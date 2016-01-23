@@ -1,9 +1,9 @@
 # King of the Ether Throne
-An Ethereum app, living on the blockchain, that will make you a King, grant you riches, and immortalize your name.
+An Ethereum app (aka contract), living on the blockchain, that will make you a King, grant you riches, and immortalize your name.
 
 ## How to Play
 
-The Ether Throne awaits you on the blockchain. It can be yours for a price - here are the rules:
+The Ether Throne awaits you on the blockchain. It can be yours for a price - here are the rules as enforced by the contract:
 
 - Let's say (for example) the current claim price for the throne is 10 ETHER.
 - You like the sound of being King, so you send 10 ETHER to the contract.
