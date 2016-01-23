@@ -37,7 +37,7 @@ King of the Ether Throne v0.3.0
 {"inputs":[],"type":"constructor"}]
 ```
 
-The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/master/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity 0.2.0-67c855c5 without optimization.
+The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/master/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity 0.2.0-67c855c5 without optimization, just in case you want to verify the code matches the bytecode.
 
 ## Where to Find the Throne
 
@@ -47,13 +47,11 @@ The web front-end is still a work in progress - in the mean-time, some options a
 
 ### Adding the Contract in the Mist Wallet
 
-If you're using the Mist Ethereum Wallet e.g. from [https://github.com/ethereum/mist/releases], go to Contracts -> Add Contract, then fill in the Contract Details above. After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price and a 'claimThrone' function to execute.
+If you're using the Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the Contract Details above. After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left (in Wei!) and a 'claimThrone' function to execute on the right (don't forget to include the payment when executing the function). This works in version 0.3.8 of the wallet client, anyway ...
 
 ### Manual Payment
 
-You can manually send your payment to `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`. You can put your name in the data field (might need to convert from ASCII).
-
-e.g. with the geth Javascript console:
+You can manually send your payment to `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`. You can put your name in the data field - might need to convert from ASCII. e.g. with the geth Javascript console:
 
 ```
 eth.sendTransaction({
@@ -68,6 +66,8 @@ eth.sendTransaction({
 You'll need to know the current claim price of the throne though (but don't worry too much about getting it wrong, it will refund you if you pay too little / too much).
 
 ### Web3 Javascript API
+
+If you're running a geth node, you can interact with the contract using a little Javascript like this:
 
 ```
 // tell web3 how to talk to the contract
@@ -95,7 +95,7 @@ You can watch transactions and storage changes on chain viewers like https://liv
 
 ### Wouldn't it be more fun if there was a limit on how long a King can rule for?
 
-Yes, need to figure out how block timestamps work first. Suggestions for improvements welcome!
+Yes, need to figure out how block timestamps work first. More suggestions for improvements welcome!
 
 ### Haven't I seen something like this before?
 
