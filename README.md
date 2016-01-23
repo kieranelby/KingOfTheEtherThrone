@@ -43,11 +43,17 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 
 ### Web Front-End
 
-The web front-end is still a work in progress - in the mean-time, some options are ...
+The web front-end is still a work in progress - soon you should be able to view it as a "dapp" in a browser - but in the mean-time, some options are ...
 
 ### Adding the Contract in the Mist Wallet
 
-If you're using the Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the Contract Details above. After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left (in Wei!) and a 'claimThrone' function to execute on the right (don't forget to include the payment when executing the function). This works in version 0.3.8 of the wallet client, anyway ...
+If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the Contract Details above. Yes, you do need to copy and paste that big long bit of JSON.
+
+After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right.
+
+Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need a little conversion.
+
+This works in version 0.3.8 of the wallet client, anyway ...
 
 ### Manual Payment
 
@@ -99,9 +105,9 @@ Yes, need to figure out how block timestamps work first. More suggestions for im
 
 ### Haven't I seen something like this before?
 
-Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemd to involve owning a gem or a special coin).
+Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemed to involve owning a magnificent gem or a special coin).
 
-The difference with Ethereum is that you don't have to trust the author not to run away with the money - instead, you can read the contract and rely on the blockchain to ensure it is executed as written.
+The difference with Ethereum is that you don't have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.
 
 This contract was somewhat inspired by http://ethereumpyramid.com/ (to which this is in no way affiliated).
 
