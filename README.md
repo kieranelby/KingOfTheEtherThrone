@@ -1,6 +1,10 @@
 # King of the Ether Throne
 An Ethereum app (aka contract), living on the blockchain, that will make you a King, grant you riches, and immortalize your name.
 
+## Version
+
+You're reading about version 0.3.0 of the contract - check the newest version here: https://github.com/kieranelby/KingOfTheEtherThrone .
+
 ## How to Play
 
 The Ether Throne awaits you on the blockchain. It can be yours for a price - here are the rules as enforced by the contract:
