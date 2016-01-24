@@ -19,7 +19,8 @@ The Ether Throne awaits you on the blockchain. It can be yours for a price - her
 You can use these details to interact with the King of the Ether Throne contract:
 
 #### CONTRACT NAME
-King of the Ether Throne v0.3.0
+
+`KingOfTheEtherThrone`
 
 #### CONTRACT ADDRESS
 `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`
@@ -37,7 +38,7 @@ King of the Ether Throne v0.3.0
 {"inputs":[],"type":"constructor"}]
 ```
 
-The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity version `0.2.0-67c855c5` without optimization, just in case you want to verify the code matches the bytecode.
+The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
 
 ## Where to Find the Throne
 
