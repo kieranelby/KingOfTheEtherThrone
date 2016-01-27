@@ -1,0 +1,10 @@
+# Backup files
+*.~
+
+# Node Modules
+# (a matter of some debate, admittedly)
+node_modules
+
+# logs
+npm-debug.log
+
