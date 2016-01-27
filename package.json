@@ -1,0 +1,15 @@
+{
+  "name": "KingOfTheEtherThrone",
+  "version": "0.0.0",
+  "private": true,
+  "license": "proprietary",
+  "scripts": {
+    "build-public": "node ./bin/build-public.js"
+  },
+  "devDependencies": {
+    "marked": "0.3.5",
+    "handlebars" : "4.0.5"
+  },
+  "dependencies": {
+  }
+}
