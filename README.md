@@ -1,8 +1,8 @@
 # King of the Ether Throne
 
-An Ethereum app (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
+An Ethereum DApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
 
-## What is it?
+## What does it do?
 
 The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:
 
@@ -13,7 +13,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 - The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.
 - The new claim price for the throne will go up by 50%, to 15 ether.
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
-- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.1 ether. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?
+- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?
 
 ## Who is the Monarch?
 
@@ -23,20 +23,20 @@ The current ruler of the Ether Throne is **Kieran**, the First of Their Name, th
 
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **0.050625 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **0.0759375 ether**.
 
 Here's how you can Pay:
 
-### Pay Using an Ethereum DApp Browser (Mist, MIX, AlephZero)
+### Pay Using an Ethereum DApp Browser (Mist, MIX, AlethZero)
 
-It's all a bit hemorrhaging-edge, but if you visit [http://www.kingoftheether.com/] - not in your normal browser, but inside a special Ethereum DApp browser such as:
+It's all a bit hemorrhaging-edge, but if you visit [the live kingoftheether.com page](http://www.kingoftheether.com/) - not in your normal browser, but inside a special Ethereum DApp browser such as:
 
 * [Mist developer preview](https://github.com/ethereum/mist/releases/tag/0.3.6) 
-* [Mix / AltethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
+* [Mix / AlethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
 
-then you should see an interface below where you can interact with the contract via your local Ethereum node:
+then you should see an interface appear where you can interact with the contract via your local Ethereum node.
 
-<div id="interfacePlaceholder">
+<div id="interfacePlaceholder" class="notWorking">
 **Sorry, this web page couldn't seem to talk to your Ethereum DApp Browser. We tried `http://localhost:8545`.**
 </div>
 
@@ -76,7 +76,7 @@ If you're running a geth node, you can interact with the contract using a little
 
 ```
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract([{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;}]);
+var kingOfTheEtherThroneContract = web3.eth.contract([object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]);
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e');
@@ -110,7 +110,7 @@ You can use these details to interact with the King of the Ether Throne contract
 #### JSON INTERFACE (CONTRACT ABI)
 
 ```
-[{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;}]
+[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
 ```
 
 #### CONTRACT SOURCE CODE

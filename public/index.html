@@ -15,17 +15,14 @@
     border: 1px solid black;
     padding: 2px;
   }
-  .notWorking {
-    background-color: #ffcccc;
-  }
   </style>
 </head>
 <body>
   <div class="content-wrapper">
     <div class="content">
       <h1 id="king-of-the-ether-throne">King of the Ether Throne</h1>
-<p>An Ethereum app (a &quot;contract&quot;), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
-<h2 id="what-is-it-">What is it?</h2>
+<p>An Ethereum DApp (a &quot;contract&quot;), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
+<h2 id="what-does-it-do-">What does it do?</h2>
 <p>The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:</p>
 <ul>
 <li>Let&#39;s say (for example) the current claim price for the throne is 10 ether.</li>
@@ -35,22 +32,22 @@
 <li>The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.</li>
 <li>The new claim price for the throne will go up by 50%, to 15 ether.</li>
 <li>If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.</li>
-<li>But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.1 ether. (The contract can&#39;t give you back your 10 ether because it was given to the previous monarch). Surely you&#39;ll find a worthy successor within 72 hours though ... right?</li>
+<li>But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can&#39;t give you back your 10 ether because it was given to the previous monarch). Surely you&#39;ll find a worthy successor within 72 hours though ... right?</li>
 </ul>
 <h2 id="who-is-the-monarch-">Who is the Monarch?</h2>
 <p>The current ruler of the Ether Throne is <strong>Kieran</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.</p>
 <p><em>NB: You don&#39;t have to trust this page; read on for how you can ask the Ethereum blockchain to determine the ruler.</em></p>
 <h2 id="how-can-i-rule-the-ether-">How Can I Rule the Ether?</h2>
-<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>0.050625 ether</strong>.</p>
+<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>0.0759375 ether</strong>.</p>
 <p>Here&#39;s how you can Pay:</p>
-<h3 id="pay-using-an-ethereum-dapp-browser-mist-mix-alephzero-">Pay Using an Ethereum DApp Browser (Mist, MIX, AlephZero)</h3>
+<h3 id="pay-using-an-ethereum-dapp-browser-mist-mix-alethzero-">Pay Using an Ethereum DApp Browser (Mist, MIX, AlethZero)</h3>
 <p>It&#39;s all a bit hemorrhaging-edge, but if you visit this page - not in your normal browser, but inside a special Ethereum DApp browser such as:</p>
 <ul>
 <li><a href="https://github.com/ethereum/mist/releases/tag/0.3.6">Mist developer preview</a> </li>
-<li><a href="https://www.gitbook.com/book/gavofyork/turboethereum/details">Mix / AltethZero</a></li>
+<li><a href="https://www.gitbook.com/book/gavofyork/turboethereum/details">Mix / AlethZero</a></li>
 </ul>
-<p>then you should see an interface below where you can interact with the contract via your local Ethereum node:</p>
-<div id="interfacePlaceholder">
+<p>then you should see an interface  appear here where you can interact with the contract via your local Ethereum node:</p>
+<div id="interfacePlaceholder" class="notWorking">
 <strong>Sorry, this web page couldn&#39;t seem to talk to your Ethereum DApp Browser. We tried <code>http://localhost:8545</code>.</strong>
 </div>
 
@@ -74,7 +71,7 @@
 <h3 id="web3-javascript-api">Web3 Javascript API</h3>
 <p>If you&#39;re running a geth node, you can interact with the contract using a little Javascript like this:</p>
 <pre><code>// tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract([{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;currentClaimPrice&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;currentMonarch&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;etherAddress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;address&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;name&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;claimPrice&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;coronationTimestamp&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:false,&amp;quot;inputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;name&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}],&amp;quot;name&amp;quot;:&amp;quot;claimThrone&amp;quot;,&amp;quot;outputs&amp;quot;:[],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;numberOfMonarchs&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;n&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;name&amp;quot;:&amp;quot;pastMonarchs&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;etherAddress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;address&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;name&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;claimPrice&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;coronationTimestamp&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:false,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;sweepCommission&amp;quot;,&amp;quot;outputs&amp;quot;:[],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;anonymous&amp;quot;:false,&amp;quot;inputs&amp;quot;:[{&amp;quot;indexed&amp;quot;:false,&amp;quot;name&amp;quot;:&amp;quot;usurperEtherAddress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;address&amp;quot;},{&amp;quot;indexed&amp;quot;:false,&amp;quot;name&amp;quot;:&amp;quot;usurperName&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;},{&amp;quot;indexed&amp;quot;:false,&amp;quot;name&amp;quot;:&amp;quot;newClaimPrice&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;name&amp;quot;:&amp;quot;ThroneClaimed&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;event&amp;quot;},{&amp;quot;inputs&amp;quot;:[],&amp;quot;type&amp;quot;:&amp;quot;constructor&amp;quot;}]);
+var kingOfTheEtherThroneContract = web3.eth.contract([object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]);
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(&#39;0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e&#39;);
@@ -97,7 +94,7 @@ kingOfTheEtherThrone.claimThrone(
 <h4 id="contract-address">CONTRACT ADDRESS</h4>
 <p><code>0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</code></p>
 <h4 id="json-interface-contract-abi-">JSON INTERFACE (CONTRACT ABI)</h4>
-<pre><code>[{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;currentClaimPrice&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;currentMonarch&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;etherAddress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;address&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;name&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;claimPrice&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;coronationTimestamp&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:false,&amp;quot;inputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;name&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}],&amp;quot;name&amp;quot;:&amp;quot;claimThrone&amp;quot;,&amp;quot;outputs&amp;quot;:[],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;numberOfMonarchs&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;n&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:true,&amp;quot;inputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;name&amp;quot;:&amp;quot;pastMonarchs&amp;quot;,&amp;quot;outputs&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;etherAddress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;address&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;name&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;claimPrice&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;coronationTimestamp&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;constant&amp;quot;:false,&amp;quot;inputs&amp;quot;:[],&amp;quot;name&amp;quot;:&amp;quot;sweepCommission&amp;quot;,&amp;quot;outputs&amp;quot;:[],&amp;quot;type&amp;quot;:&amp;quot;function&amp;quot;},{&amp;quot;anonymous&amp;quot;:false,&amp;quot;inputs&amp;quot;:[{&amp;quot;indexed&amp;quot;:false,&amp;quot;name&amp;quot;:&amp;quot;usurperEtherAddress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;address&amp;quot;},{&amp;quot;indexed&amp;quot;:false,&amp;quot;name&amp;quot;:&amp;quot;usurperName&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;},{&amp;quot;indexed&amp;quot;:false,&amp;quot;name&amp;quot;:&amp;quot;newClaimPrice&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;uint256&amp;quot;}],&amp;quot;name&amp;quot;:&amp;quot;ThroneClaimed&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;event&amp;quot;},{&amp;quot;inputs&amp;quot;:[],&amp;quot;type&amp;quot;:&amp;quot;constructor&amp;quot;}]
+<pre><code>[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
 </code></pre><h4 id="contract-source-code">CONTRACT SOURCE CODE</h4>
 <p>The Solidarity source code for the contract lives at [<a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol">https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol</a>]. It was compiled with solidity version <code>v0.2.0-2016-01-20-67c855c</code> without optimization, just in case you want to verify the code matches the bytecode.</p>
 <h2 id="hall-of-past-monarchs">Hall of Past Monarchs</h2>

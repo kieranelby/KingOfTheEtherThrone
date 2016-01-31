@@ -37,13 +37,13 @@ if (web3.eth.syncing) {
 }
 
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract(JSON.parse(contractAbiJson));
+var kingOfTheEtherThroneContract = web3.eth.contract(contractAbi);
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(contractAddress);
 
 // ask contract what the starting and current claim price is
-var startingClaimPrice = web3.fromWei(kingOfTheEtherThrone.startingClaimPrice(),'ether') + ' ether';
+var startingClaimPrice = '0.01 ether';
 var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
 
 // TODO ask for more stuff
