@@ -7,7 +7,7 @@ var Web3 = require('web3');
 console.log("Building public content ...");
 
 var contractAddress = "0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e";
-var contractAbiJson = 
+var contractAbi = JSON.parse(
   '[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},' +
   '{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
   '{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},' +
@@ -15,7 +15,8 @@ var contractAbiJson =
   '{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
   '{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},' +
   '{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},' +
-  '{"inputs":[],"type":"constructor"}]';
+  '{"inputs":[],"type":"constructor"}]'
+);
 
 var buildTimeWeb3Provider = 'http://localhost:8545';
 var clientSideWeb3Provider = 'http://localhost:8545';
@@ -25,6 +26,8 @@ console.log("Making sure public dir exists ...");
 fs.statSync("public");
 
 console.log("Talking to local Ethereum node to get latest monarchy data ...");
+
+// TODO - allow option of using cached monarchy data if we just want to tweak the wording ...
 
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(buildTimeWeb3Provider));
@@ -39,23 +42,24 @@ var kingOfTheEtherThroneContract = web3.eth.contract(JSON.parse(contractAbiJson)
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(contractAddress);
 
-// ask contract what the current claim price is
-var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
+// ask contract what the starting and current claim price is
+var startingClaimPrice = web3.fromWei(kingOfTheEtherThrone.startingClaimPrice(),'ether') + ' ether';
+var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
+
+// TODO ask for more stuff
 
 console.log("got claim price of " + currentClaimPrice);
 
 console.log("Using template to generate README markdown for git and for the website ...");
-
-// TODO - contract address, too
 
 var readmeTemplateSource = fs.readFileSync('templates/README.md.nunjucks', 'utf8');
 var readmeContext = {
   targetIsGit: false,
   targetIsWeb: false,
   contractAddress: contractAddress,
-  contractAbi: contractAbiJson,
-  startingClaimPrice: "0.1 ether",
-  currentClaimPrice: "0.050625 ether",
+  contractAbi: contractAbi,
+  startingClaimPrice: startingClaimPrice,
+  currentClaimPrice: currentClaimPrice,
   currentMonarch: {name: 'Kieran'},
   pastMonarchs: [{name: 'Kieran the Old'}]
 };

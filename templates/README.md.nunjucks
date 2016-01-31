@@ -1,8 +1,8 @@
 # King of the Ether Throne
 
-An Ethereum app (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
+An Ethereum DApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
 
-## What is it?
+## What does it do?
 
 The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:
 
@@ -27,16 +27,16 @@ The power of the Ether Throne can be yours for the **current claim price** of ju
 
 Here's how you can Pay:
 
-### Pay Using an Ethereum DApp Browser (Mist, MIX, AlephZero)
+### Pay Using an Ethereum DApp Browser (Mist, MIX, AlethZero)
 
 It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[http://www.kingoftheether.com/]{% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum DApp browser such as:
 
 * [Mist developer preview](https://github.com/ethereum/mist/releases/tag/0.3.6) 
-* [Mix / AltethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
+* [Mix / AlethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
 
 then you should see an interface below where you can interact with the contract via your local Ethereum node:
 
-<div id="interfacePlaceholder">
+<div id="interfacePlaceholder" class="notWorking">
 **Sorry, this web page couldn't seem to talk to your Ethereum DApp Browser. We tried `http://localhost:8545`.**
 </div>
 
