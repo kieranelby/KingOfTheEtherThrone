@@ -4,7 +4,7 @@ An Ethereum app (a "contract"), living on the blockchain, that will make you a K
 
 ## What is it?
 
-The Ether Throne awaits you on the blockchain. It can be yours for a price - here are the rules as enforced by the contract:
+The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:
 
 - Let's say (for example) the current claim price for the throne is 10 ether.
 - You like the sound of being King, so you send 10 ether to the contract.
@@ -13,23 +13,23 @@ The Ether Throne awaits you on the blockchain. It can be yours for a price - her
 - The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.
 - The new claim price for the throne will go up by 50%, to 15 ether.
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
-- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.1 ether. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?
+- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to {{startingClaimPrice}}. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?
 
 ## Who is the Monarch?
 
-The current ruler of the Ether Throne is **Kieran**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
+The current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page; read on for how you can inspect the Ethereum blockchain to determine the ruler.*
+*NB: You don't have to trust this page; read on for how you can ask the Ethereum blockchain to determine the ruler.*
 
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **0.050625 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **{{currentClaimPrice}}**.
 
 Here's how you can Pay:
 
 ### Pay Using an Ethereum DApp Browser (Mist, MIX, AlephZero)
 
-It's all a bit hemorrhaging-edge, but if you visit [http://www.kingoftheether.com/] - not in your normal browser, but inside a special Ethereum DApp browser such as:
+It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[http://www.kingoftheether.com/]{% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum DApp browser such as:
 
 * [Mist developer preview](https://github.com/ethereum/mist/releases/tag/0.3.6) 
 * [Mix / AltethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
@@ -42,17 +42,17 @@ then you should see an interface below where you can interact with the contract 
 
 ### Pay by Adding the Contract in the Mist Wallet
 
-If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the Contract Details above. Yes, you do need to copy and paste that big long bit of JSON.
+If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the details from the "Contract Details" section below. Yes, you do need to copy and paste that big long bit of JSON.
 
 After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right.
 
-Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need a little conversion.
+Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
 
-This works in version 0.3.8 of the wallet client, anyway ...
+This works in version 0.3.8 of the wallet client on Windows, anyway ...
 
 ### Pay by Sending a Manual Payment
 
-You can manually send your payment to `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`.
+You can manually send your payment to `{{contractAddress}}`.
 
 If another monarch comes along and takes your throne, we'll send your compensation payment to the address you sent your payment from - so make sure you send it from an address you control.
 
@@ -62,7 +62,7 @@ We'll use your Ethereum address as your name, though if you like you can put you
 eth.sendTransaction({
   from: eth.accounts[0],
   value: web3.toWei(15, 'ether'),
-  to: '0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e',
+  to: '{{contractAddress}}',
   gas: 500000,
   data: web3.fromAscii('Your Kingly Name')
 });
@@ -76,10 +76,10 @@ If you're running a geth node, you can interact with the contract using a little
 
 ```
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"inputs":[],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"}]);
+var kingOfTheEtherThroneContract = web3.eth.contract({{contractAbi}});
 
 // tell web3 where the contract is
-var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e');
+var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('{{contractAddress}}');
 
 // ask contract what the current claim price is
 web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
@@ -94,7 +94,7 @@ kingOfTheEtherThrone.claimThrone(
 
 ### Chain Explorers
 
-You can watch transactions and storage changes on chain viewers like [https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e], [https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e], and [https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e]. Some don't seem to be very good at showing transactions generated by the contract though.
+You can watch transactions and storage changes on chain viewers like [https://etherchain.org/account/{{contractAddress}}], [https://etherscan.io/address/{{contractAddress}}], and [https://live.ether.camp/account/{{contractAddress}}]. Some don't seem to be very good at showing transactions generated by the contract though.
 
 ## Contract Details
 
@@ -105,33 +105,25 @@ You can use these details to interact with the King of the Ether Throne contract
 `KingOfTheEtherThrone`
 
 #### CONTRACT ADDRESS
-`0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`
+`{{contractAddress}}`
 
 #### JSON INTERFACE (CONTRACT ABI)
 
 ```
-[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},
-{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},
-{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},
-{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},
-{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},
-{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},
-{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},
-{"inputs":[],"type":"constructor"}]
+{{contractAbi}}
 ```
 
 #### CONTRACT SOURCE CODE
 
 The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
 
-## Where to Find the Throne
-
-
 ## Hall of Past Monarchs
 
 |Number|Name|Account|Claim Price Paid|
 |---|---|---|---|
-|?|Kieran the Old|?|?|
+{%- for pastMonarch in pastMonarchs %}
+|?|{{pastMonarch.name}}|?|?|
+{%- endfor %}
 
 ## Other Bits and Pieces
 

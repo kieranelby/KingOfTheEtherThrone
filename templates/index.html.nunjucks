@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <style>
+  .content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 2px;
+  }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="content">
+      {{readmeHtml | safe}}
+    </div>
+  </div>
+  <script type="text/javascript" src="interface.js"></script>
+  <script type="text/javascript" src="web3.js"></script>
+</body>
+</html>
