@@ -7,7 +7,7 @@ var Web3 = require('web3');
 console.log("Building public content ...");
 
 var contractAddress = "0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e";
-var contractAbi = 
+var contractAbiJson = 
   '[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},' +
   '{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
   '{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},' +
@@ -34,7 +34,7 @@ if (web3.eth.syncing) {
 }
 
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract(contractAbi);
+var kingOfTheEtherThroneContract = web3.eth.contract(JSON.parse(contractAbi));
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(contractAddress);
