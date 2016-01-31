@@ -34,7 +34,7 @@ if (web3.eth.syncing) {
 }
 
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract(JSON.parse(contractAbi));
+var kingOfTheEtherThroneContract = web3.eth.contract(JSON.parse(contractAbiJson));
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(contractAddress);
@@ -53,6 +53,7 @@ var readmeContext = {
   targetIsGit: false,
   targetIsWeb: false,
   contractAddress: contractAddress,
+  contractAbi: contractAbiJson,
   startingClaimPrice: "0.1 ether",
   currentClaimPrice: "0.050625 ether",
   currentMonarch: {name: 'Kieran'},
