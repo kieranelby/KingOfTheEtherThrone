@@ -34,11 +34,12 @@ It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live
 * [Mist developer preview](https://github.com/ethereum/mist/releases/tag/0.3.6) 
 * [Mix / AlethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
 
-then you should see an interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear here where you can interact with the contract via your local Ethereum node:{% endif %}
+then you should see an interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear here where you can interact with the contract via your local Ethereum node:
 
 <div id="interfacePlaceholder" class="notWorking">
 **Sorry, this web page couldn't seem to talk to your Ethereum DApp Browser. We tried `http://localhost:8545`.**
 </div>
+{% endif %}
 
 ### Pay by Adding the Contract in the Mist Wallet
 
