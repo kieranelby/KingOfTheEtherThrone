@@ -63,7 +63,7 @@ function decorateRawMonarch(rawMonarch, number) {
 // ask contract for details we need (claim price, monarchs)
 var startingClaimPrice = '0.01 ether';
 var lastUpdatedBlockTimestamp = web3.eth.getBlock("latest").timestamp;
-var lastUpdatedBlockTimestampReadable = new Date(1000 * lastUpdatedBlockTimestamp).toISOString();
+var lastUpdatedBlockTimestampReadable = (new Date(1000 * lastUpdatedBlockTimestamp)).toISOString();
 var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
 
 var numberOfMonarchs = kingOfTheEtherThrone.numberOfMonarchs();
@@ -82,7 +82,7 @@ for (var i = 0; i < numberOfMonarchs; i++) {
 // TODO ask for more stuff
 console.log("got currentMonarch " + currentMonarch);
 
-console.log("got claim price of " + currentClaimPrice);
+console.log("got lastUpdatedBlockTimestamp of " + lastUpdatedBlockTimestamp);
 
 console.log("Using template to generate README markdown for git and for the website ...");
 
@@ -95,7 +95,8 @@ var readmeContext = {
   startingClaimPrice: startingClaimPrice,
   currentClaimPrice: currentClaimPrice,
   currentMonarch: currentMonarch,
-  pastMonarchs: pastMonarchs
+  pastMonarchs: pastMonarchs,
+  lastUpdatedBlockTimestampReadable: lastUpdatedBlockTimestamp,
 };
 readmeContext.targetIsGit = true;
 readmeContext.targetIsWeb = false;
