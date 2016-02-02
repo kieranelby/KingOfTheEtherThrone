@@ -72,7 +72,7 @@ var currentMonarchRaw = kingOfTheEtherThrone.currentMonarch();
 var currentMonarch = decorateRawMonarch(currentMonarchRaw, numberOfMonarchs);
 
 var pastMonarchs = [];
-for (var i = 0; i < numberOfMonarchs; i++) {
+for (var i = numberOfMonarchs - 1; i >=0 ; i--) {
   var pastMonarchRaw = kingOfTheEtherThrone.pastMonarchs(i);
   var pastMonarch = decorateRawMonarch(pastMonarchRaw, i);
   pastMonarchs.push(pastMonarch);
