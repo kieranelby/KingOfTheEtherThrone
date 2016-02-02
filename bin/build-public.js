@@ -33,7 +33,7 @@ var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(buildTimeWeb3Provider));
 
 if (web3.eth.syncing) {
-  throw new Error("your ethereum node is syncing; try later?");
+  throw new Error('your ethereum node is syncing; try later?');
 }
 
 // tell web3 how to talk to the contract
@@ -42,11 +42,43 @@ var kingOfTheEtherThroneContract = web3.eth.contract(contractAbi);
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(contractAddress);
 
-// ask contract what the starting and current claim price is
+function decorateRawMonarch(rawMonarch, number) {
+  var monarch = {
+    etherAddress : rawMonarch[0],
+    name : rawMonarch[1],
+    claimPricePaid : web3.fromWei(rawMonarch[2], 'ether') + ' ether',
+    coronationTimestamp : rawMonarch[3],
+    number: (number == 0 ? '' : number)
+  };
+  if (monarch.name == '') {
+    monarch.name = etherAddress;
+  } else if (monarch.name == '[Vacant]') {
+    monarch.etherAddress = '';
+  } else {
+    monarch.name = monarch.name + ' (' + monarch.etherAddress + ')';
+  }
+  return monarch;
+}
+
+// ask contract for details we need (claim price, monarchs)
 var startingClaimPrice = '0.01 ether';
 var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
 
+var numberOfMonarchs = kingOfTheEtherThrone.numberOfMonarchs();
+
+var currentMonarchRaw = kingOfTheEtherThrone.currentMonarch();
+var currentMonarch = decorateRawMonarch(currentMonarchRaw, numberOfMonarchs);
+
+var pastMonarchs = [];
+for (var i = 0; i < numberOfMonarchs; i++) {
+  var pastMonarchRaw = kingOfTheEtherThrone.pastMonarchs(i);
+  var pastMonarch = decorateRawMonarch(pastMonarchRaw, i);
+  pastMonarchs.push(pastMonarch);
+}
+
+
 // TODO ask for more stuff
+console.log("got currentMonarch " + currentMonarch);
 
 console.log("got claim price of " + currentClaimPrice);
 
@@ -60,8 +92,8 @@ var readmeContext = {
   contractAbi: contractAbi,
   startingClaimPrice: startingClaimPrice,
   currentClaimPrice: currentClaimPrice,
-  currentMonarch: {name: 'Kieran'},
-  pastMonarchs: [{name: 'Kieran the Old'}]
+  currentMonarch: currentMonarch,
+  pastMonarchs: pastMonarchs
 };
 readmeContext.targetIsGit = true;
 readmeContext.targetIsWeb = false;
