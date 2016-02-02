@@ -6,12 +6,12 @@
 // TODO - allow ownership transfer / creating new thrones?
 // TODO - enforce time-limit on reign (can contracts do that without external action)?
 // TODO - add bitcoin bridge so agents can pay in bitcoin?
+// TODO - maybe allow different return payment address?
 
 contract KingOfTheEtherThrone {
 
     struct Monarch {
-        // Address from which they paid their claimFee
-        // and to which their compensation will be sent.
+        // Address to which their compensation will be sent.
         address etherAddress;
         // A name by which they wish to be known.
         // TODO - should I use string? bytes? bytes32?

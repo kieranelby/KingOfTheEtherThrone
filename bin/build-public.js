@@ -7,7 +7,7 @@ var Web3 = require('web3');
 console.log("Building public content ...");
 
 var contractAddress = "0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e";
-var contractAbi = JSON.parse(
+var contractAbiJson =
   '[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},' +
   '{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
   '{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},' +
@@ -15,8 +15,8 @@ var contractAbi = JSON.parse(
   '{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
   '{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},' +
   '{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},' +
-  '{"inputs":[],"type":"constructor"}]'
-);
+  '{"inputs":[],"type":"constructor"}]';
+var contractAbi = JSON.parse(contractAbiJson);
 
 var buildTimeWeb3Provider = 'http://localhost:8545';
 var clientSideWeb3Provider = 'http://localhost:8545';
@@ -92,6 +92,7 @@ var readmeContext = {
   targetIsWeb: false,
   contractAddress: contractAddress,
   contractAbi: contractAbi,
+  contractAbiJson: contractAbiJson,
   startingClaimPrice: startingClaimPrice,
   currentClaimPrice: currentClaimPrice,
   currentMonarch: currentMonarch,

@@ -111,7 +111,7 @@ You can use these details to interact with the King of the Ether Throne contract
 #### JSON INTERFACE (CONTRACT ABI)
 
 ```
-{{contractAbi}}
+{{contractAbiJson}}
 ```
 
 #### CONTRACT SOURCE CODE
