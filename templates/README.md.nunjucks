@@ -17,9 +17,9 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 ## Who is the Monarch?
 
-The current ruler of the Ether Throne is **{{currentMonarch.name}} ({{currentMonarch.etherAddress}})**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
+The current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page; read on for how you can ask the Ethereum blockchain to determine the ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 ## How Can I Rule the Ether?
 
@@ -123,7 +123,7 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 |Number|Name|Claim Price Paid|
 |---|---|---|
 {%- for pastMonarch in pastMonarchs %}
-|{{pastMonarch.number}}|{{pastMonarch.name}}|{{pastMonarch.etherAddress}}|{{pastMonarch.claimPricePaid}}|
+|{{pastMonarch.number}}|{{pastMonarch.name}}|{{pastMonarch.claimPricePaid}}|
 {%- endfor %}
 
 ## Other Bits and Pieces

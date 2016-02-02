@@ -62,6 +62,8 @@ function decorateRawMonarch(rawMonarch, number) {
 
 // ask contract for details we need (claim price, monarchs)
 var startingClaimPrice = '0.01 ether';
+var lastUpdatedBlockTimestamp = web3.eth.getBlock("latest").timestamp;
+var lastUpdatedBlockTimestampReadable = new Date(1000 * lastUpdatedBlockTimestamp).toISOString();
 var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
 
 var numberOfMonarchs = kingOfTheEtherThrone.numberOfMonarchs();
