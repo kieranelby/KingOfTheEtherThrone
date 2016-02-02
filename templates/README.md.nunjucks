@@ -17,7 +17,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 ## Who is the Monarch?
 
-The current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
+Since {{currentMonarch.coronationTimestampReadable}}, the illustrious current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
 *NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
@@ -77,7 +77,7 @@ If you're running a geth node, you can interact with the contract using a little
 
 ```
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract({{contractAbi}});
+var kingOfTheEtherThroneContract = web3.eth.contract({{contractAbiJson | safe}});
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('{{contractAddress}}');
@@ -123,7 +123,7 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 |Number|Name|Claim Price Paid|
 |---|---|---|
 {%- for pastMonarch in pastMonarchs %}
-|{{pastMonarch.number}}|{{pastMonarch.name}}|{{pastMonarch.claimPricePaid}}|
+|{{pastMonarch.number}}|{{pastMonarch.displayName}}|{{pastMonarch.claimPricePaid}}|
 {%- endfor %}
 
 ## Other Bits and Pieces

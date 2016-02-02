@@ -42,6 +42,10 @@ var kingOfTheEtherThroneContract = web3.eth.contract(contractAbi);
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(contractAddress);
 
+function makeUnixTimestampReadable(timestamp) {
+  return (new Date(1000 * timestamp)).toISOString();
+}
+
 function decorateRawMonarch(rawMonarch, number) {
   var monarch = {
     etherAddress : rawMonarch[0],
@@ -50,12 +54,14 @@ function decorateRawMonarch(rawMonarch, number) {
     coronationTimestamp : rawMonarch[3],
     number: (number == 0 ? '' : number)
   };
+  monarch.coronationTimestampReadable = makeUnixTimestampReadable(monarch.coronationTimestamp);
   if (monarch.name == '') {
-    monarch.name = etherAddress;
+    monarch.displayName = etherAddress;
   } else if (monarch.name == '[Vacant]') {
+    monarch.displayName = '[Vacant]';
     monarch.etherAddress = '';
   } else {
-    monarch.name = monarch.name + ' (' + monarch.etherAddress + ')';
+    monarch.displayName = monarch.name + ' (' + monarch.etherAddress + ')';
   }
   return monarch;
 }
@@ -63,7 +69,7 @@ function decorateRawMonarch(rawMonarch, number) {
 // ask contract for details we need (claim price, monarchs)
 var startingClaimPrice = '0.01 ether';
 var lastUpdatedBlockTimestamp = web3.eth.getBlock("latest").timestamp;
-var lastUpdatedBlockTimestampReadable = (new Date(1000 * lastUpdatedBlockTimestamp)).toISOString();
+var lastUpdatedBlockTimestampReadable = makeUnixTimestampReadable(lastUpdatedBlockTimestamp);
 var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
 
 var numberOfMonarchs = kingOfTheEtherThrone.numberOfMonarchs();
@@ -97,7 +103,7 @@ var readmeContext = {
   currentClaimPrice: currentClaimPrice,
   currentMonarch: currentMonarch,
   pastMonarchs: pastMonarchs,
-  lastUpdatedBlockTimestampReadable: lastUpdatedBlockTimestamp,
+  lastUpdatedBlockTimestampReadable: lastUpdatedBlockTimestampReadable,
 };
 readmeContext.targetIsGit = true;
 readmeContext.targetIsWeb = false;
