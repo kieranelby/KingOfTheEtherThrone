@@ -49,13 +49,13 @@ function renderDataFromContract(config, web3, kingOfTheEtherThrone) {
 function attachEvents(web3, kingOfTheEtherThrone) {
   var claimThroneButton = document.getElementById('claimThroneButton');
   // TODO - error handling !!!
-  claimThroneButton.onclick = new function() {
+  claimThroneButton.onclick = function() {
     kingOfTheEtherThrone.claimThrone(
     document.getElementById('yourNameInput').value,
     { from: web3.eth.accounts[0],
       value: kingOfTheEtherThrone.currentClaimPrice(),
       gas: 500000 } );
-  }
+  };
   var monarchNumberSelect = document.getElementById('monarchNumberSelect');
 }
 
