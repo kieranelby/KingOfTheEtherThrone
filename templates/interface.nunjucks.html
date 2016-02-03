@@ -2,12 +2,16 @@
   <fieldset>
     <legend>Become the Monarch</legend>
     <div class="pure-control-group">
-    <label for="currentClaimPriceInput">Current Claim Price</label>
-    <input id="currentClaimPriceInput" type="text" value="12.5 ether" readonly>
+      <label for="currentClaimPriceInput">Current Claim Price</label>
+      <input id="currentClaimPriceInput" type="text" value="{{currentClaimPrice}}" readonly>
     </div>
     <div class="pure-control-group">
-    <label>&nbsp;</label>
-    <button type="submit" id="claimThroneButton" class="pure-button pure-button-primary">Claim Throne</button>
+      <label for="yourNameInput">Your Regal Name</label>
+      <input id="yourNameInput" type="text" value="{{yourName}}">
+    </div>
+    <div class="pure-control-group">
+      <label>&nbsp;</label>
+      <button type="submit" id="claimThroneButton" class="pure-button pure-button-primary">Claim Throne</button>
     </div>
   </fieldset>
   <fieldset>
@@ -16,9 +20,9 @@
       <label for="monarchNumberSelect">Number</label>
       <select id="monarchNumberSelect">
         <option>-- Choose Monarch --</option>
-        <option>Current</option>
-        <option>2</option>
-        <option>1</option>
+        {% for monarchNumber in monarchNumbers %}
+        <option value="{{monarchNumber}}" {% if monarchNumber == selectedMonarchNumber %}selected{% endif %}>{{monarchNumber}}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="pure-control-group">
