@@ -27,12 +27,12 @@ function getLiveContract(config, web3) {
 }
 
 function renderDataFromContract(config, web3, kingOfTheEtherThrone) {
-  var uiArea = document.getElementById("interfacePlaceholder");
+  var uiArea = document.getElementById('interfacePlaceholder');
   var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
   var templateContext = {
   };
   var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
-  uiArea.innerHtml = interfaceHtml;
+  uiArea.innerHTML = interfaceHtml;
 }
 
 function createInterface(config) {
