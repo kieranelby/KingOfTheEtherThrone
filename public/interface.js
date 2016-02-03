@@ -8,18 +8,18 @@
 // [CLAIM THRONE (2.2 ether)]
 //
 
-function getContract(config) {
+function getContract(config, web3) {
   //return getLiveContract();
-  return getFakeContract();
+  return getFakeContract(config, web3);
 }
 
-function getFakeContract(config) {
+function getFakeContract(config, web3) {
   var kingOfTheEtherThrone = {};
   kingOfTheEtherThrone.currentClaimPrice = function() { return '125000000000'; };
   return kingOfTheEtherThrone;
 }
 
-function getLiveContract(config) {
+function getLiveContract(config, web3) {
   web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
   var kingOfTheEtherThroneContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},{"inputs":[],"type":"constructor"}]);
   var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e');
@@ -37,6 +37,6 @@ function renderDataFromContract(config, web3, kingOfTheEtherThrone) {
 
 function createInterface(config) {
   web3 = new Web3();
+  var contract = getContract(config, web3);
   renderDataFromContract(config, web3, contract);
 }
-
