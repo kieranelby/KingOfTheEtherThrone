@@ -29,7 +29,7 @@ function getLiveContract(config, web3) {
 
 function renderDataFromContract(config, web3, kingOfTheEtherThrone) {
   var uiArea = document.getElementById('interfacePlaceholder');
-  var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + " ether";
+  var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether') + ' ether';
   var numberOfMonarchs = kingOfTheEtherThrone.numberOfMonarchs();
   var monarchNumbers = ['Current'];
   for (var i = numberOfMonarchs - 1; i > 0; i--) {
@@ -42,6 +42,21 @@ function renderDataFromContract(config, web3, kingOfTheEtherThrone) {
   };
   var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
   uiArea.innerHTML = interfaceHtml;
+  attachEvents(web3, kingOfTheEtherThrone);
+  uiArea.className = 'good';
+}
+
+function attachEvents(web3, kingOfTheEtherThrone) {
+  var claimThroneButton = document.getElementById('claimThroneButton');
+  // TODO - error handling !!!
+  claimThroneButton.onclick = new function() {
+    kingOfTheEtherThrone.claimThrone(
+    document.getElementById('yourNameInput').value,
+    { from: web3.eth.accounts[0],
+      value: kingOfTheEtherThrone.currentClaimPrice(),
+      gas: 500000 } );
+  }
+  var monarchNumberSelect = document.getElementById('monarchNumberSelect');
 }
 
 function createInterface(config) {
