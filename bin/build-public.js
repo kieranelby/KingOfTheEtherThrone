@@ -132,8 +132,11 @@ console.log("Pre-compiling templates needed by public web content at run-time");
 
 // TODO - API confusing here ...
 var precompileOpts = {};
-nunjucks.precompile("interface.nunjucks.html", precompileOpts)
+var precompiledTemplatesJs = nunjucks.precompile("templates/interface.nunjucks.html", precompileOpts);
+fs.writeFileSync('public/templates.js', precompiledTemplatesJs, 'utf8');
 
 console.log("Copying files needed by public web content at run-time");
 
-cp.sync("node_modules/web3/dist/web3.js", "public/web3.js");
+var minStr = "";
+cp.sync("node_modules/web3/dist/web3" + minStr + ".js", "public/web3.js");
+cp.sync("node_modules/nunjucks/browser/nunjucks-slim" + minStr + ".js", "public/nunjucks-slim.js");

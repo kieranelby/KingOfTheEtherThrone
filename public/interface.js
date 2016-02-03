@@ -26,17 +26,17 @@ function getLiveContract(config) {
   return kingOfTheEtherThrone;
 }
 
-function renderDataFromContract(kingOfTheEtherThrone) {
+function renderDataFromContract(config, web3, kingOfTheEtherThrone) {
   var uiArea = document.getElementById("interfacePlaceholder");
   var currentClaimPrice = web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
-  // TODO
-  uiArea.innerHtml = currentClaimPrice;
+  var templateContext = {
+  };
+  var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
+  uiArea.innerHtml = interfaceHtml;
 }
 
-web3 = new Web3();
+function createInterface(config) {
+  web3 = new Web3();
+  renderDataFromContract(config, web3, contract);
+}
 
-var config = {
-  contractAddress: '0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e'
-};
-
-renderDataFromContract(config, contract);
