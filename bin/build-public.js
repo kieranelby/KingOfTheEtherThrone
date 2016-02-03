@@ -92,7 +92,7 @@ console.log("got lastUpdatedBlockTimestamp of " + lastUpdatedBlockTimestamp);
 
 console.log("Using template to generate README markdown for git and for the website ...");
 
-var readmeTemplateSource = fs.readFileSync('templates/README.md.nunjucks', 'utf8');
+var readmeTemplateSource = fs.readFileSync('templates/README.nunjucks.md', 'utf8');
 var readmeContext = {
   targetIsGit: false,
   targetIsWeb: false,
@@ -121,12 +121,18 @@ var readmeHtml = marked(webReadMeMarkdown);
 
 console.log("Using template to write home-page html ...");
 
-var indexTemplateSource = fs.readFileSync('templates/index.html.nunjucks', 'utf8');
+var indexTemplateSource = fs.readFileSync('templates/index.nunjucks.html', 'utf8');
 var indexContext = {
   readmeHtml: readmeHtml
 };
 var indexHtml = nunjucks.renderString(indexTemplateSource, indexContext);
 fs.writeFileSync('public/index.html', indexHtml, 'utf8');
+
+console.log("Pre-compiling templates needed by public web content at run-time");
+
+// TODO - API confusing here ...
+var precompileOpts = {};
+nunjucks.precompile("interface.nunjucks.html", precompileOpts)
 
 console.log("Copying files needed by public web content at run-time");
 
