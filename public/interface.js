@@ -9,13 +9,14 @@
 //
 
 function getContract(config, web3) {
-  //return getLiveContract();
-  return getFakeContract(config, web3);
+  return getLiveContract(config, web3);
+  //return getFakeContract(config, web3);
 }
 
 function getFakeContract(config, web3) {
   var kingOfTheEtherThrone = {};
-  kingOfTheEtherThrone.currentClaimPrice = function() { return '125000000000'; };
+  kingOfTheEtherThrone.currentClaimPrice = function() { return '125000000000000'; };
+  kingOfTheEtherThrone.numberOfMonarchs = function() { return 3; };
   return kingOfTheEtherThrone;
 }
 
