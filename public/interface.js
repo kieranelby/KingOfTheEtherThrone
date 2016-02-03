@@ -50,11 +50,12 @@ function attachEvents(web3, kingOfTheEtherThrone) {
   var claimThroneButton = document.getElementById('claimThroneButton');
   // TODO - error handling !!!
   claimThroneButton.onclick = function() {
-    kingOfTheEtherThrone.claimThrone(
-    document.getElementById('yourNameInput').value,
-    { from: web3.eth.accounts[0],
-      value: kingOfTheEtherThrone.currentClaimPrice(),
-      gas: 500000 } );
+    var result = kingOfTheEtherThrone.claimThrone(
+      document.getElementById('yourNameInput').value,
+      { from: web3.eth.accounts[0],
+        value: kingOfTheEtherThrone.currentClaimPrice(),
+        gas: 500000 } );
+    alert("result = " + result);
   };
   var monarchNumberSelect = document.getElementById('monarchNumberSelect');
 }
