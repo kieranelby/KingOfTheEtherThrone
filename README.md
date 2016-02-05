@@ -17,6 +17,7 @@ This is all very pre-release and buggy - might switch to a new contract soon!
   - [via Javascript console](#PayWithJavascript)
   - [using chain explorers](#InteractChainExplorers)
 - [Contract Details](#TheContract)
+- [Hall of Monarchs](#GreatHall")
 - [Other Bits and Pieces](#BitsAndBobs)
 - [And Finally](#AndFinally)
 
@@ -39,7 +40,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-05T04:16:37.000Z, the illustrious current ruler of the Ether Throne is **DONKEYTHIEF**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T22:14:59.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T22:17:31.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
@@ -150,6 +151,7 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
+|Current|DONKEYTHIEF (0xa1e81f015e1185d8e5b1bfc6e0155180779638af)|0.170859375 ether|
 |7|WORLDSSTRONGESTCAT (0x363be44335d8b8d9cc7447913a72d077041bbfba)|0.11390625 ether|
 |6|pacov2kile (0xbc845f440de1419a540cfe1d6d445b9cc8e38427)|0.0759375 ether|
 |5|vamsi (0xbb101ae8ac3cec6e26575b7d6446ee1f91d83c1d)|0.050625 ether|
@@ -158,6 +160,8 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 |2|Kieran II (0xa082de4736e831c026cce4c281a80ae6b196a462)|0.015 ether|
 |1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
 ||[Vacant]|0 ether|
+
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T22:17:31.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
