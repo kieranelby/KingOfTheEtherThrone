@@ -79,12 +79,14 @@ var KingOfTheEtherDapp = (function () {
   var claimThrone = function(e) {
     updateStatus('busy', 'Trying to execute contract with payment ...');
     try {
-        var result = throne.claimThrone(
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+      var result = throne.claimThrone(
         templateContext.yourName,
-        { from: web3.eth.defaultAccount,
+        {
+          from: web3.eth.defaultAccount,
           value: throne.currentClaimPrice(),
-          gas: 500000 }
-      );
+          gas: 500000
+        });
       updateStatus('good', 'Hmm, not sure if it worked, got result of: ' + result.toString());
     } catch (ex) {
       updateStatus('bad', 'Failed to claim throne due to ' + ex.toString());
