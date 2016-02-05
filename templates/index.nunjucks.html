@@ -37,9 +37,10 @@
   <script type="text/javascript">
   <!--
   var interfaceConfig = {
-    contractAddress: '0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e'
+    contractAbi: {{contractAbiJson | safe}},
+    contractAddress: '{{contractAddress}}'
   };
-  createInterface(interfaceConfig);
+  KingOfTheEtherDapp.init(interfaceConfig);
   // -->
   </script>
 </body>

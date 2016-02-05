@@ -1,5 +1,16 @@
 <form id="interfaceForm" class="pure-form pure-form-aligned">
   <fieldset>
+    <legend>Status</legend>
+    <div class="pure-control-group">
+      <label for="interfaceStatus">Status</label>
+      <input id="interfaceStatus" type="text" value="{{interfaceStatus}}" readonly>
+    </div>
+    <div class="pure-control-group">
+      <label>&nbsp;</label>
+      <button id="refreshInterfaceButton" class="pure-button">Refresh</button>
+    </div>
+  </fieldset>
+  <fieldset>
     <legend>Become the Monarch</legend>
     <div class="pure-control-group">
       <label for="currentClaimPriceInput">Current Claim Price</label>
