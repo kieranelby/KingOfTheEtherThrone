@@ -123,7 +123,10 @@ console.log("Using template to write home-page html ...");
 
 var indexTemplateSource = fs.readFileSync('templates/index.nunjucks.html', 'utf8');
 var indexContext = {
-  readmeHtml: readmeHtml
+  readmeHtml: readmeHtml,
+  contractAddress: contractAddress,
+  contractAbi: contractAbi,
+  cacheBuster: (new Date()).getTime()
 };
 var indexHtml = nunjucks.renderString(indexTemplateSource, indexContext);
 fs.writeFileSync('public/index.html', indexHtml, 'utf8');

@@ -2,6 +2,10 @@
 
 An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
 
+## Warning
+
+This is under development - the contract may be replaced with a new one.
+
 ## What does it do?
 
 The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:
@@ -13,7 +17,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 - The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.
 - The new claim price for the throne will go up by 50%, to 15 ether.
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
-- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to {{startingClaimPrice}}. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?
+- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to {{startingClaimPrice}}. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right? **TODO - not implemented yet**
 
 ## Who is the Monarch?
 
