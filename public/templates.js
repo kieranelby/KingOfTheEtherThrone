@@ -6,7 +6,7 @@ var output = "";
 try {
 var parentTemplate = null;
 output += "<form id=\"interfaceForm\" class=\"pure-form pure-form-aligned\">\n  <fieldset>\n    <legend>Status</legend>\n    <div class=\"pure-control-group\">\n      <label for=\"interfaceStatus\">Status</label>\n      <input id=\"interfaceStatus\" type=\"text\" value=\"";
-output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "interfaceStatus"), env.opts.autoescape);
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "statusText"), env.opts.autoescape);
 output += "\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label>&nbsp;</label>\n      <button id=\"refreshInterfaceButton\" class=\"pure-button\">Refresh</button>\n    </div>\n  </fieldset>\n  <fieldset>\n    <legend>Become the Monarch</legend>\n    <div class=\"pure-control-group\">\n      <label for=\"currentClaimPriceInput\">Current Claim Price</label>\n      <input id=\"currentClaimPriceInput\" type=\"text\" value=\"";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "currentClaimPrice"), env.opts.autoescape);
 output += "\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"yourNameInput\">Your Regal Name</label>\n      <input id=\"yourNameInput\" type=\"text\" value=\"";
