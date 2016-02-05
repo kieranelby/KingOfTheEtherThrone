@@ -1,6 +1,10 @@
 # King of the Ether Throne
 
-An Ethereum DApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
+An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
+
+## Warning
+
+This is all very pre-release and buggy - might switch to referring to a new contract soon!
 
 ## What does it do?
 
@@ -13,32 +17,29 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 - The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.
 - The new claim price for the throne will go up by 50%, to 15 ether.
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
-- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?
+- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right? **TODO - not implemented yet**
 
 ## Who is the Monarch?
 
-The current ruler of the Ether Throne is **Kieran**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
+Since 2016-02-05T04:16:37.000Z, the illustrious current ruler of the Ether Throne is **DONKEYTHIEF**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page; read on for how you can ask the Ethereum blockchain to determine the ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T07:37:55.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **0.0759375 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **0.2562890625 ether**.
 
-Here's how you can Pay:
+Here's how you can pay the claim price and rule the Ether ...
 
-### Pay Using an Ethereum DApp Browser (Mist, MIX, AlethZero)
+### Pay Using an Ethereum ÐApp Browser (e.g. Mist)
 
-It's all a bit hemorrhaging-edge, but if you visit [the live kingoftheether.com page](http://www.kingoftheether.com/) - not in your normal browser, but inside a special Ethereum DApp browser such as:
+It's all a bit hemorrhaging-edge, but if you visit [the live kingoftheether.com page](http://www.kingoftheether.com/) - not in your normal browser, but inside a special Ethereum ÐApp browser such as:
 
 * [Mist developer preview](https://github.com/ethereum/mist/releases/tag/0.3.6) 
-* [Mix / AlethZero](https://www.gitbook.com/book/gavofyork/turboethereum/details)
 
-then you should see an interface appear where you can interact with the contract via your local Ethereum node.
+then you should see the ÐApp interface appear where you can interact with the contract via your local Ethereum node.
 
-<div id="interfacePlaceholder" class="notWorking">
-**Sorry, this web page couldn't seem to talk to your Ethereum DApp Browser. We tried `http://localhost:8545`.**
-</div>
+If that doesn't work, read on ...
 
 ### Pay by Adding the Contract in the Mist Wallet
 
@@ -48,13 +49,13 @@ After you've added the Contract, if you click "Show Contract Information", you s
 
 Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
 
-This works in version 0.3.8 of the wallet client on Windows, anyway ...
+This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good. Read on for more ways ...
 
 ### Pay by Sending a Manual Payment
 
-You can manually send your payment to `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`.
+You can simply manually send your payment to `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
 
-If another monarch comes along and takes your throne, we'll send your compensation payment to the address you sent your payment from - so make sure you send it from an address you control.
+If another monarch comes along and takes your throne, we'll send your compensation payment to the address you sent your payment from - so make sure you send the payment from an address you control.
 
 We'll use your Ethereum address as your name, though if you like you can put your name in the data field - might need to convert from ASCII. e.g. with the geth Javascript console:
 
@@ -68,15 +69,17 @@ eth.sendTransaction({
 });
 ```
 
+Please keep the length of your name to less than 20 letters - some ÐApp software gets confused by long names.
+
 See above for the current claim price of the throne (don't worry too much about getting it wrong, it will refund you if you pay too little / too much).
 
-### Web3 Javascript API
+### Using the Web3 Javascript API
 
 If you're running a geth node, you can interact with the contract using a little Javascript like this:
 
 ```
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract([object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]);
+var kingOfTheEtherThroneContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},{"inputs":[],"type":"constructor"}]);
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e');
@@ -92,7 +95,7 @@ kingOfTheEtherThrone.claimThrone(
     gas: 500000 } )
 ```
 
-### Chain Explorers
+### Using Chain Explorers
 
 You can watch transactions and storage changes on chain viewers like [https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e], [https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e], and [https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e]. Some don't seem to be very good at showing transactions generated by the contract though.
 
@@ -110,7 +113,7 @@ You can use these details to interact with the King of the Ether Throne contract
 #### JSON INTERFACE (CONTRACT ABI)
 
 ```
-[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},{"inputs":[],"type":"constructor"}]
 ```
 
 #### CONTRACT SOURCE CODE
@@ -119,9 +122,16 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 
 ## Hall of Past Monarchs
 
-|Number|Name|Account|Claim Price Paid|
-|---|---|---|---|
-|?|Kieran the Old|?|?|
+|Number|Name|Claim Price Paid|
+|---|---|---|
+|7|WORLDSSTRONGESTCAT (0x363be44335d8b8d9cc7447913a72d077041bbfba)|0.11390625 ether|
+|6|pacov2kile (0xbc845f440de1419a540cfe1d6d445b9cc8e38427)|0.0759375 ether|
+|5|vamsi (0xbb101ae8ac3cec6e26575b7d6446ee1f91d83c1d)|0.050625 ether|
+|4|King Kieran the Sleepy (0x2f88180369377869a1bc5ae807416f72d736c206)|0.03375 ether|
+|3|0x4b696572616e20494949 (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.0225 ether|
+|2|Kieran II (0xa082de4736e831c026cce4c281a80ae6b196a462)|0.015 ether|
+|1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
+||[Vacant]|0 ether|
 
 ## Other Bits and Pieces
 
@@ -139,7 +149,7 @@ This contract was somewhat inspired by http://ethereumpyramid.com/ (to which thi
 
 ### Can you make me a throne too?
 
-Hmm, perhaps we need a contract for creating thrones (for a small commission, of course) ...
+Hmm, perhaps we need a contract for creating thrones (for a small commission, of course) ... drop me an email if interested.
 
 ### I think something went wrong. Can I have my money back?
 

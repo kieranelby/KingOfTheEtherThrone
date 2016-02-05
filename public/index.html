@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <title>King of the Ether Throne</title>
   <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
   <style>
   .content {
@@ -15,13 +16,21 @@
     border: 1px solid black;
     padding: 2px;
   }
+  .notWorking {
+    background-color: #ffcccc;
+  }
+  .good {
+    background-color: #ccffcc;
+  }
   </style>
 </head>
 <body>
   <div class="content-wrapper">
     <div class="content">
       <h1 id="king-of-the-ether-throne">King of the Ether Throne</h1>
-<p>An Ethereum DApp (a &quot;contract&quot;), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
+<p>An Ethereum ÐApp (a &quot;contract&quot;), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
+<h2 id="warning">Warning</h2>
+<p>This is all very pre-release and buggy - might switch to referring to a new contract soon!</p>
 <h2 id="what-does-it-do-">What does it do?</h2>
 <p>The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:</p>
 <ul>
@@ -32,33 +41,34 @@
 <li>The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.</li>
 <li>The new claim price for the throne will go up by 50%, to 15 ether.</li>
 <li>If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.</li>
-<li>But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can&#39;t give you back your 10 ether because it was given to the previous monarch). Surely you&#39;ll find a worthy successor within 72 hours though ... right?</li>
+<li>But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can&#39;t give you back your 10 ether because it was given to the previous monarch). Surely you&#39;ll find a worthy successor within 72 hours though ... right? <strong>TODO - not implemented yet</strong></li>
 </ul>
 <h2 id="who-is-the-monarch-">Who is the Monarch?</h2>
-<p>The current ruler of the Ether Throne is <strong>Kieran</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.</p>
-<p><em>NB: You don&#39;t have to trust this page; read on for how you can ask the Ethereum blockchain to determine the ruler.</em></p>
+<p>Since 2016-02-05T04:16:37.000Z, the illustrious current ruler of the Ether Throne is <strong>DONKEYTHIEF</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.</p>
+<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-05T07:37:55.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.</em></p>
 <h2 id="how-can-i-rule-the-ether-">How Can I Rule the Ether?</h2>
-<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>0.0759375 ether</strong>.</p>
-<p>Here&#39;s how you can Pay:</p>
-<h3 id="pay-using-an-ethereum-dapp-browser-mist-mix-alethzero-">Pay Using an Ethereum DApp Browser (Mist, MIX, AlethZero)</h3>
-<p>It&#39;s all a bit hemorrhaging-edge, but if you visit this page - not in your normal browser, but inside a special Ethereum DApp browser such as:</p>
+<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>0.2562890625 ether</strong>.</p>
+<p>Here&#39;s how you can pay the claim price and rule the Ether ...</p>
+<h3 id="pay-using-an-ethereum-app-browser-e-g-mist-">Pay Using an Ethereum ÐApp Browser (e.g. Mist)</h3>
+<p>It&#39;s all a bit hemorrhaging-edge, but if you visit this page - not in your normal browser, but inside a special Ethereum ÐApp browser such as:</p>
 <ul>
 <li><a href="https://github.com/ethereum/mist/releases/tag/0.3.6">Mist developer preview</a> </li>
-<li><a href="https://www.gitbook.com/book/gavofyork/turboethereum/details">Mix / AlethZero</a></li>
 </ul>
-<p>then you should see an interface  appear here where you can interact with the contract via your local Ethereum node:</p>
+<p>then you should see the ÐApp interface  appear here where you can interact with the contract via your local Ethereum node:</p>
 <div id="interfacePlaceholder" class="notWorking">
-<strong>Sorry, this web page couldn&#39;t seem to talk to your Ethereum DApp Browser. We tried <code>http://localhost:8545</code>.</strong>
+<strong>Sorry, this web page couldn&#39;t seem to create the ÐApp interface.</strong>
 </div>
 
+
+<p>If that doesn&#39;t work, read on ...</p>
 <h3 id="pay-by-adding-the-contract-in-the-mist-wallet">Pay by Adding the Contract in the Mist Wallet</h3>
 <p>If you&#39;re using the (still experimental!) Mist Ethereum Wallet - e.g. from [<a href="https://github.com/ethereum/mist/releases">https://github.com/ethereum/mist/releases</a>] - go to Contracts -&gt; Add Contract, then fill in the details from the &quot;Contract Details&quot; section below. Yes, you do need to copy and paste that big long bit of JSON.</p>
 <p>After you&#39;ve added the Contract, if you click &quot;Show Contract Information&quot;, you should be able to see the Current Claim Price on the left and a &#39;claimThrone&#39; function you can select and execute on the right.</p>
 <p>Don&#39;t forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.</p>
-<p>This works in version 0.3.8 of the wallet client on Windows, anyway ...</p>
+<p>This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn&#39;t much good. Read on for more ways ...</p>
 <h3 id="pay-by-sending-a-manual-payment">Pay by Sending a Manual Payment</h3>
-<p>You can manually send your payment to <code>0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</code>.</p>
-<p>If another monarch comes along and takes your throne, we&#39;ll send your compensation payment to the address you sent your payment from - so make sure you send it from an address you control.</p>
+<p>You can simply manually send your payment to <code>0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</code>. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.</p>
+<p>If another monarch comes along and takes your throne, we&#39;ll send your compensation payment to the address you sent your payment from - so make sure you send the payment from an address you control.</p>
 <p>We&#39;ll use your Ethereum address as your name, though if you like you can put your name in the data field - might need to convert from ASCII. e.g. with the geth Javascript console:</p>
 <pre><code>eth.sendTransaction({
   from: eth.accounts[0],
@@ -67,11 +77,12 @@
   gas: 500000,
   data: web3.fromAscii(&#39;Your Kingly Name&#39;)
 });
-</code></pre><p>See above for the current claim price of the throne (don&#39;t worry too much about getting it wrong, it will refund you if you pay too little / too much).</p>
-<h3 id="web3-javascript-api">Web3 Javascript API</h3>
+</code></pre><p>Please keep the length of your name to less than 20 letters - some ÐApp software gets confused by long names.</p>
+<p>See above for the current claim price of the throne (don&#39;t worry too much about getting it wrong, it will refund you if you pay too little / too much).</p>
+<h3 id="using-the-web3-javascript-api">Using the Web3 Javascript API</h3>
 <p>If you&#39;re running a geth node, you can interact with the contract using a little Javascript like this:</p>
 <pre><code>// tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract([object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]);
+var kingOfTheEtherThroneContract = web3.eth.contract([{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;}]);
 
 // tell web3 where the contract is
 var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(&#39;0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e&#39;);
@@ -85,7 +96,7 @@ kingOfTheEtherThrone.claimThrone(
   { from: eth.accounts[0],
     value: kingOfTheEtherThrone.currentClaimPrice(),
     gas: 500000 } )
-</code></pre><h3 id="chain-explorers">Chain Explorers</h3>
+</code></pre><h3 id="using-chain-explorers">Using Chain Explorers</h3>
 <p>You can watch transactions and storage changes on chain viewers like [<a href="https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</a>], [<a href="https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</a>], and [<a href="https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</a>]. Some don&#39;t seem to be very good at showing transactions generated by the contract though.</p>
 <h2 id="contract-details">Contract Details</h2>
 <p>You can use these details to interact with the King of the Ether Throne contract:</p>
@@ -94,7 +105,7 @@ kingOfTheEtherThrone.claimThrone(
 <h4 id="contract-address">CONTRACT ADDRESS</h4>
 <p><code>0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</code></p>
 <h4 id="json-interface-contract-abi-">JSON INTERFACE (CONTRACT ABI)</h4>
-<pre><code>[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+<pre><code>[{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;}]
 </code></pre><h4 id="contract-source-code">CONTRACT SOURCE CODE</h4>
 <p>The Solidarity source code for the contract lives at [<a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol">https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol</a>]. It was compiled with solidity version <code>v0.2.0-2016-01-20-67c855c</code> without optimization, just in case you want to verify the code matches the bytecode.</p>
 <h2 id="hall-of-past-monarchs">Hall of Past Monarchs</h2>
@@ -103,16 +114,49 @@ kingOfTheEtherThrone.claimThrone(
 <tr>
 <th>Number</th>
 <th>Name</th>
-<th>Account</th>
 <th>Claim Price Paid</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>?</td>
-<td>Kieran the Old</td>
-<td>?</td>
-<td>?</td>
+<td>7</td>
+<td>WORLDSSTRONGESTCAT (0x363be44335d8b8d9cc7447913a72d077041bbfba)</td>
+<td>0.11390625 ether</td>
+</tr>
+<tr>
+<td>6</td>
+<td>pacov2kile (0xbc845f440de1419a540cfe1d6d445b9cc8e38427)</td>
+<td>0.0759375 ether</td>
+</tr>
+<tr>
+<td>5</td>
+<td>vamsi (0xbb101ae8ac3cec6e26575b7d6446ee1f91d83c1d)</td>
+<td>0.050625 ether</td>
+</tr>
+<tr>
+<td>4</td>
+<td>King Kieran the Sleepy (0x2f88180369377869a1bc5ae807416f72d736c206)</td>
+<td>0.03375 ether</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0x4b696572616e20494949 (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)</td>
+<td>0.0225 ether</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Kieran II (0xa082de4736e831c026cce4c281a80ae6b196a462)</td>
+<td>0.015 ether</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)</td>
+<td>0.01 ether</td>
+</tr>
+<tr>
+<td></td>
+<td>[Vacant]</td>
+<td>0 ether</td>
 </tr>
 </tbody>
 </table>
@@ -124,7 +168,7 @@ kingOfTheEtherThrone.claimThrone(
 <p>The difference with Ethereum is that you don&#39;t have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.</p>
 <p>This contract was somewhat inspired by <a href="http://ethereumpyramid.com/">http://ethereumpyramid.com/</a> (to which this is in no way affiliated).</p>
 <h3 id="can-you-make-me-a-throne-too-">Can you make me a throne too?</h3>
-<p>Hmm, perhaps we need a contract for creating thrones (for a small commission, of course) ...</p>
+<p>Hmm, perhaps we need a contract for creating thrones (for a small commission, of course) ... drop me an email if interested.</p>
 <h3 id="i-think-something-went-wrong-can-i-have-my-money-back-">I think something went wrong. Can I have my money back?</h3>
 <p>Long answer: Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So you&#39;ll agree that refunds are impossible and unethical.</p>
 <p>Short answer: No.</p>
@@ -133,7 +177,18 @@ kingOfTheEtherThrone.claimThrone(
 
     </div>
   </div>
-  <script type="text/javascript" src="interface.js"></script>
-  <script type="text/javascript" src="web3.js"></script>
+  <script type="text/javascript" src="web3.js?v=1454657938744"></script>
+  <script type="text/javascript" src="nunjucks-slim.js?v=1454657938744"></script>
+  <script type="text/javascript" src="templates.js?v=1454657938744"></script>
+  <script type="text/javascript" src="interface.js?v=1454657938744"></script>
+  <script type="text/javascript">
+  <!--
+  var interfaceConfig = {
+    contractAbi: [{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},{"inputs":[],"type":"constructor"}],
+    contractAddress: '0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e'
+  };
+  KingOfTheEtherDapp.init(interfaceConfig);
+  // -->
+  </script>
 </body>
 </html>
