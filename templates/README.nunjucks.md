@@ -50,14 +50,18 @@ The power of the Ether Throne can be yours for the **current claim price** of ju
 Here's how you can pay the claim price and rule the Ether ...
 
 <a name="PayDappBrowser"/>
-### Pay Using an Ethereum ÐApp Browser (e.g. Mist)
+### Pay Using an Ethereum ÐApp Browser
 
-It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live kingoftheether.com page](http://www.kingoftheether.com/){% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum ÐApp browser such as:
+It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live kingoftheether.com page](http://www.kingoftheether.com/){% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum ÐApp browser such as [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear right here in this section.{% endif %}
 
-* [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) 
+This may also work in a normal browser (Chrome, Firefox) if you have the Ethereum geth client on running locally with RPC calls enabled - e.g.
+```
+# warning: insecure
+geth --rpc --rpccorsdomain '*'
+```
 
-then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear here where you can interact with the contract via your local Ethereum node:
-
+{% if targetIsWeb %}
+Anyway, here's the ÐApp interface. You might need to unlock your wallet account to make it work:
 <div id="interfacePlaceholder" class="badMood">
 **Sorry, this web page couldn't seem to create the ÐApp interface.**
 </div>
