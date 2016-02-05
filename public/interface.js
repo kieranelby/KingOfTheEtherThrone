@@ -69,7 +69,15 @@ var KingOfTheEtherDapp = (function () {
     }
   };
 
+  var updateName = function() {
+    var yourNameInput = document.getElementById('yourNameInput');
+    if (yourNameInput) {
+      templateContext.yourName = yourNameInput.value;
+    }
+  }
+
   var renderUI = function() {
+    updateName();
     var uiArea = document.getElementById('interfacePlaceholder');
     var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
     uiArea.innerHTML = interfaceHtml;
@@ -78,8 +86,8 @@ var KingOfTheEtherDapp = (function () {
 
   var claimThrone = function(e) {
     updateStatus('busy', 'Trying to execute contract with payment ...');
+    updateName();
     try {
-      web3.eth.defaultAccount = web3.eth.accounts[0];
       var result = throne.claimThrone(
         templateContext.yourName,
         {
@@ -87,7 +95,7 @@ var KingOfTheEtherDapp = (function () {
           value: throne.currentClaimPrice(),
           gas: 500000
         });
-      updateStatus('good', 'Hmm, not sure if it worked, got result of: ' + result.toString());
+      updateStatus('good', 'Hmm, might have worked, check your wallet balance - got result of: ' + result.toString());
     } catch (ex) {
       updateStatus('bad', 'Failed to claim throne due to ' + ex.toString());
     }
