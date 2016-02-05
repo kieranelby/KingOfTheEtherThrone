@@ -25,7 +25,7 @@ var KingOfTheEtherDapp = (function () {
     if (console) {
       console.log(text);
     }
-  }
+  };
 
   var initWeb3 = function () {
     updateStatus('busy', 'Connecting to node...');
@@ -76,25 +76,25 @@ var KingOfTheEtherDapp = (function () {
     attachEvents();
   };
 
-  var claimThrone = function() {
+  var claimThrone = function(e) {
+    alert('hello'?);
     updateStatus('busy', 'Trying to execute contract with payment ...');
-    renderUI();
     try {
-      var result = throne.claimThrone(
+        var result = throne.claimThrone(
         templateContext.yourName,
         { from: web3.eth.defaultAccount,
           value: throne.currentClaimPrice(),
           gas: 500000 }
       );
       updateStatus('good', 'Hmm, not sure if it worked, got result of: ' + result.toString());
-    } catch (e) {
-      updateStatus('bad', 'Failed to claim throne due to ' + e.toString());
+    } catch (ex) {
+      updateStatus('bad', 'Failed to claim throne due to ' + ex.toString());
     }
     renderUI();
     return false;
   };
 
-  var refreshInterface = function() {
+  var refreshInterface = function(e) {
     readContractData();
     renderUI();
     return false;
