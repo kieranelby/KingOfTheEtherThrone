@@ -125,7 +125,7 @@ var indexTemplateSource = fs.readFileSync('templates/index.nunjucks.html', 'utf8
 var indexContext = {
   readmeHtml: readmeHtml,
   contractAddress: contractAddress,
-  contractAbi: contractAbi,
+  contractAbiJson: contractAbiJson,
   cacheBuster: (new Date()).getTime()
 };
 var indexHtml = nunjucks.renderString(indexTemplateSource, indexContext);
