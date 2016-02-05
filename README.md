@@ -38,14 +38,14 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since 2016-02-05T23:19:33.000Z, the illustrious current ruler of the Ether Throne is **Your Name**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
+Since 2016-02-05T23:27:15.000Z, the illustrious current ruler of the Ether Throne is **Your Name**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T23:24:19.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T23:39:09.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **0.38443359375 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **0.576650390625 ether**.
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -151,7 +151,8 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
-|Current|Your Name (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.2562890625 ether|
+|Current|Your Name (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.38443359375 ether|
+|9|Your Name (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.2562890625 ether|
 |8|DONKEYTHIEF (0xa1e81f015e1185d8e5b1bfc6e0155180779638af)|0.170859375 ether|
 |7|WORLDSSTRONGESTCAT (0x363be44335d8b8d9cc7447913a72d077041bbfba)|0.11390625 ether|
 |6|pacov2kile (0xbc845f440de1419a540cfe1d6d445b9cc8e38427)|0.0759375 ether|
@@ -162,7 +163,7 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 |1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T23:24:19.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T23:39:09.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
