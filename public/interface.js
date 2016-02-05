@@ -82,7 +82,9 @@ var KingOfTheEtherDapp = (function () {
     try {
       var result = throne.claimThrone(
         templateContext.yourName,
-        { value: throne.currentClaimPrice(), gas: 500000 }
+        { from: web3.eth.defaultAccount,
+          value: throne.currentClaimPrice(),
+          gas: 500000 }
       );
       updateStatus('good', 'Hmm, not sure if it worked, got result of: ' + result.toString());
     } catch (e) {
