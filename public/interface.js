@@ -26,7 +26,12 @@ var KingOfTheEtherDapp = (function () {
       // use the existing web3
     }
     if (typeof web3.eth.defaultAccount === 'undefined') {
-      web3.eth.defaultAccount = web3.eth.accounts[0];
+      try {
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+      } catch (e) {
+        templateContext.statusText = 'Error: ' + e.toString();
+        templateContext.good = false;
+      }
     }
   };
 

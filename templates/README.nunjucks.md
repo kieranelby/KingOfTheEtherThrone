@@ -4,7 +4,7 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 
 ## Warning
 
-This is under development - the contract may be replaced with a new one.
+This is all very pre-release and buggy - might switch to referring to a new contract soon!
 
 ## What does it do?
 
