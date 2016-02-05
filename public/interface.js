@@ -119,7 +119,10 @@ var KingOfTheEtherDapp = (function () {
   };
 
   return {
-    init: init
+    init: init,
+    reloadClicked: refreshInterface,
+    claimThroneClicked: claimThrone,
+    selectedMonarchChanged: function(e) { alert('TODO') }
   };
 
 })();
