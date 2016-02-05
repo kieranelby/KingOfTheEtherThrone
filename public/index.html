@@ -33,10 +33,21 @@
 <p>This is all very pre-release and buggy - might switch to a new contract soon!</p>
 <h2 id="contents">Contents</h2>
 <ul>
-<li><a href="#WhatItDo">What does it do</a></li>
-<li><a href="#WhoMonarch">What does it do</a></li>
+<li><a href="#WhatItDo">What does it do?</a></li>
+<li><a href="#WhoMonarch">Who is the Monarch?</a></li>
+<li><a href="#HowIRule">How Can I Rule the Ether?</a><ul>
+<li><a href="#PayDappBrowser">with a ÐApp browser</a></li>
+<li><a href="#PayAddContract">by adding the contract</a></li>
+<li><a href="#PayManually">manual payment</a></li>
+<li><a href="#PayWithJavascript">via Javascript console</a></li>
+<li><a href="#InteractChainExplorers">using chain explorers</a></li>
 </ul>
-<p><a name="WhatItDo"></p>
+</li>
+<li><a href="#TheContract">Contract Details</a></li>
+<li><a href="#BitsAndBobs">Other Bits and Pieces</a></li>
+<li><a href="#AndFinally">And Finally</a></li>
+</ul>
+<p><a name="WhatItDo"/></p>
 <h2 id="what-does-it-do-">What does it do?</h2>
 <p>The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:</p>
 <ul>
@@ -49,17 +60,19 @@
 <li>If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.</li>
 <li>But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can&#39;t give you back your 10 ether because it was given to the previous monarch). Surely you&#39;ll find a worthy successor within 72 hours though ... right? <strong>TODO - not implemented yet</strong></li>
 </ul>
-<p><a name="WhoMonarch"></p>
+<p><a name="WhoMonarch"/></p>
 <h2 id="who-is-the-monarch-">Who is the Monarch?</h2>
 <p>Since 2016-02-05T04:16:37.000Z, the illustrious current ruler of the Ether Throne is <strong>DONKEYTHIEF</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.</p>
-<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-05T21:10:39.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.</em></p>
+<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-05T21:22:47.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.</em></p>
+<p><a name="HowIRule"/></p>
 <h2 id="how-can-i-rule-the-ether-">How Can I Rule the Ether?</h2>
 <p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>0.2562890625 ether</strong>.</p>
 <p>Here&#39;s how you can pay the claim price and rule the Ether ...</p>
+<p><a name="PayDappBrowser"/></p>
 <h3 id="pay-using-an-ethereum-app-browser-e-g-mist-">Pay Using an Ethereum ÐApp Browser (e.g. Mist)</h3>
 <p>It&#39;s all a bit hemorrhaging-edge, but if you visit this page - not in your normal browser, but inside a special Ethereum ÐApp browser such as:</p>
 <ul>
-<li><a href="https://github.com/ethereum/mist/releases/tag/0.3.6">Mist developer preview</a> </li>
+<li><a href="https://github.com/ethereum/mist/releases/tag/0.3.6">Mist (developer preview)</a> </li>
 </ul>
 <p>then you should see the ÐApp interface  appear here where you can interact with the contract via your local Ethereum node:</p>
 <div id="interfacePlaceholder" class="notWorking">
@@ -68,11 +81,14 @@
 
 
 <p>If that doesn&#39;t work, read on ...</p>
+<p><a name="PayAddContract"/></p>
 <h3 id="pay-by-adding-the-contract-in-the-mist-wallet">Pay by Adding the Contract in the Mist Wallet</h3>
-<p>If you&#39;re using the (still experimental!) Mist Ethereum Wallet - e.g. from [<a href="https://github.com/ethereum/mist/releases">https://github.com/ethereum/mist/releases</a>] - go to Contracts -&gt; Add Contract, then fill in the details from the &quot;Contract Details&quot; section below. Yes, you do need to copy and paste that big long bit of JSON.</p>
+<p>If you&#39;re using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -&gt; Add Contract, then fill in the details from the &quot;Contract Details&quot; section below. Yes, you do need to copy and paste that big long bit of JSON.</p>
 <p>After you&#39;ve added the Contract, if you click &quot;Show Contract Information&quot;, you should be able to see the Current Claim Price on the left and a &#39;claimThrone&#39; function you can select and execute on the right.</p>
 <p>Don&#39;t forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.</p>
-<p>This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn&#39;t much good. Read on for more ways ...</p>
+<p>This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn&#39;t much good.</p>
+<p>Read on for more ways to pay ...</p>
+<p><a name="PayManually"/></p>
 <h3 id="pay-by-sending-a-manual-payment">Pay by Sending a Manual Payment</h3>
 <p>You can simply manually send your payment to <code>0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</code>. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.</p>
 <p>If another monarch comes along and takes your throne, we&#39;ll send your compensation payment to the address you sent your payment from - so make sure you send the payment from an address you control.</p>
@@ -86,6 +102,7 @@
 });
 </code></pre><p>Please keep the length of your name to less than 20 letters - some ÐApp software gets confused by long names.</p>
 <p>See above for the current claim price of the throne (don&#39;t worry too much about getting it wrong, it will refund you if you pay too little / too much).</p>
+<p><a name="PayWithJavascript"/></p>
 <h3 id="using-the-web3-javascript-api">Using the Web3 Javascript API</h3>
 <p>If you&#39;re running a geth node, you can interact with the contract using a little Javascript like this:</p>
 <pre><code>// tell web3 how to talk to the contract
@@ -103,8 +120,10 @@ kingOfTheEtherThrone.claimThrone(
   { from: eth.accounts[0],
     value: kingOfTheEtherThrone.currentClaimPrice(),
     gas: 500000 } )
-</code></pre><h3 id="using-chain-explorers">Using Chain Explorers</h3>
-<p>You can watch transactions and storage changes on chain viewers like [<a href="https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</a>], [<a href="https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</a>], and [<a href="https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</a>]. Some don&#39;t seem to be very good at showing transactions generated by the contract though.</p>
+</code></pre><p><a name="InteractChainExplorers"/></p>
+<h3 id="interacting-via-chain-explorers">Interacting via Chain Explorers</h3>
+<p>You can watch transactions and storage changes on chain viewers like [https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e], [https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e], and [https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e]. Some don&#39;t seem to be very good at showing transactions generated by the contract though.</p>
+<p><a name="TheContract"/></p>
 <h2 id="contract-details">Contract Details</h2>
 <p>You can use these details to interact with the King of the Ether Throne contract:</p>
 <h4 id="contract-name">CONTRACT NAME</h4>
@@ -114,7 +133,8 @@ kingOfTheEtherThrone.claimThrone(
 <h4 id="json-interface-contract-abi-">JSON INTERFACE (CONTRACT ABI)</h4>
 <pre><code>[{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;}]
 </code></pre><h4 id="contract-source-code">CONTRACT SOURCE CODE</h4>
-<p>The Solidarity source code for the contract lives at [<a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol">https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol</a>]. It was compiled with solidity version <code>v0.2.0-2016-01-20-67c855c</code> without optimization, just in case you want to verify the code matches the bytecode.</p>
+<p>The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity version <code>v0.2.0-2016-01-20-67c855c</code> without optimization, just in case you want to verify the code matches the bytecode.</p>
+<p><a name="GreatHall"/></p>
 <h2 id="hall-of-monarchs">Hall of Monarchs</h2>
 <table>
 <thead>
@@ -172,27 +192,29 @@ kingOfTheEtherThrone.claimThrone(
 </tr>
 </tbody>
 </table>
+<p><a name="BitsAndBobs"/></p>
 <h2 id="other-bits-and-pieces">Other Bits and Pieces</h2>
 <h3 id="how-much-is-the-commission-charge-">How much is the commission charge?</h3>
 <p>Two percent. This helps cover gas costs too.</p>
 <h3 id="haven-t-i-seen-something-like-this-before-">Haven&#39;t I seen something like this before?</h3>
 <p>Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemed to involve owning a magnificent gem or a special coin).</p>
 <p>The difference with Ethereum is that you don&#39;t have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.</p>
-<p>This contract was somewhat inspired by <a href="http://ethereumpyramid.com/">http://ethereumpyramid.com/</a> (to which this is in no way affiliated).</p>
+<p>This contract was somewhat inspired by http://ethereumpyramid.com/ (to which this is in no way affiliated).</p>
 <h3 id="can-you-make-me-a-throne-too-">Can you make me a throne too?</h3>
 <p>Hmm, perhaps we need a contract for creating thrones (for a small commission, of course) ... drop me an email if interested.</p>
 <h3 id="i-think-something-went-wrong-can-i-have-my-money-back-">I think something went wrong. Can I have my money back?</h3>
 <p>Long answer: Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So you&#39;ll agree that refunds are impossible and unethical.</p>
 <p>Short answer: No.</p>
-<h3 id="and-finally">And Finally</h3>
+<p><a name="AndFinally"/></p>
+<h2 id="and-finally">And Finally</h2>
 <p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockahin can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun. And if you suspect that spending cryptocurrencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
 
     </div>
   </div>
-  <script type="text/javascript" src="web3.js?v=1454706666899"></script>
-  <script type="text/javascript" src="nunjucks-slim.js?v=1454706666899"></script>
-  <script type="text/javascript" src="templates.js?v=1454706666899"></script>
-  <script type="text/javascript" src="interface.js?v=1454706666899"></script>
+  <script type="text/javascript" src="web3.js?v=1454707445336"></script>
+  <script type="text/javascript" src="nunjucks-slim.js?v=1454707445336"></script>
+  <script type="text/javascript" src="templates.js?v=1454707445336"></script>
+  <script type="text/javascript" src="interface.js?v=1454707445336"></script>
   <script type="text/javascript">
   <!--
   var interfaceConfig = {
