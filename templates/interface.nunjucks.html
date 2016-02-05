@@ -5,7 +5,7 @@
     <div>{{statusText}}</div>
     <div class="pure-control-group">
       <label>&nbsp;</label>
-      <button id="refreshInterfaceButton" class="pure-button">Reload</button>
+      <button id="refreshInterfaceButton" class="pure-button" onclick="KingOfTheEtherDapp.reloadClicked()">Reload</button>
     </div>
   </fieldset>
   <fieldset>
@@ -20,14 +20,14 @@
     </div>
     <div class="pure-control-group">
       <label>&nbsp;</label>
-      <button type="submit" id="claimThroneButton" class="pure-button pure-button-primary">Claim Throne</button>
+      <button type="submit" id="claimThroneButton" class="pure-button pure-button-primary" onclick="KingOfTheEtherDapp.claimThroneClicked()">Claim Throne</button>
     </div>
   </fieldset>
   <fieldset>
     <legend>View Hall of Great Monarchs</legend>
     <div class="pure-control-group">
       <label for="monarchNumberSelect">Number</label>
-      <select id="monarchNumberSelect">
+      <select id="monarchNumberSelect" onchange="KingOfTheEtherDapp.selectedMonarchChanged()">
         <option>-- Choose Monarch --</option>
         {% for monarchNumber in monarchNumbers %}
         <option value="{{monarchNumber}}" {% if monarchNumber == selectedMonarchNumber %}selected{% endif %}>{{monarchNumber}}</option>
