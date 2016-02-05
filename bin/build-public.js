@@ -80,8 +80,19 @@ var currentMonarch = decorateRawMonarch(currentMonarchRaw, numberOfMonarchs);
 
 var pastMonarchs = [];
 for (var i = numberOfMonarchs; i >=0 ; i--) {
-  var pastMonarchRaw = kingOfTheEtherThrone.pastMonarchs(i);
-  var pastMonarch = decorateRawMonarch(pastMonarchRaw, i);
+  try {
+    var pastMonarchRaw = kingOfTheEtherThrone.pastMonarchs(i);
+    var pastMonarch = decorateRawMonarch(pastMonarchRaw, i);
+  } catch (e) {
+    var pastMonarchRaw = {
+      etherAddress : 'unknown',
+      name : 'unknown',
+      claimPricePaid : 'unknown',
+      coronationTimestamp : 'unknown',
+      coronationTimestampReadable : 'unknown',
+      displayName : 'unknown'
+    };
+  }
   pastMonarchs.push(pastMonarch);
 }
 
