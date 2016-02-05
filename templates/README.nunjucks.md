@@ -67,7 +67,7 @@ If that doesn't work, read on ...
 <a name="PayAddContract"/>
 ### Pay by Adding the Contract in the Mist Wallet
 
-If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the details from the "Contract Details" section below. Yes, you do need to copy and paste that big long bit of JSON.
+If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the details from the [Contract Details](#TheContract) section below. Yes, you do need to copy and paste that big long bit of JSON.
 
 After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right.
 
