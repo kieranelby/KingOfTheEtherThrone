@@ -9,7 +9,7 @@ var KingOfTheEtherDapp = (function () {
   var config = {};
 
   var templateContext = {
-    good: false;
+    good: false,
     statusText: 'Initialising ...',
     yourName: 'Your Name',
     currentClaimPrice: 'Unknown',
