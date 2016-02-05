@@ -88,6 +88,9 @@ var KingOfTheEtherDapp = (function () {
     updateStatus('busy', 'Trying to execute contract with payment ...');
     updateName();
     try {
+      if (typeof web3.eth.defaultAccount === 'undefined') {
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+      }
       var result = throne.claimThrone(
         templateContext.yourName,
         {
