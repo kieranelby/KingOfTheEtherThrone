@@ -77,7 +77,6 @@ var KingOfTheEtherDapp = (function () {
   };
 
   var claimThrone = function(e) {
-    alert('hello');
     updateStatus('busy', 'Trying to execute contract with payment ...');
     try {
         var result = throne.claimThrone(
