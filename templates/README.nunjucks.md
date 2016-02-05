@@ -8,10 +8,19 @@ This is all very pre-release and buggy - might switch to a new contract soon!
 
 ## Contents
 
-- [What does it do](#WhatItDo)
-- [What does it do](#WhoMonarch)
+- [What does it do?](#WhatItDo)
+- [Who is the Monarch?](#WhoMonarch)
+- [How Can I Rule the Ether?](#HowIRule)
+  - [with a ÐApp browser](#PayDappBrowser)
+  - [by adding the contract](#PayAddContract)
+  - [manual payment](#PayManually)
+  - [via Javascript console](#PayWithJavascript)
+  - [using chain explorers](#InteractChainExplorers)
+- [Contract Details](#TheContract)
+- [Other Bits and Pieces](#BitsAndBobs)
+- [And Finally](#AndFinally)
 
-<a name="WhatItDo">
+<a name="WhatItDo"/>
 ## What does it do?
 
 The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:
@@ -25,24 +34,26 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
 - But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to {{startingClaimPrice}}. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right? **TODO - not implemented yet**
 
-<a name="WhoMonarch">
+<a name="WhoMonarch"/>
 ## Who is the Monarch?
 
 Since {{currentMonarch.coronationTimestampReadable}}, the illustrious current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
 *NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
+<a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
 The power of the Ether Throne can be yours for the **current claim price** of just **{{currentClaimPrice}}**.
 
 Here's how you can pay the claim price and rule the Ether ...
 
+<a name="PayDappBrowser"/>
 ### Pay Using an Ethereum ÐApp Browser (e.g. Mist)
 
 It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live kingoftheether.com page](http://www.kingoftheether.com/){% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum ÐApp browser such as:
 
-* [Mist developer preview](https://github.com/ethereum/mist/releases/tag/0.3.6) 
+* [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) 
 
 then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear here where you can interact with the contract via your local Ethereum node:
 
@@ -53,6 +64,7 @@ then you should see the ÐApp interface {% if targetIsGit %}appear where you can
 
 If that doesn't work, read on ...
 
+<a name="PayAddContract"/>
 ### Pay by Adding the Contract in the Mist Wallet
 
 If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the details from the "Contract Details" section below. Yes, you do need to copy and paste that big long bit of JSON.
@@ -61,8 +73,11 @@ After you've added the Contract, if you click "Show Contract Information", you s
 
 Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
 
-This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good. Read on for more ways ...
+This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good.
 
+Read on for more ways to pay ...
+
+<a name="PayManually"/>
 ### Pay by Sending a Manual Payment
 
 You can simply manually send your payment to `{{contractAddress}}`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
@@ -85,6 +100,7 @@ Please keep the length of your name to less than 20 letters - some ÐApp softwar
 
 See above for the current claim price of the throne (don't worry too much about getting it wrong, it will refund you if you pay too little / too much).
 
+<a name="PayWithJavascript"/>
 ### Using the Web3 Javascript API
 
 If you're running a geth node, you can interact with the contract using a little Javascript like this:
@@ -107,10 +123,12 @@ kingOfTheEtherThrone.claimThrone(
     gas: 500000 } )
 ```
 
-### Using Chain Explorers
+<a name="InteractChainExplorers"/>
+### Interacting via Chain Explorers
 
 You can watch transactions and storage changes on chain viewers like [https://etherchain.org/account/{{contractAddress}}], [https://etherscan.io/address/{{contractAddress}}], and [https://live.ether.camp/account/{{contractAddress}}]. Some don't seem to be very good at showing transactions generated by the contract though.
 
+<a name="TheContract"/>
 ## Contract Details
 
 You can use these details to interact with the King of the Ether Throne contract:
@@ -132,6 +150,7 @@ You can use these details to interact with the King of the Ether Throne contract
 
 The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
 
+<a name="GreatHall"/>
 ## Hall of Monarchs
 
 |Number|Name|Claim Price Paid|
@@ -140,6 +159,7 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 |{{pastMonarch.number}}|{{pastMonarch.displayName}}|{{pastMonarch.claimPricePaid}}|
 {%- endfor %}
 
+<a name="BitsAndBobs"/>
 ## Other Bits and Pieces
 
 ### How much is the commission charge?
@@ -164,6 +184,7 @@ Long answer: Ah. Well, you see, one downside of trustless autonomous contracts e
 
 Short answer: No.
 
-### And Finally
+<a name="AndFinally"/>
+## And Finally
 
 This is intended as a bit of fun and to explore what a contract running on the Ethereum blockahin can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending cryptocurrencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).
