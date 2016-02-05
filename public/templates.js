@@ -5,7 +5,9 @@ var colno = null;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<form id=\"interfaceForm\" class=\"pure-form pure-form-aligned\">\n  <fieldset>\n    <legend>Status</legend>\n    <div>";
+output += "<div class=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "mood"), env.opts.autoescape);
+output += "Mood\">\n<form id=\"interfaceForm\" class=\"pure-form pure-form-aligned\">\n  <fieldset>\n    <legend>Status</legend>\n    <div>";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "statusText"), env.opts.autoescape);
 output += "</div>\n    <div class=\"pure-control-group\">\n      <label>&nbsp;</label>\n      <button id=\"refreshInterfaceButton\" class=\"pure-button\">Reload</button>\n    </div>\n  </fieldset>\n  <fieldset>\n    <legend>Become the Monarch</legend>\n    <div class=\"pure-control-group\">\n      <label for=\"currentClaimPriceInput\">Current Claim Price</label>\n      <input id=\"currentClaimPriceInput\" type=\"text\" value=\"";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "currentClaimPrice"), env.opts.autoescape);
@@ -39,7 +41,7 @@ output += "</option>\n        ";
 }
 }
 frame = frame.pop();
-output += "\n      </select>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchName\">Name</label>\n      <input id=\"monarchName\" type=\"text\" value=\"\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchClaimPrice\">Claim Price Paid</label>\n      <input id=\"monarchClaimPrice\" type=\"text\" value=\"\" readonly>\n    </div>\n  </fieldset>\n</form>\n";
+output += "\n      </select>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchName\">Name</label>\n      <input id=\"monarchName\" type=\"text\" value=\"\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchClaimPrice\">Claim Price Paid</label>\n      <input id=\"monarchClaimPrice\" type=\"text\" value=\"\" readonly>\n    </div>\n  </fieldset>\n</form>\n</div>";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
