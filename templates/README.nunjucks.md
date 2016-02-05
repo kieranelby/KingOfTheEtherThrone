@@ -17,6 +17,7 @@ This is all very pre-release and buggy - might switch to a new contract soon!
   - [via Javascript console](#PayWithJavascript)
   - [using chain explorers](#InteractChainExplorers)
 - [Contract Details](#TheContract)
+- [Hall of Monarchs](#GreatHall")
 - [Other Bits and Pieces](#BitsAndBobs)
 - [And Finally](#AndFinally)
 
@@ -155,9 +156,12 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
+|Current|{{currentMonarch.displayName}}|{{currentMonarch.claimPricePaid}}|
 {%- for pastMonarch in pastMonarchs %}
 |{{pastMonarch.number}}|{{pastMonarch.displayName}}|{{pastMonarch.claimPricePaid}}|
 {%- endfor %}
+
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
