@@ -9,7 +9,7 @@ var KingOfTheEtherDapp = (function () {
   var config = {};
 
   var templateContext = {
-    good: false,
+    mood: 'busy',
     statusText: 'Initialising ...',
     yourName: 'Your Name',
     currentClaimPrice: 'Unknown',
@@ -19,18 +19,29 @@ var KingOfTheEtherDapp = (function () {
 
   var throne = undefined;
 
+  var updateStatus = function(mood, text) {
+    templateContext.mood = mood;
+    templateContext.statusText = text;
+    if (console) {
+      console.log(text);
+    }
+  }
+
   var initWeb3 = function () {
+    updateStatus('busy', 'Connecting to node...');
+    renderUI();
     if (typeof web3 === 'undefined') {
       web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     } else {
       // use the existing web3
     }
+    updateStatus('busy', 'Checking account usable...');
     if (typeof web3.eth.defaultAccount === 'undefined') {
       try {
         web3.eth.defaultAccount = web3.eth.accounts[0];
+        updateStatus('good', 'Node connected and default account exists');
       } catch (e) {
-        templateContext.statusText = 'Error: ' + e.toString();
-        templateContext.good = false;
+        updateStatus('bad', 'Default account not usable due to: ' + e.toString());
       }
     }
   };
@@ -41,19 +52,20 @@ var KingOfTheEtherDapp = (function () {
   };
 
   var readContractData = function() {
+    updateStatus('busy', 'Reading contract data...');
     try {
       templateContext.currentClaimPrice = web3.fromWei(throne.currentClaimPrice(),'ether') + ' ether';
       var numberOfMonarchs = throne.numberOfMonarchs();
+      // don't read the monarchs themselves yet (some web3 problems with strings sometimes?)
       var monarchNumbers = ['Current'];
       for (var i = numberOfMonarchs - 1; i > 0; i--) {
         monarchNumbers.push(i);
       }
       templateContext.monarchNumbers = monarchNumbers;
-      templateContext.good = false;
+      updateStatus('good', 'Read contract data.');
     } catch (e) {
-      templateContext.statusText = 'Error getting data from contract: ' + e;
       templateContext.currentClaimPrice = 'Unknown';
-      templateContext.good = false;
+      updateStatus('bad', 'Failed to read contract data due to ' + e.toString());
     }
   };
 
@@ -62,31 +74,28 @@ var KingOfTheEtherDapp = (function () {
     var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
     uiArea.innerHTML = interfaceHtml;
     attachEvents();
-    if (templateContext.good) {
-      uiArea.className = 'good';
-    } else {
-      uiArea.className = 'notWorking';
-    }
   };
 
   var claimThrone = function() {
+    updateStatus('busy', 'Trying to execute contract with payment ...');
+    renderUI();
     try {
       var result = throne.claimThrone(
         templateContext.yourName,
         { value: throne.currentClaimPrice(), gas: 500000 }
       );
-      templateContext.statusText = 'Hmm, not sure if it worked, got ' + result.toString();
-      templateContext.good = true;
+      updateStatus('good', 'Hmm, not sure if it worked, got result of: ' + result.toString());
     } catch (e) {
-      templateContext.statusText = 'Error claiming throne: ' + e.toString();
-      templateContext.good = false;
+      updateStatus('bad', 'Failed to claim throne due to ' + e.toString());
     }
     renderUI();
+    return false;
   };
 
   var refreshInterface = function() {
     readContractData();
     renderUI();
+    return false;
   };
 
   var attachEvents = function() {
