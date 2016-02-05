@@ -32,14 +32,14 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 - The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.
 - The new claim price for the throne will go up by 50%, to 15 ether.
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
-- But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right? **TODO - not implemented yet**
+- ~~But ... if no new Monarch comes along within 3 days, then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can't give you back your ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?~~ **TODO - the current version of the contract never resets, so you may reign forever ...**
 
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
 Since 2016-02-05T04:16:37.000Z, the illustrious current ruler of the Ether Throne is **DONKEYTHIEF**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T22:13:20.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T22:14:59.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
