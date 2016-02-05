@@ -39,7 +39,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-05T04:16:37.000Z, the illustrious current ruler of the Ether Throne is **DONKEYTHIEF**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T21:22:47.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T22:07:08.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
@@ -62,7 +62,7 @@ If that doesn't work, read on ...
 <a name="PayAddContract"/>
 ### Pay by Adding the Contract in the Mist Wallet
 
-If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the details from the "Contract Details" section below. Yes, you do need to copy and paste that big long bit of JSON.
+If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases] - go to Contracts -> Add Contract, then fill in the details from the [Contract Details](#TheContract) section below. Yes, you do need to copy and paste that big long bit of JSON.
 
 After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right.
 
@@ -150,7 +150,6 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
-||||
 |7|WORLDSSTRONGESTCAT (0x363be44335d8b8d9cc7447913a72d077041bbfba)|0.11390625 ether|
 |6|pacov2kile (0xbc845f440de1419a540cfe1d6d445b9cc8e38427)|0.0759375 ether|
 |5|vamsi (0xbb101ae8ac3cec6e26575b7d6446ee1f91d83c1d)|0.050625 ether|
