@@ -54,18 +54,24 @@ Here's how you can pay the claim price and rule the Ether ...
 
 It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live kingoftheether.com page](http://www.kingoftheether.com/){% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum ÐApp browser such as [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear right here in this section.{% endif %}
 
-This may also work in a normal browser (Chrome, Firefox) if you have the Ethereum geth client on running locally with RPC calls enabled - e.g.
+This may also work in a normal browser (Chrome, Firefox) if you have the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client on running locally with RPC calls enabled so your browser can talk to it - e.g. like this:
 ```
 # warning: insecure
 geth --rpc --rpccorsdomain '*'
 ```
 
 {% if targetIsWeb %}
-Anyway, here's the ÐApp interface. You might need to unlock your wallet account to make it work:
+Anyway, here's the ÐApp interface:
 <div id="interfacePlaceholder" class="badMood">
 **Sorry, this web page couldn't seem to create the ÐApp interface.**
 </div>
 {% endif %}
+
+You might need to unlock your wallet account to make it work - e.g. in the [geth](https://github.com/ethereum/go-ethereum/wiki/geth) console:
+
+```
+personal.unlockAccount(web3.eth.accounts[0]);
+```
 
 If that doesn't work, read on ...
 

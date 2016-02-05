@@ -36,13 +36,11 @@ var KingOfTheEtherDapp = (function () {
       // use the existing web3
     }
     updateStatus('busy', 'Checking account usable...');
-    if (typeof web3.eth.defaultAccount === 'undefined') {
-      try {
-        web3.eth.defaultAccount = web3.eth.accounts[0];
-        updateStatus('good', 'Node connected and default account exists');
-      } catch (e) {
-        updateStatus('bad', 'Default account not usable due to: ' + e.toString());
-      }
+    try {
+      var balance = web3.eth.getBalance(web3.eth.accounts[0]);
+      updateStatus('good', 'Node connected and account seems usable');  
+    } catch (e) {
+      updateStatus('bad', 'Account not usable due to: ' + e.toString());
     }
   };
 
@@ -88,13 +86,11 @@ var KingOfTheEtherDapp = (function () {
     updateStatus('busy', 'Trying to execute contract with payment ...');
     updateName();
     try {
-      if (typeof web3.eth.defaultAccount === 'undefined') {
-        web3.eth.defaultAccount = web3.eth.accounts[0];
-      }
+      var regalName = templateContext.yourName.substring(0,24);
+      // web3.eth.accounts[0] is ugly but nothing else seems to work properly?
       var result = throne.claimThrone(
-        templateContext.yourName,
-        {
-          from: web3.eth.defaultAccount,
+        regalName, {
+          from: web3.eth.accounts[0],
           value: throne.currentClaimPrice(),
           gas: 500000
         });
