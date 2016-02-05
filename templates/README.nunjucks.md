@@ -58,7 +58,7 @@ It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live
 
 then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear here where you can interact with the contract via your local Ethereum node:
 
-<div id="interfacePlaceholder" class="notWorking">
+<div id="interfacePlaceholder" class="badMood">
 **Sorry, this web page couldn't seem to create the ÐApp interface.**
 </div>
 {% endif %}
