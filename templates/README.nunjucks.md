@@ -4,8 +4,14 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 
 ## Warning
 
-This is all very pre-release and buggy - might switch to referring to a new contract soon!
+This is all very pre-release and buggy - might switch to a new contract soon!
 
+## Contents
+
+- [What does it do](#WhatItDo)
+- [What does it do](#WhoMonarch)
+
+<a name="WhatItDo">
 ## What does it do?
 
 The Ether Throne awaits you. It can be yours for a price - here are the rules as enforced by the contract:
@@ -19,6 +25,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 - If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
 - But ... if no new Monarch comes along within 3 days (72 hours to be precise), then your reign ends and the throne becomes vacant, with the claim price reset back to {{startingClaimPrice}}. (The contract can't give you back your 10 ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right? **TODO - not implemented yet**
 
+<a name="WhoMonarch">
 ## Who is the Monarch?
 
 Since {{currentMonarch.coronationTimestampReadable}}, the illustrious current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
@@ -125,7 +132,7 @@ You can use these details to interact with the King of the Ether Throne contract
 
 The Solidarity source code for the contract lives at [https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol]. It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
 
-## Hall of Past Monarchs
+## Hall of Monarchs
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
