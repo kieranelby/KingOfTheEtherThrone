@@ -1,4 +1,4 @@
-// TODO - document
+// This provides the DApp user interface to allow nicer interation with the contract.
 // 
 // TODO - handle web3.syncing problem ...
 // TODO - how to ensure account unlocked?
@@ -37,6 +37,7 @@ var KingOfTheEtherDapp = (function () {
     }
     updateStatus('busy', 'Checking account usable...');
     try {
+      assertNotSyncing();
       var balance = web3.eth.getBalance(web3.eth.accounts[0]);
       updateStatus('good', 'Node connected and account seems usable');  
     } catch (e) {
@@ -52,6 +53,7 @@ var KingOfTheEtherDapp = (function () {
   var readContractData = function() {
     updateStatus('busy', 'Reading contract data...');
     try {
+      assertNotSyncing();
       templateContext.currentClaimPrice = web3.fromWei(throne.currentClaimPrice(),'ether') + ' ether';
       var numberOfMonarchs = throne.numberOfMonarchs();
       // don't read the monarchs themselves yet (some web3 problems with strings sometimes?)
@@ -60,7 +62,7 @@ var KingOfTheEtherDapp = (function () {
         monarchNumbers.push(i);
       }
       templateContext.monarchNumbers = monarchNumbers;
-      updateStatus('good', 'Read contract data.');
+      updateStatus('good', 'Successfully read monarchy data from contract.');
     } catch (e) {
       templateContext.currentClaimPrice = 'Unknown';
       updateStatus('bad', 'Failed to read contract data due to ' + e.toString());
@@ -79,13 +81,13 @@ var KingOfTheEtherDapp = (function () {
     var uiArea = document.getElementById('interfacePlaceholder');
     var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
     uiArea.innerHTML = interfaceHtml;
-    attachEvents();
   };
 
   var claimThrone = function(e) {
     updateStatus('busy', 'Trying to execute contract with payment ...');
     updateName();
     try {
+      assertNotSyncing();
       var regalName = templateContext.yourName.substring(0,24);
       // web3.eth.accounts[0] is ugly but nothing else seems to work properly?
       var result = throne.claimThrone(
@@ -102,19 +104,42 @@ var KingOfTheEtherDapp = (function () {
     return false;
   };
 
+  var selectedMonarchChanged = function(e) {
+    updateStatus('busy', 'Looking up monarch ...');
+    try {
+      assertNotSyncing();
+      var select = document.getElementById('monarchNumberSelect');
+      var monarchNumber = select.selectedValue;
+      var rawMonarch;
+      if (monarchNumber == 'Current') {
+        rawMonarch = throne.currentMonarch();
+      } else {
+        rawMonarch = throne.pastMonarch(monarchNumber);
+      }
+      templateContext.selectedMonarchNumber = monarchNumber;
+      templateContext.hallMonarchFate = (monarchNumber == 'Current') ? 'Alive' : 'Usurped';
+      templateContext.hallMonarchName = rawMonarch[1];
+      templateContext.hallMonarchAddress = rawMonarch[0];
+      templateContext.hallMonarchClaimPrice = web3.fromWei(rawMonarch[2], 'ether') + ' ether';
+      updateStatus('good', 'Found monarch data.');
+    } catch (e) {
+      updateStatus('bad', 'Failed to lookup monarch due to ' + ex.toString());
+    }
+    renderUI();
+  }
+
+  var assertNotSyncing = function() {
+    if (web3.eth.syncing) throw new Error("your node is syncing");
+  }
+
+  var makeUnixTimestampReadable = function (timestamp) {
+    return (new Date(1000 * timestamp)).toLocaleString();
+  }
+
   var refreshInterface = function(e) {
     readContractData();
     renderUI();
     return false;
-  };
-
-  var attachEvents = function() {
-    // TODO - your name input
-    // TODO - monarch select dropdown
-    var refreshButton = document.getElementById('refreshInterfaceButton');
-    refreshButton.onclick = refreshInterface;
-    var claimThroneButton = document.getElementById('claimThroneButton');
-    claimThroneButton.onclick = claimThrone;
   };
 
   var init = function (dappConfig) {
@@ -130,7 +155,7 @@ var KingOfTheEtherDapp = (function () {
     init: init,
     reloadClicked: refreshInterface,
     claimThroneClicked: claimThrone,
-    selectedMonarchChanged: function(e) { alert('TODO') }
+    selectedMonarchChanged: selectedMonarchChanged }
   };
 
 })();
