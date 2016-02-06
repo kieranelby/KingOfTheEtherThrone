@@ -68,7 +68,7 @@ personal.unlockAccount(web3.eth.accounts[0]);
 ```
 {% endif %}
 
-If that doesn't work, don't worry, read on for me ways to claim your throne ...
+If that doesn't work, don't worry, read on for more ways to claim your throne ...
 
 <a name="PayManually"/>
 ### Pay by Sending a Manual Payment
