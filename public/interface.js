@@ -85,7 +85,7 @@ var KingOfTheEtherDapp = (function () {
     uiArea.innerHTML = interfaceHtml;
   };
 
-  var claimThrone = function(e) {
+  var claimThrone = function(event) {
     updateStatus('busy', 'Trying to execute contract with payment ...');
     readNameInput();
     try {
@@ -105,6 +105,11 @@ var KingOfTheEtherDapp = (function () {
       updateStatus('bad', 'Failed to claim throne due to ' + ex.toString());
     }
     renderUI();
+    // hmm, mist seems to do something weird to click handlers
+    try {
+      event.preventDefault();
+      event.stopPropagation();
+    } catch (ex) {}
     return false;
   };
 
@@ -153,9 +158,15 @@ var KingOfTheEtherDapp = (function () {
     return (new Date(1000 * timestamp)).toLocaleString();
   }
 
-  var refreshInterface = function(e) {
+  var refreshInterface = function(event) {
     readContractData();
+    selectedMonarchChanged();
     renderUI();
+    // hmm, mist seems to do something weird to click handlers
+    try {
+      event.preventDefault();
+      event.stopPropagation();
+    } catch (ex) {}
     return false;
   };
 
