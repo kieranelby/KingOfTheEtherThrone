@@ -1,12 +1,16 @@
 // A chain-game contract that maintains a 'throne' which agents may pay to rule.
+// See www.kingoftheether.com .
 // (c) Kieran Elby. All rights reserved.
 // v0.3.0.
 // Inspired by ethereumpyramid.com and the (now-gone?) "magnificent bitcoin gem".
-// TODO - round amounts to e.g. 3 sig fig, start with higher amount.
+
+// TODO - round amounts to e.g. 4 sig fig, start with higher amount.
 // TODO - allow ownership transfer / creating new thrones?
 // TODO - enforce time-limit on reign (can contracts do that without external action)?
+// TODO - add random reset?
 // TODO - add bitcoin bridge so agents can pay in bitcoin?
 // TODO - maybe allow different return payment address?
+// TODO - startingClaimPrice was too low
 
 contract KingOfTheEtherThrone {
 

@@ -114,7 +114,7 @@ var KingOfTheEtherDapp = (function () {
       if (monarchNumber == 'Current') {
         rawMonarch = throne.currentMonarch();
       } else {
-        rawMonarch = throne.pastMonarch(monarchNumber);
+        rawMonarch = throne.pastMonarchs(monarchNumber);
       }
       templateContext.selectedMonarchNumber = monarchNumber;
       templateContext.hallMonarchFate = (monarchNumber == 'Current') ? 'Alive' : 'Usurped';
@@ -123,7 +123,7 @@ var KingOfTheEtherDapp = (function () {
       templateContext.hallMonarchClaimPrice = web3.fromWei(rawMonarch[2], 'ether') + ' ether';
       updateStatus('good', 'Found monarch data.');
     } catch (e) {
-      updateStatus('bad', 'Failed to lookup monarch due to ' + ex.toString());
+      updateStatus('bad', 'Failed to lookup monarch due to ' + e.toString());
     }
     renderUI();
   }
