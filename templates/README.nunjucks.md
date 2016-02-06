@@ -67,7 +67,6 @@ Anyway, here's the ÐApp interface:
 </div>
 
 You might need to unlock your wallet account to make it work - e.g. in the [geth](https://github.com/ethereum/go-ethereum/wiki/geth) console:
-
 ```
 personal.unlockAccount(web3.eth.accounts[0]);
 ```
