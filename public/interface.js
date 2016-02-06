@@ -155,7 +155,7 @@ var KingOfTheEtherDapp = (function () {
     init: init,
     reloadClicked: refreshInterface,
     claimThroneClicked: claimThrone,
-    selectedMonarchChanged: selectedMonarchChanged }
+    selectedMonarchChanged: selectedMonarchChanged
   };
 
 })();
