@@ -6,6 +6,7 @@ var marked = require('marked');
 var cp = require('cp');
 var Web3 = require('web3');
 var child_process = require('child_process');
+var markdownEscape = require('markdown-escape')
 
 var publishEnabled = true;
 
@@ -62,7 +63,7 @@ function decorateRawMonarch(rawMonarch, number) {
     monarch.displayName = '[Vacant]';
     monarch.etherAddress = '';
   } else {
-    monarch.displayName = monarch.name + ' (' + monarch.etherAddress + ')';
+    monarch.displayName = markdownEscape(monarch.name) + ' (' + monarch.etherAddress + ')';
   }
   return monarch;
 }
