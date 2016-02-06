@@ -40,7 +40,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is **king_penguin**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T23:53:20.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T00:10:27.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
@@ -54,7 +54,7 @@ Here's how you can pay the claim price and rule the Ether ...
 
 It's all a bit hemorrhaging-edge, but if you visit [the live kingoftheether.com page](http://www.kingoftheether.com/) - not in your normal browser, but inside a special Ethereum ÐApp browser such as [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) then you should see the ÐApp interface appear where you can interact with the contract via your local Ethereum node.
 
-This may also work in a normal browser (Chrome, Firefox) if you have the Ethereum geth client on running locally with RPC calls enabled - e.g.
+This may also work in a normal browser (Chrome, Firefox) if you have the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client on running locally with RPC calls enabled so your browser can talk to it - e.g. like this:
 ```
 # warning: insecure
 geth --rpc --rpccorsdomain '*'
@@ -168,7 +168,7 @@ The Solidarity source code for the contract lives at [https://github.com/kierane
 |1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-05T23:53:20.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T00:10:27.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
@@ -198,4 +198,4 @@ Short answer: No.
 <a name="AndFinally"/>
 ## And Finally
 
-This is intended as a bit of fun and to explore what a contract running on the Ethereum blockahin can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending cryptocurrencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).
+This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).
