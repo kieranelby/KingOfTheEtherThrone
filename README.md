@@ -34,14 +34,14 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since 2016-02-06T19:13:20.000Z, the illustrious current ruler of the Ether Throne is **Max von Sydow (0xa15cc3b84ab0fb5598778366d0281714fc878d8d)**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
+Since 2016-02-06T19:15:06.000Z, the illustrious current ruler of the Ether Throne is **moo ha ha says the laughing cow (0x1db3439a222c519ab44bb1144fc28167b4fa6ee6)**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T19:14:54.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T19:29:47.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **1.13 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **1.69 ether**.
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -147,7 +147,8 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
-|Current|Max von Sydow (0xa15cc3b84ab0fb5598778366d0281714fc878d8d)|0.757 ether|
+|Current|moo ha ha says the laughing cow (0x1db3439a222c519ab44bb1144fc28167b4fa6ee6)|1.13 ether|
+|6|Max von Sydow (0xa15cc3b84ab0fb5598778366d0281714fc878d8d)|0.757 ether|
 |5|\_natsu\_ (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.505 ether|
 |4|king\_pengui2 (0x9371ea0d13fb8a8306a420572cda36c4e8640f38)|0.337 ether|
 |3|SPACE\_CHICKEN (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.225 ether|
@@ -155,7 +156,7 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 |1|kingoftheether.com (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.1 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T19:14:54.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T19:29:47.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
