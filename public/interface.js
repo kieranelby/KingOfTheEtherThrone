@@ -114,7 +114,7 @@ var KingOfTheEtherDapp = (function () {
       if (monarchNumber == 'Current') {
         rawMonarch = throne.currentMonarch();
       } else {
-        rawMonarch = throne.pastMonarchs(Math.parseInt(monarchNumber,10));
+        rawMonarch = throne.pastMonarchs(parseInt(monarchNumber,10));
       }
       templateContext.selectedMonarchNumber = monarchNumber;
       templateContext.hallMonarchFate = (monarchNumber == 'Current') ? 'Alive' : 'Usurped';
