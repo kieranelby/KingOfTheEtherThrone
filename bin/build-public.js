@@ -11,16 +11,17 @@ var publishEnabled = true;
 
 console.log("Building public content ...");
 
-var contractAddress = "0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e";
+var contractAddress = "0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0";
 var contractAbiJson =
-  '[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},' +
-  '{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
-  '{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},' +
-  '{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},' +
-  '{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},' +
-  '{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},' +
-  '{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},' +
-  '{"inputs":[],"type":"constructor"}]';
+  '[{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"sweepCommission","outputs":[],"type":"function"},'+
+  '{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},'+
+  '{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},'+
+  '{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},'+
+  '{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},'+
+  '{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},'+
+  '{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},'+
+  '{"inputs":[],"type":"constructor"},'+
+  '{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"}]'
 var contractAbi = JSON.parse(contractAbiJson);
 
 var buildTimeWeb3Provider = 'http://localhost:8545';
@@ -66,7 +67,7 @@ function decorateRawMonarch(rawMonarch, number) {
   return monarch;
 }
 
-var startingClaimPrice = '0.01 ether';
+var startingClaimPrice = '0.1 ether';
 
 var lastUpdatedBlockTimestamp = web3.eth.getBlock("latest").timestamp;
 var lastUpdatedBlockTimestampReadable = makeUnixTimestampReadable(lastUpdatedBlockTimestamp);

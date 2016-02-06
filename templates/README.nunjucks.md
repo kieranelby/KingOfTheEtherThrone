@@ -2,10 +2,6 @@
 
 An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
 
-## Warning
-
-This is all very pre-release and buggy - might switch to a new contract soon!
-
 ## Contents
 
 - [What does it do?](#WhatItDo)
@@ -154,7 +150,7 @@ You can use these details to interact with the King of the Ether Throne contract
 
 #### CONTRACT SOURCE CODE
 
-The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
+The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `0.2.1-fad2d4df` with optimization, just in case you want to verify the code matches the bytecode.
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
