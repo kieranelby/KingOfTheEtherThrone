@@ -41,7 +41,15 @@ output += "</option>\n        ";
 }
 }
 frame = frame.pop();
-output += "\n      </select>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchName\">Name</label>\n      <input id=\"monarchName\" type=\"text\" value=\"\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchClaimPrice\">Claim Price Paid</label>\n      <input id=\"monarchClaimPrice\" type=\"text\" value=\"\" readonly>\n    </div>\n  </fieldset>\n</form>\n</div>";
+output += "\n      </select>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchFate\">Fate</label>\n      <input id=\"monarchFate\" type=\"text\" value=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchFate"), env.opts.autoescape);
+output += "\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchName\">Name</label>\n      <input id=\"monarchName\" type=\"text\" value=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchName"), env.opts.autoescape);
+output += "\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchAddress\">Address</label>\n      <input id=\"monarchAddress\" type=\"text\" value=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchAddress"), env.opts.autoescape);
+output += "\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchClaimPrice\">Claim Price Paid</label>\n      <input id=\"monarchClaimPrice\" type=\"text\" value=\"";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchClaimPrice"), env.opts.autoescape);
+output += "\" readonly>\n    </div>\n  </fieldset>\n</form>\n</div>";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
