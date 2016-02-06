@@ -54,7 +54,7 @@ Here's how you can pay the claim price and rule the Ether ...
 
 It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}[the live kingoftheether.com page](http://www.kingoftheether.com/){% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum ÐApp browser such as [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear right here in this section.{% endif %}
 
-This may also work in a normal browser (Chrome, Firefox) if you have the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client on running locally with RPC calls enabled so your browser can talk to it - e.g. like this:
+This may also work in your normal browser (Chrome, Firefox) if you have the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client running locally with RPC calls enabled so your browser can talk to it - e.g. like this:
 ```
 # warning: insecure
 geth --rpc --rpccorsdomain '*'
