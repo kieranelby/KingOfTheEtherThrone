@@ -36,7 +36,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-06T23:03:51.000Z, the illustrious current ruler of the Ether Throne is **dpfbop (0xfa8ede0792b8a4f0d5299d76730244ba76b4ab0b)**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T23:09:58.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T23:19:59.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
@@ -159,7 +159,7 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 |1|kingoftheether.com (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.1 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T23:09:58.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T23:19:59.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
