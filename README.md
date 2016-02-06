@@ -2,10 +2,6 @@
 
 An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
 
-## Warning
-
-This is all very pre-release and buggy - might switch to a new contract soon!
-
 ## Contents
 
 - [What does it do?](#WhatItDo)
@@ -38,14 +34,14 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is **king_penguin**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
+Since 2016-02-06T16:12:18.000Z, the illustrious current ruler of the Ether Throne is **[Vacant]**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T16:15:01.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T16:23:15.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **0.8649755859375 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **0.1 ether**.
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -67,7 +63,7 @@ If that doesn't work, don't worry, read on for me ways to claim your throne ...
 <a name="PayManually"/>
 ### Pay by Sending a Manual Payment
 
-You can simply manually send your payment to `0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
+You can simply manually send your payment to `0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
 
 If another monarch comes along and takes your throne, we'll send your compensation payment to the address you sent your payment from - so make sure you send the payment from an address you control.
 
@@ -77,7 +73,7 @@ We'll use your Ethereum address as your name, though if you like you can put you
 eth.sendTransaction({
   from: eth.accounts[0],
   value: web3.toWei(15, 'ether'),
-  to: '0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e',
+  to: '0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0',
   gas: 500000,
   data: web3.fromAscii('Your Kingly Name')
 });
@@ -94,10 +90,10 @@ If you're running a geth node, you can interact with the contract using a little
 
 ```
 // tell web3 how to talk to the contract
-var kingOfTheEtherThroneContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},{"inputs":[],"type":"constructor"}]);
+var kingOfTheEtherThroneContract = web3.eth.contract([{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"sweepCommission","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"}]);
 
 // tell web3 where the contract is
-var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e');
+var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0');
 
 // ask contract what the current claim price is
 web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
@@ -122,7 +118,7 @@ This worked (once) in version 0.3.8 of the wallet client on Windows, anyway. Unf
 <a name="InteractChainExplorers"/>
 ### Interacting via Chain Explorers
 
-You can watch transactions and storage changes happening in this contract on chain viewers at e.g. [etherchain.org](https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e), [etherscan.io](https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e), and [ethercamp](https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e). Some don't seem to be very good at showing transactions generated by the contract though.
+You can watch transactions and storage changes happening in this contract on chain viewers at e.g. [etherchain.org](https://etherchain.org/account/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0), [etherscan.io](https://etherscan.io/address/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0), and [ethercamp](https://live.ether.camp/account/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0). Some don't seem to be very good at showing transactions generated by the contract though.
 
 <a name="TheContract"/>
 ## Contract Details
@@ -134,37 +130,26 @@ You can use these details to interact with the King of the Ether Throne contract
 `KingOfTheEtherThrone`
 
 #### CONTRACT ADDRESS
-`0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e`
+`0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0`
 
 #### JSON INTERFACE (CONTRACT ABI)
 
 ```
-[{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"sweepCommission","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"},{"inputs":[],"type":"constructor"}]
+[{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"sweepCommission","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"}]
 ```
 
 #### CONTRACT SOURCE CODE
 
-The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
+The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `0.2.1-fad2d4df` with optimization, just in case you want to verify the code matches the bytecode.
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
-|Current|king_penguin (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.576650390625 ether|
-|10|Your Name (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.38443359375 ether|
-|9|Your Name (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.2562890625 ether|
-|8|DONKEYTHIEF (0xa1e81f015e1185d8e5b1bfc6e0155180779638af)|0.170859375 ether|
-|7|WORLDSSTRONGESTCAT (0x363be44335d8b8d9cc7447913a72d077041bbfba)|0.11390625 ether|
-|6|pacov2kile (0xbc845f440de1419a540cfe1d6d445b9cc8e38427)|0.0759375 ether|
-|5|vamsi (0xbb101ae8ac3cec6e26575b7d6446ee1f91d83c1d)|0.050625 ether|
-|4|King Kieran the Sleepy (0x2f88180369377869a1bc5ae807416f72d736c206)|0.03375 ether|
-|3|0x4b696572616e20494949 (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.0225 ether|
-|2|Kieran II (0xa082de4736e831c026cce4c281a80ae6b196a462)|0.015 ether|
-|1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
-||[Vacant]|0 ether|
+|Current|[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T16:15:01.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T16:23:15.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
