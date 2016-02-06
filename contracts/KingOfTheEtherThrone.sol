@@ -1,26 +1,21 @@
 // A chain-game contract that maintains a 'throne' which agents may pay to rule.
-// See www.kingoftheether.com & https://github.com/kieranelby/KingOfTheEtherThrone .
-// (c) Kieran Elby 2016. All rights reserved.
-// v0.4.0.
+// (c) Kieran Elby. All rights reserved.
+// Lives at 0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e.
+// This is the old v0.3.0 version - see kingoftheether.com for new version.
 // Inspired by ethereumpyramid.com and the (now-gone?) "magnificent bitcoin gem".
-
-// This contract lives on the blockchain at 0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0
-// and was compiled (using optimization) with:
-// Solidity version: 0.2.1-fad2d4df/.-Emscripten/clang/int linked to libethereum
-
-// For future versions it would be nice to ...
+// TODO - round amounts to e.g. 3 sig fig, start with higher amount.
+// TODO - allow ownership transfer / creating new thrones?
 // TODO - enforce time-limit on reign (can contracts do that without external action)?
-// TODO - add a random reset?
 // TODO - add bitcoin bridge so agents can pay in bitcoin?
-// TODO - maybe allow different return payment address?
 
 contract KingOfTheEtherThrone {
 
     struct Monarch {
-        // Address to which their compensation will be sent.
+        // Address from which they paid their claimFee
+        // and to which their compensation will be sent.
         address etherAddress;
         // A name by which they wish to be known.
-        // NB: Unfortunately "string" seems to expose some bugs in web3.
+        // TODO - should I use string? bytes? bytes32?
         string name;
         // How much did they pay to become monarch?
         uint claimPrice;
@@ -32,11 +27,15 @@ contract KingOfTheEtherThrone {
     // occupy the throne during gaps in succession and collect fees.
     address wizardAddress;
 
+    // We let the wizard payments build up rather than consume
+    // too much gas.
+    uint accumulatedWizardPayments = 0;
+
     // Used to ensure only the wizard can do some things.
     modifier onlywizard { if (msg.sender == wizardAddress) _ }
 
     // How much must the first monarch pay?
-    uint constant startingClaimPrice = 100 finney;
+    uint constant startingClaimPrice = 10 finney;
 
     // The next claimPrice is calculated from the previous claimFee
     // by multiplying by claimFeeAdjustNum and dividing by claimFeeAdjustDen -
@@ -50,7 +49,7 @@ contract KingOfTheEtherThrone {
     uint constant wizardCommissionFractionNum = 1;
     uint constant wizardCommissionFractionDen = 100;
 
-    // How much must an agent pay now to become the monarch?
+    // How much ether must an agent pay now to become the monarch?
     uint public currentClaimPrice;
 
     // The King (or Queen) of the Ether.
@@ -76,8 +75,7 @@ contract KingOfTheEtherThrone {
         return pastMonarchs.length;
     }
 
-    // Fired when the throne is claimed.
-    // In theory can be used to help build a front-end.
+    // Fired when the throne is claimed. Can be used to help build a front-end.
     event ThroneClaimed(
         address usurperEtherAddress,
         string usurperName,
@@ -113,13 +111,15 @@ contract KingOfTheEtherThrone {
         // payments accumulate to avoid wasting gas sending small fees.
 
         uint wizardCommission = (valuePaid * wizardCommissionFractionNum) / wizardCommissionFractionDen;
-        
+        accumulatedWizardPayments += wizardCommission;
+
         uint compensation = valuePaid - wizardCommission;
 
         if (currentMonarch.etherAddress != wizardAddress) {
             currentMonarch.etherAddress.send(compensation);
         } else {
-            // When the throne is vacant, the fee accumulates for the wizard.
+            // When the throne is vacant, the wizard is paid the fee.
+            accumulatedWizardPayments += compensation;
         }
 
         // Usurp the current monarch, replacing them with the new one.
@@ -132,38 +132,19 @@ contract KingOfTheEtherThrone {
         );
 
         // Increase the claim fee for next time.
-        // Stop number of trailing decimals getting silly - we round it a bit.
-        uint rawNewClaimPrice = currentClaimPrice * claimPriceAdjustNum / claimPriceAdjustDen;
-        if (rawNewClaimPrice < 10 finney) {
-            currentClaimPrice = rawNewClaimPrice;
-        } else if (rawNewClaimPrice < 100 finney) {
-            currentClaimPrice = 100 szabo * (rawNewClaimPrice / 100 szabo);
-        } else if (rawNewClaimPrice < 1 ether) {
-            currentClaimPrice = 1 finney * (rawNewClaimPrice / 1 finney);
-        } else if (rawNewClaimPrice < 10 ether) {
-            currentClaimPrice = 10 finney * (rawNewClaimPrice / 10 finney);
-        } else if (rawNewClaimPrice < 100 ether) {
-            currentClaimPrice = 100 finney * (rawNewClaimPrice / 100 finney);
-        } else if (rawNewClaimPrice < 1000 ether) {
-            currentClaimPrice = 1 ether * (rawNewClaimPrice / 1 ether);
-        } else if (rawNewClaimPrice < 10000 ether) {
-            currentClaimPrice = 10 ether * (rawNewClaimPrice / 10 ether);
-        } else {
-            currentClaimPrice = rawNewClaimPrice;
-        }
+        currentClaimPrice = currentClaimPrice * claimPriceAdjustNum / claimPriceAdjustDen;
 
         // Hail the new monarch!
         ThroneClaimed(currentMonarch.etherAddress, currentMonarch.name, currentClaimPrice);
     }
 
     // Used only by the wizard to collect his commission.
-    function sweepCommission(uint amount) onlywizard {
-        wizardAddress.send(amount);
-    }
-
-    // Used only by the wizard to collect his commission.
-    function transferOwnership(address newOwner) onlywizard {
-        wizardAddress = newOwner;
+    function sweepCommission() onlywizard {
+        if (accumulatedWizardPayments == 0) {
+            return;
+        }
+        wizardAddress.send(accumulatedWizardPayments);
+        accumulatedWizardPayments = 0;
     }
 
 }
