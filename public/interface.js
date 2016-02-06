@@ -109,12 +109,12 @@ var KingOfTheEtherDapp = (function () {
     try {
       assertNotSyncing();
       var select = document.getElementById('monarchNumberSelect');
-      var monarchNumber = select.selectedValue;
+      var monarchNumber = select.selectedOptions[0];
       var rawMonarch;
       if (monarchNumber == 'Current') {
         rawMonarch = throne.currentMonarch();
       } else {
-        rawMonarch = throne.pastMonarchs(monarchNumber);
+        rawMonarch = throne.pastMonarchs(Math.parseInt(monarchNumber,10));
       }
       templateContext.selectedMonarchNumber = monarchNumber;
       templateContext.hallMonarchFate = (monarchNumber == 'Current') ? 'Alive' : 'Usurped';
