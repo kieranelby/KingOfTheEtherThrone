@@ -64,6 +64,7 @@ var KingOfTheEtherDapp = (function () {
       }
       templateContext.monarchNumbers = monarchNumbers;
       updateStatus('good', 'Successfully read monarchy data from contract.');
+      flashCurrentClaimPrice(templateContext.currentClaimPrice);
     } catch (e) {
       templateContext.currentClaimPrice = 'Unknown';
       updateStatus('bad', 'Failed to read contract data due to ' + e.toString());
@@ -157,6 +158,16 @@ var KingOfTheEtherDapp = (function () {
     renderUI();
     return false;
   };
+
+  var flashCurrentClaimPrice = function(priceText) {
+    if (typeof mist !== 'undefined') {
+      try {
+        mist.menu.setBadge('only ' + priceText);  
+      } catch (e) {
+        // oh well, nice to have
+      }      
+    }
+  }
 
   var init = function (dappConfig) {
     config = dappConfig;
