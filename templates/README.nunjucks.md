@@ -1,6 +1,10 @@
-# King of the Ether Throne
+# King of the Ether Throne (OLD)
 
 An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.
+
+## Important Warning
+
+This page is for the **old**, orignal (v0.3) version of the throne contract - it's slightly buggy (e.g. lack of rounding) so has been replaced with a newer one at [kingoftheether.com](http://www.kingoftheether.com). Of course, the contract itself and the blockchain data will live on until the last ethereum node dies ...
 
 ## Contents
 
@@ -150,7 +154,7 @@ You can use these details to interact with the King of the Ether Throne contract
 
 #### CONTRACT SOURCE CODE
 
-The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `0.2.1-fad2d4df` with optimization, just in case you want to verify the code matches the bytecode.
+The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.3.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `v0.2.0-2016-01-20-67c855c` without optimization, just in case you want to verify the code matches the bytecode.
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
