@@ -47,9 +47,9 @@ output += "\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n   
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchName"), env.opts.autoescape);
 output += "\" maxlength=\"20\" size=\"20\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchAddress\">Address</label>\n      <input id=\"monarchAddress\" type=\"text\" value=\"";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchAddress"), env.opts.autoescape);
-output += "\" maxlength=\"32\" size=\"32\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchClaimPrice\">Claim Price Paid</label>\n      <input id=\"monarchClaimPrice\" type=\"text\" value=\"";
+output += "\" maxlength=\"36\" size=\"36\" readonly>\n    </div>\n    <div class=\"pure-control-group\">\n      <label for=\"monarchClaimPrice\">Claim Price Paid</label>\n      <input id=\"monarchClaimPrice\" type=\"text\" value=\"";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "hallMonarchClaimPrice"), env.opts.autoescape);
-output += "\" readonly>\n    </div>\n  </fieldset>\n</form>\n</div>";
+output += "\" size=\"36\" readonly>\n    </div>\n  </fieldset>\n</form>\n</div>";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
