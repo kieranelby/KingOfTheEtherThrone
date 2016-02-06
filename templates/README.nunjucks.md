@@ -65,13 +65,13 @@ Anyway, here's the ÐApp interface:
 <div id="interfacePlaceholder" class="badMood">
 **Sorry, this web page couldn't seem to create the ÐApp interface.**
 </div>
-{% endif %}
 
 You might need to unlock your wallet account to make it work - e.g. in the [geth](https://github.com/ethereum/go-ethereum/wiki/geth) console:
 
 ```
 personal.unlockAccount(web3.eth.accounts[0]);
 ```
+{% endif %}
 
 If that doesn't work, read on ...
 
@@ -201,4 +201,4 @@ Short answer: No.
 <a name="AndFinally"/>
 ## And Finally
 
-This is intended as a bit of fun and to explore what a contract running on the Ethereum blockahin can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending cryptocurrencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).
+This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).
