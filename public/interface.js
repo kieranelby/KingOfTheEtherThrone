@@ -1,7 +1,8 @@
 // This provides the DApp user interface to allow nicer interation with the contract.
 // 
-// TODO - handle web3.syncing problem ...
+// TODO - add Mist menu entry?
 // TODO - how to ensure account unlocked?
+// TODO - it's pretty ugly both visually and behind the scenes ...
 //
 
 var KingOfTheEtherDapp = (function () {
@@ -69,7 +70,7 @@ var KingOfTheEtherDapp = (function () {
     }
   };
 
-  var updateName = function() {
+  var readNameInput = function() {
     var yourNameInput = document.getElementById('yourNameInput');
     if (yourNameInput) {
       templateContext.yourName = yourNameInput.value;
@@ -77,7 +78,7 @@ var KingOfTheEtherDapp = (function () {
   }
 
   var renderUI = function() {
-    updateName();
+    readNameInput();
     var uiArea = document.getElementById('interfacePlaceholder');
     var interfaceHtml = nunjucks.render('templates/interface.nunjucks.html', templateContext);
     uiArea.innerHTML = interfaceHtml;
@@ -85,7 +86,7 @@ var KingOfTheEtherDapp = (function () {
 
   var claimThrone = function(e) {
     updateStatus('busy', 'Trying to execute contract with payment ...');
-    updateName();
+    readNameInput();
     try {
       assertNotSyncing();
       var regalName = templateContext.yourName.substring(0,24);
@@ -96,6 +97,8 @@ var KingOfTheEtherDapp = (function () {
           value: throne.currentClaimPrice(),
           gas: 500000
         });
+      // TODO - need better error / status handling, it's surprisingly
+      // hard when everything is very asynchronous ...
       updateStatus('good', 'Hmm, might have worked, check your wallet balance - got result of: ' + result.toString());
     } catch (ex) {
       updateStatus('bad', 'Failed to claim throne due to ' + ex.toString());
@@ -104,28 +107,41 @@ var KingOfTheEtherDapp = (function () {
     return false;
   };
 
+  var readSelectedMonarchInput = function() {
+    var select = document.getElementById('monarchNumberSelect');
+    var monarchNumber = select.selectedOptions[0].value;
+    templateContext.selectedMonarchNumber = monarchNumber;
+  }
+
   var selectedMonarchChanged = function(e) {
-    updateStatus('busy', 'Looking up monarch ...');
+    readSelectedMonarchInput();
+    templateContext.hallMonarchFate = 'NA';
+    templateContext.hallMonarchName = 'NA';
+    templateContext.hallMonarchAddress = 'NA';
+    templateContext.hallMonarchClaimPrice = 'NA';
+    if (templateContext.selectedMonarchNumber == 'NA') {
+      return;
+    }
+    updateStatus('busy', 'Looking up selected monarch ...');
     try {
       assertNotSyncing();
-      var select = document.getElementById('monarchNumberSelect');
-      var monarchNumber = select.selectedOptions[0];
       var rawMonarch;
-      if (monarchNumber == 'Current') {
+      if (templateContext.selectedMonarchNumber == 'Current') {
         rawMonarch = throne.currentMonarch();
       } else {
-        rawMonarch = throne.pastMonarchs(parseInt(monarchNumber,10));
+        rawMonarch = throne.pastMonarchs(parseInt(templateContext.selectedMonarchNumber,10));
       }
-      templateContext.selectedMonarchNumber = monarchNumber;
-      templateContext.hallMonarchFate = (monarchNumber == 'Current') ? 'Alive' : 'Usurped';
+      // TODO - one day we might introduce Died ...
+      templateContext.hallMonarchFate = (templateContext.selectedMonarchNumber == 'Current') ? 'Alive' : 'Usurped';
       templateContext.hallMonarchName = rawMonarch[1];
       templateContext.hallMonarchAddress = rawMonarch[0];
       templateContext.hallMonarchClaimPrice = web3.fromWei(rawMonarch[2], 'ether') + ' ether';
-      updateStatus('good', 'Found monarch data.');
+      updateStatus('good', 'Found selected monarch data.');
     } catch (e) {
-      updateStatus('bad', 'Failed to lookup monarch due to ' + e.toString());
+      updateStatus('bad', 'Failed to look-up selected monarch due to ' + e.toString());
     }
     renderUI();
+    return;
   }
 
   var assertNotSyncing = function() {
@@ -148,6 +164,7 @@ var KingOfTheEtherDapp = (function () {
     initWeb3();
     findContract();
     readContractData();
+    selectedMonarchChanged();
     renderUI();
   };
 

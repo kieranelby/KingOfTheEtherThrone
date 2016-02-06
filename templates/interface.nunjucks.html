@@ -28,7 +28,7 @@
     <div class="pure-control-group">
       <label for="monarchNumberSelect">Number</label>
       <select id="monarchNumberSelect" onchange="KingOfTheEtherDapp.selectedMonarchChanged()">
-        <option>-- Choose Monarch --</option>
+        <option value="NA">-- Choose Monarch --</option>
         {% for monarchNumber in monarchNumbers %}
         <option value="{{monarchNumber}}" {% if monarchNumber == selectedMonarchNumber %}selected{% endif %}>{{monarchNumber}}</option>
         {% endfor %}
