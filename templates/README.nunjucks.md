@@ -34,7 +34,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since {{currentMonarch.coronationTimestampReadable}}, the illustrious current ruler of the Ether Throne is **{{currentMonarch.name}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
+Since {{currentMonarch.coronationTimestampReadable}}, the illustrious current ruler of the Ether Throne is **{{currentMonarch.displayName}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
 *NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
