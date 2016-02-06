@@ -16,7 +16,7 @@
     </div>
     <div class="pure-control-group">
       <label for="yourNameInput">Your Regal Name</label>
-      <input id="yourNameInput" type="text" value="{{yourName}}">
+      <input id="yourNameInput" type="text" maxlength="20" size="20" value="{{yourName}}">
     </div>
     <div class="pure-control-group">
       <label>&nbsp;</label>
@@ -40,11 +40,11 @@
     </div>
     <div class="pure-control-group">
       <label for="monarchName">Name</label>
-      <input id="monarchName" type="text" value="{{hallMonarchName}}" readonly>
+      <input id="monarchName" type="text" value="{{hallMonarchName}}" maxlength="20" size="20" readonly>
     </div>
     <div class="pure-control-group">
       <label for="monarchAddress">Address</label>
-      <input id="monarchAddress" type="text" value="{{hallMonarchAddress}}" readonly>
+      <input id="monarchAddress" type="text" value="{{hallMonarchAddress}}" maxlength="32" size="32" readonly>
     </div>
     <div class="pure-control-group">
       <label for="monarchClaimPrice">Claim Price Paid</label>
