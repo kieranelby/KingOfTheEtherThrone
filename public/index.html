@@ -40,14 +40,14 @@
 <li><a href="#WhoMonarch">Who is the Monarch?</a></li>
 <li><a href="#HowIRule">How Can I Rule the Ether?</a><ul>
 <li><a href="#PayDappBrowser">with a ÐApp browser</a></li>
-<li><a href="#PayAddContract">by adding the contract</a></li>
 <li><a href="#PayManually">manual payment</a></li>
 <li><a href="#PayWithJavascript">via Javascript console</a></li>
+<li><a href="#PayAddContract">by adding the contract</a></li>
 <li><a href="#InteractChainExplorers">using chain explorers</a></li>
 </ul>
 </li>
 <li><a href="#TheContract">Contract Details</a></li>
-<li><a href="#GreatHall&quot;">Hall of Monarchs</a></li>
+<li><a href="#GreatHall">Hall of Monarchs</a></li>
 <li><a href="#BitsAndBobs">Other Bits and Pieces</a></li>
 <li><a href="#AndFinally">And Finally</a></li>
 </ul>
@@ -57,17 +57,17 @@
 <ul>
 <li>Let&#39;s say (for example) the current claim price for the throne is 10 ether.</li>
 <li>You like the sound of being King, so you send 10 ether to the contract.</li>
-<li>This makes you the new King of the Ether Throne, the First of His Name, the Uncentralized, Sovereign of the Exalted Order of Miners, Emperor of the Blocks beyond the Sidechains, Head of the Great Patricia Tree, and so on and so forth.</li>
-<li>Your name will be added to the Hall of Past Monarchs in the blockchain.</li>
-<li>The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.</li>
+<li>This makes you the new King of the Ether Throne, the First of His Name, the Uncentralized, Sovereign of the Exalted Order of Miners, Emperor of the Blocks beyond the Sidechains, Head of the Great Patricia Tree, and so on.</li>
+<li>Your name will be added to the <a href="#GreatHall">Hall of Monarchs</a> in the blockchain.</li>
+<li>The contract will then send your 10 ether (less a small commission) to the previous Monarch you have usurped, as compensation.</li>
 <li>The new claim price for the throne will go up by 50%, to 15 ether.</li>
-<li>If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.</li>
-<li><del>But ... if no new Monarch comes along within 3 days, then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can&#39;t give you back your ether because it was given to the previous monarch). Surely you&#39;ll find a worthy successor within 72 hours though ... right?</del> <strong>TODO - the current version of the contract never resets, so you may reign forever ...</strong></li>
+<li>If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether as compensation - a profit of 5 ether for you.</li>
+<li>Of course, if no usurper comes along, you will never get your 10 ether back - but what is that compared to ruling the ether forever?</li>
 </ul>
 <p><a name="WhoMonarch"/></p>
 <h2 id="who-is-the-monarch-">Who is the Monarch?</h2>
-<p>Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is <strong>king_penguin</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.</p>
-<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:14:48.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.</em></p>
+<p>Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is <strong>king_penguin</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
+<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:20:08.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.</em></p>
 <p><a name="HowIRule"/></p>
 <h2 id="how-can-i-rule-the-ether-">How Can I Rule the Ether?</h2>
 <p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>0.8649755859375 ether</strong>.</p>
@@ -85,14 +85,7 @@ geth --rpc --rpccorsdomain &#39;*&#39;
 
 <p>You might need to unlock your wallet account to make it work - e.g. in the <a href="https://github.com/ethereum/go-ethereum/wiki/geth">geth</a> console:</p>
 <pre><code>personal.unlockAccount(web3.eth.accounts[0]);
-</code></pre><p>If that doesn&#39;t work, read on ...</p>
-<p><a name="PayAddContract"/></p>
-<h3 id="pay-by-adding-the-contract-in-the-mist-wallet">Pay by Adding the Contract in the Mist Wallet</h3>
-<p>If you&#39;re using the (still experimental!) Mist Ethereum Wallet - e.g. from <a href="https://github.com/ethereum/mist/releases">https://github.com/ethereum/mist/releases</a> - go to Contracts -&gt; Add Contract, then fill in the details from the <a href="#TheContract">Contract Details</a> section below. Yes, you do need to copy and paste that big long bit of JSON.</p>
-<p>After you&#39;ve added the Contract, if you click &quot;Show Contract Information&quot;, you should be able to see the Current Claim Price on the left and a &#39;claimThrone&#39; function you can select and execute on the right.</p>
-<p>Don&#39;t forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.</p>
-<p>This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn&#39;t much good.</p>
-<p>Read on for more ways to pay ...</p>
+</code></pre><p>If that doesn&#39;t work, don&#39;t worry, read on for me ways to claim your throne ...</p>
 <p><a name="PayManually"/></p>
 <h3 id="pay-by-sending-a-manual-payment">Pay by Sending a Manual Payment</h3>
 <p>You can simply manually send your payment to <code>0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e</code>. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.</p>
@@ -105,7 +98,7 @@ geth --rpc --rpccorsdomain &#39;*&#39;
   gas: 500000,
   data: web3.fromAscii(&#39;Your Kingly Name&#39;)
 });
-</code></pre><p>Please keep the length of your name to less than 20 letters - some ÐApp software gets confused by long names.</p>
+</code></pre><p>Please keep the length of your name to no more than 20 characters - some ÐApp software gets confused by long names.</p>
 <p>See above for the current claim price of the throne (don&#39;t worry too much about getting it wrong, it will refund you if you pay too little / too much).</p>
 <p><a name="PayWithJavascript"/></p>
 <h3 id="using-the-web3-javascript-api">Using the Web3 Javascript API</h3>
@@ -125,7 +118,12 @@ kingOfTheEtherThrone.claimThrone(
   { from: eth.accounts[0],
     value: kingOfTheEtherThrone.currentClaimPrice(),
     gas: 500000 } )
-</code></pre><p><a name="InteractChainExplorers"/></p>
+</code></pre><p><a name="PayAddContract"/></p>
+<h3 id="pay-by-adding-the-contract-in-the-mist-wallet">Pay by Adding the Contract in the Mist Wallet</h3>
+<p>If you&#39;re using the (still experimental!) Mist Ethereum Wallet - e.g. from <a href="https://github.com/ethereum/mist/releases">https://github.com/ethereum/mist/releases</a> - go to Contracts -&gt; Add Contract, then fill in the details from the <a href="#TheContract">Contract Details</a> section below. Yes, you do need to copy and paste that big long bit of JSON.</p>
+<p>After you&#39;ve added the Contract, if you click &quot;Show Contract Information&quot;, you should be able to see the Current Claim Price on the left and a &#39;claimThrone&#39; function you can select and execute on the right. Don&#39;t forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.</p>
+<p>This worked (once) in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn&#39;t much good.</p>
+<p><a name="InteractChainExplorers"/></p>
 <h3 id="interacting-via-chain-explorers">Interacting via Chain Explorers</h3>
 <p>You can watch transactions and storage changes happening in this contract on chain viewers at e.g. <a href="https://etherchain.org/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">etherchain.org</a>, <a href="https://etherscan.io/address/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">etherscan.io</a>, and <a href="https://live.ether.camp/account/0xa9d160e32ad37ac6f2b8231e4efe14d35abb576e">ethercamp</a>. Some don&#39;t seem to be very good at showing transactions generated by the contract though.</p>
 <p><a name="TheContract"/></p>
@@ -212,11 +210,11 @@ kingOfTheEtherThrone.claimThrone(
 </tr>
 </tbody>
 </table>
-<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:14:48.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.</em></p>
+<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:20:08.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.</em></p>
 <p><a name="BitsAndBobs"/></p>
 <h2 id="other-bits-and-pieces">Other Bits and Pieces</h2>
 <h3 id="how-much-is-the-commission-charge-">How much is the commission charge?</h3>
-<p>Two percent. This helps cover gas costs too.</p>
+<p>One percent. This helps cover gas costs too.</p>
 <h3 id="haven-t-i-seen-something-like-this-before-">Haven&#39;t I seen something like this before?</h3>
 <p>Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemed to involve owning a magnificent gem or a special coin).</p>
 <p>The difference with Ethereum is that you don&#39;t have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.</p>
@@ -228,14 +226,14 @@ kingOfTheEtherThrone.claimThrone(
 <p>Short answer: No.</p>
 <p><a name="AndFinally"/></p>
 <h2 id="and-finally">And Finally</h2>
-<p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
+<p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives). Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract.</p>
 
     </div>
   </div>
-  <script type="text/javascript" src="web3.js?v=1454771705031"></script>
-  <script type="text/javascript" src="nunjucks-slim.js?v=1454771705031"></script>
-  <script type="text/javascript" src="templates.js?v=1454771705031"></script>
-  <script type="text/javascript" src="interface.js?v=1454771705031"></script>
+  <script type="text/javascript" src="web3.js?v=1454772022359"></script>
+  <script type="text/javascript" src="nunjucks-slim.js?v=1454772022359"></script>
+  <script type="text/javascript" src="templates.js?v=1454772022359"></script>
+  <script type="text/javascript" src="interface.js?v=1454772022359"></script>
   <script type="text/javascript">
   <!--
   var interfaceConfig = {

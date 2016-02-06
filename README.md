@@ -12,12 +12,12 @@ This is all very pre-release and buggy - might switch to a new contract soon!
 - [Who is the Monarch?](#WhoMonarch)
 - [How Can I Rule the Ether?](#HowIRule)
   - [with a ÐApp browser](#PayDappBrowser)
-  - [by adding the contract](#PayAddContract)
   - [manual payment](#PayManually)
   - [via Javascript console](#PayWithJavascript)
+  - [by adding the contract](#PayAddContract)
   - [using chain explorers](#InteractChainExplorers)
 - [Contract Details](#TheContract)
-- [Hall of Monarchs](#GreatHall")
+- [Hall of Monarchs](#GreatHall)
 - [Other Bits and Pieces](#BitsAndBobs)
 - [And Finally](#AndFinally)
 
@@ -28,19 +28,19 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 - Let's say (for example) the current claim price for the throne is 10 ether.
 - You like the sound of being King, so you send 10 ether to the contract.
-- This makes you the new King of the Ether Throne, the First of His Name, the Uncentralized, Sovereign of the Exalted Order of Miners, Emperor of the Blocks beyond the Sidechains, Head of the Great Patricia Tree, and so on and so forth.
-- Your name will be added to the Hall of Past Monarchs in the blockchain.
-- The contract will then send your 10 ether (less a small commission charge) to the previous Monarch you have usurped, as compensation.
+- This makes you the new King of the Ether Throne, the First of His Name, the Uncentralized, Sovereign of the Exalted Order of Miners, Emperor of the Blocks beyond the Sidechains, Head of the Great Patricia Tree, and so on.
+- Your name will be added to the [Hall of Monarchs](#GreatHall) in the blockchain.
+- The contract will then send your 10 ether (less a small commission) to the previous Monarch you have usurped, as compensation.
 - The new claim price for the throne will go up by 50%, to 15 ether.
-- If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether (less a small commission charge) as compensation - a profit of 5 ether for you.
-- ~~But ... if no new Monarch comes along within 3 days, then your reign ends and the throne becomes vacant, with the claim price reset back to 0.01 ether. (The contract can't give you back your ether because it was given to the previous monarch). Surely you'll find a worthy successor within 72 hours though ... right?~~ **TODO - the current version of the contract never resets, so you may reign forever ...**
+- If an usurper comes along who is willing to pay 15 ether, she will depose you and become Queen, and you will receive her payment of 15 ether as compensation - a profit of 5 ether for you.
+- Of course, if no usurper comes along, you will never get your 10 ether back - but what is that compared to ruling the ether forever?
 
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is **king_penguin**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
+Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is **king_penguin**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:14:48.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:20:08.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
@@ -62,20 +62,7 @@ geth --rpc --rpccorsdomain '*'
 
 
 
-If that doesn't work, read on ...
-
-<a name="PayAddContract"/>
-### Pay by Adding the Contract in the Mist Wallet
-
-If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases](https://github.com/ethereum/mist/releases) - go to Contracts -> Add Contract, then fill in the details from the [Contract Details](#TheContract) section below. Yes, you do need to copy and paste that big long bit of JSON.
-
-After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right.
-
-Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
-
-This worked in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good.
-
-Read on for more ways to pay ...
+If that doesn't work, don't worry, read on for me ways to claim your throne ...
 
 <a name="PayManually"/>
 ### Pay by Sending a Manual Payment
@@ -96,7 +83,7 @@ eth.sendTransaction({
 });
 ```
 
-Please keep the length of your name to less than 20 letters - some ÐApp software gets confused by long names.
+Please keep the length of your name to no more than 20 characters - some ÐApp software gets confused by long names.
 
 See above for the current claim price of the throne (don't worry too much about getting it wrong, it will refund you if you pay too little / too much).
 
@@ -122,6 +109,15 @@ kingOfTheEtherThrone.claimThrone(
     value: kingOfTheEtherThrone.currentClaimPrice(),
     gas: 500000 } )
 ```
+
+<a name="PayAddContract"/>
+### Pay by Adding the Contract in the Mist Wallet
+
+If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases](https://github.com/ethereum/mist/releases) - go to Contracts -> Add Contract, then fill in the details from the [Contract Details](#TheContract) section below. Yes, you do need to copy and paste that big long bit of JSON.
+
+After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right. Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
+
+This worked (once) in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good.
 
 <a name="InteractChainExplorers"/>
 ### Interacting via Chain Explorers
@@ -168,14 +164,14 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 |1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:14:48.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T15:20:08.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
 
 ### How much is the commission charge?
 
-Two percent. This helps cover gas costs too.
+One percent. This helps cover gas costs too.
 
 ### Haven't I seen something like this before?
 
@@ -198,4 +194,4 @@ Short answer: No.
 <a name="AndFinally"/>
 ## And Finally
 
-This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).
+This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don't spend money you can't afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives). Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract.
