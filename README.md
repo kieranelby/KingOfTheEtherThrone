@@ -40,7 +40,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-05T23:47:50.000Z, the illustrious current ruler of the Ether Throne is **king_penguin**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, and so on and so forth.
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T11:44:07.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T12:14:42.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
@@ -168,7 +168,7 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 |1|Kieran the 1st (0x2f88180369377869a1bc5ae807416f72d736c206)|0.01 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T11:44:07.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-06T12:14:42.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
