@@ -58,7 +58,7 @@ function decorateRawMonarch(rawMonarch, number) {
   };
   monarch.coronationTimestampReadable = makeUnixTimestampReadable(monarch.coronationTimestamp);
   if (monarch.name == '') {
-    monarch.displayName = etherAddress;
+    monarch.displayName = monarch.etherAddress;
   } else if (monarch.name == '[Vacant]') {
     monarch.displayName = '[Vacant]';
     monarch.etherAddress = '';
