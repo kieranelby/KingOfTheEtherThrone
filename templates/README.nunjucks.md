@@ -4,7 +4,7 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 
 ## Warning
 
-Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. In particular, [ethercan.io](https://etherscan.io/address/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0) shows an unexpected balance change following transaction 0xdf4d5cd4b460f73cfd4899315d1ff0ecd9f1313622db785c4054a14f8993aa02.
+Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this [reddit thread](https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf) for details.
 
 ## Contents
 
