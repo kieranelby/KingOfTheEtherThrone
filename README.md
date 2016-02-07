@@ -6,6 +6,7 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 
 - [What does it do?](#WhatItDo)
 - [Who is the Monarch?](#WhoMonarch)
+- [Hall of Monarchs](#GreatHall)
 - [How Can I Rule the Ether?](#HowIRule)
   - [with a ÐApp browser](#PayDappBrowser)
   - [manual payment](#PayManually)
@@ -13,7 +14,6 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
   - [by adding the contract](#PayAddContract)
   - [using chain explorers](#InteractChainExplorers)
 - [Contract Details](#TheContract)
-- [Hall of Monarchs](#GreatHall)
 - [Other Bits and Pieces](#BitsAndBobs)
 - [And Finally](#AndFinally)
 
@@ -36,12 +36,32 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-07T07:32:16.000Z, the illustrious current ruler of the Ether Throne is **0x60cea93e5d7b98027f7e7e433673f9b30448b001**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T08:59:49.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T09:02:16.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
+
+<a name="GreatHall"/>
+## Hall of Monarchs
+
+|Number|Name|Claim Price Paid|
+|---|---|---|
+|Current|0x60cea93e5d7b98027f7e7e433673f9b30448b001|12.7 ether|
+|12|Sir Buterin (0x71e3c9097edd8cf3b3136cdc2eb69ce2cec80f02)|8.52 ether|
+|11|Aakil Fernandes  (0xdc99b79555385ab2fe0ff28c3c954a07b28aac5e)|5.68 ether|
+|10|dpfbop (0xfa8ede0792b8a4f0d5299d76730244ba76b4ab0b)|3.79 ether|
+|9|Bokky Poo Bah (0x9dec4be08b93838697fba22c3cdd28c1a03ed159)|2.53 ether|
+|8|Dunning\_Krugerrands (0xefede69c637ca59ae461094ab64c5bbe99843f34)|1.69 ether|
+|7|moo ha ha says the laughing cow (0x1db3439a222c519ab44bb1144fc28167b4fa6ee6)|1.13 ether|
+|6|Max von Sydow (0xa15cc3b84ab0fb5598778366d0281714fc878d8d)|0.757 ether|
+|5|\_natsu\_ (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.505 ether|
+|4|king\_pengui2 (0x9371ea0d13fb8a8306a420572cda36c4e8640f38)|0.337 ether|
+|3|SPACE\_CHICKEN (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.225 ether|
+|2|king\_pengui (0x9371ea0d13fb8a8306a420572cda36c4e8640f38)|0.15 ether|
+|1|kingoftheether.com (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.1 ether|
+||[Vacant]|0 ether|
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **19 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **19 ether** (as of 2016-02-07T09:02:16.000Z).
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -50,10 +70,10 @@ Here's how you can pay the claim price and rule the Ether ...
 
 It's all a bit hemorrhaging-edge, but if you visit the live version of this page at [kingoftheether.com](http://www.kingoftheether.com/) - not in your normal browser, but inside a special Ethereum ÐApp browser such as [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) then you should see the ÐApp interface appear where you can interact with the contract via your local Ethereum node.
 
-This may also work in your normal browser (Chrome, Firefox) if you have the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client running locally with RPC calls enabled so your browser can talk to it - e.g. like this:
+Unfortunately Mist is still under heavy development (I keep getting 'invalid address' errors), so you might have more luck if you use your normal browser (Chrome, Firefox) with the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client running locally. You'll need to enable RPC calls so the ÐApp in your browser can talk to it - e.g. start geth like this:
 ```
-# warning: insecure
-geth --rpc --rpccorsdomain '*'
+# NB: the DApp always uses the first account, so unlock it:
+geth --rpc --rpccorsdomain 'http://www.kingoftheether.com' --unlock 0 console
 ```
 
 
@@ -72,10 +92,10 @@ We'll use your Ethereum address as your name, though if you like you can put you
 ```
 eth.sendTransaction({
   from: eth.accounts[0],
-  value: web3.toWei(15, 'ether'),
+  value: web3.toWei(15, 'ether'), // change this
   to: '0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0',
   gas: 500000,
-  data: web3.fromAscii('Your Kingly Name')
+  data: web3.fromAscii('Your Kingly Name') // change this
 });
 ```
 
@@ -111,14 +131,16 @@ kingOfTheEtherThrone.claimThrone(
 
 If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases](https://github.com/ethereum/mist/releases) - go to Contracts -> Add Contract, then fill in the details from the [Contract Details](#TheContract) section below. Yes, you do need to copy and paste that big long bit of JSON.
 
-After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right. Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
+After you've added the Contract, if you click "Show Contract Information" (and perhaps click what appears underneath?), you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right. Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
 
 This worked (once) in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good.
 
 <a name="InteractChainExplorers"/>
 ### Interacting via Chain Explorers
 
-You can watch transactions and storage changes happening in this contract on chain viewers at e.g. [etherchain.org](https://etherchain.org/account/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0), [etherscan.io](https://etherscan.io/address/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0), and [ethercamp](https://live.ether.camp/account/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0). Some don't seem to be very good at showing transactions generated by the contract though.
+You can watch transactions and storage changes happening in this contract on chain viewers at e.g. [etherchain.org](https://etherchain.org/account/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0), [etherscan.io](https://etherscan.io/address/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0), and [ethercamp](https://live.ether.camp/account/0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0).
+
+Some don't seem to be very good at showing transactions generated by the contract though. Ether.camp has the best visualisation but appears to be lagging behind a bit as of 7th Feb - don't panic if transactions not appearing!
 
 <a name="TheContract"/>
 ## Contract Details
@@ -142,27 +164,7 @@ You can use these details to interact with the King of the Ether Throne contract
 
 The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `0.2.1-fad2d4df` with optimization, just in case you want to verify the code matches the bytecode.
 
-<a name="GreatHall"/>
-## Hall of Monarchs
 
-|Number|Name|Claim Price Paid|
-|---|---|---|
-|Current|0x60cea93e5d7b98027f7e7e433673f9b30448b001|12.7 ether|
-|12|Sir Buterin (0x71e3c9097edd8cf3b3136cdc2eb69ce2cec80f02)|8.52 ether|
-|11|Aakil Fernandes  (0xdc99b79555385ab2fe0ff28c3c954a07b28aac5e)|5.68 ether|
-|10|dpfbop (0xfa8ede0792b8a4f0d5299d76730244ba76b4ab0b)|3.79 ether|
-|9|Bokky Poo Bah (0x9dec4be08b93838697fba22c3cdd28c1a03ed159)|2.53 ether|
-|8|Dunning\_Krugerrands (0xefede69c637ca59ae461094ab64c5bbe99843f34)|1.69 ether|
-|7|moo ha ha says the laughing cow (0x1db3439a222c519ab44bb1144fc28167b4fa6ee6)|1.13 ether|
-|6|Max von Sydow (0xa15cc3b84ab0fb5598778366d0281714fc878d8d)|0.757 ether|
-|5|\_natsu\_ (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.505 ether|
-|4|king\_pengui2 (0x9371ea0d13fb8a8306a420572cda36c4e8640f38)|0.337 ether|
-|3|SPACE\_CHICKEN (0xb2afec1da55c15ad57b3310f9008c47f4e028de3)|0.225 ether|
-|2|king\_pengui (0x9371ea0d13fb8a8306a420572cda36c4e8640f38)|0.15 ether|
-|1|kingoftheether.com (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.1 ether|
-||[Vacant]|0 ether|
-
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T08:59:49.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
