@@ -34,14 +34,14 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since 2016-02-07T05:46:18.000Z, the illustrious current ruler of the Ether Throne is **Sir Buterin (0x71e3c9097edd8cf3b3136cdc2eb69ce2cec80f02)**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
+Since 2016-02-07T07:32:16.000Z, the illustrious current ruler of the Ether Throne is **0x60cea93e5d7b98027f7e7e433673f9b30448b001**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T07:29:35.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T08:44:53.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **12.7 ether**.
+The power of the Ether Throne can be yours for the **current claim price** of just **19 ether**.
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -147,7 +147,8 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
-|Current|Sir Buterin (0x71e3c9097edd8cf3b3136cdc2eb69ce2cec80f02)|8.52 ether|
+|Current|0x60cea93e5d7b98027f7e7e433673f9b30448b001|12.7 ether|
+|12|Sir Buterin (0x71e3c9097edd8cf3b3136cdc2eb69ce2cec80f02)|8.52 ether|
 |11|Aakil Fernandes  (0xdc99b79555385ab2fe0ff28c3c954a07b28aac5e)|5.68 ether|
 |10|dpfbop (0xfa8ede0792b8a4f0d5299d76730244ba76b4ab0b)|3.79 ether|
 |9|Bokky Poo Bah (0x9dec4be08b93838697fba22c3cdd28c1a03ed159)|2.53 ether|
@@ -161,7 +162,7 @@ The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](
 |1|kingoftheether.com (0xfe159b1852a4450ba4bd9c2630dbea72c9b8cd65)|0.1 ether|
 ||[Vacant]|0 ether|
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T07:29:35.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T08:44:53.000Z); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
