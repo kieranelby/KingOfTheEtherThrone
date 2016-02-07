@@ -6,6 +6,7 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 
 - [What does it do?](#WhatItDo)
 - [Who is the Monarch?](#WhoMonarch)
+- [Hall of Monarchs](#GreatHall)
 - [How Can I Rule the Ether?](#HowIRule)
   - [with a ÐApp browser](#PayDappBrowser)
   - [manual payment](#PayManually)
@@ -13,7 +14,6 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
   - [by adding the contract](#PayAddContract)
   - [using chain explorers](#InteractChainExplorers)
 - [Contract Details](#TheContract)
-- [Hall of Monarchs](#GreatHall)
 - [Other Bits and Pieces](#BitsAndBobs)
 - [And Finally](#AndFinally)
 
