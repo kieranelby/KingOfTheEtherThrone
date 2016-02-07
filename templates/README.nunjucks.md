@@ -36,12 +36,22 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since {{currentMonarch.coronationTimestampReadable}}, the illustrious current ruler of the Ether Throne is **{{currentMonarch.displayName}}**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
+
+<a name="GreatHall"/>
+## Hall of Monarchs
+
+|Number|Name|Claim Price Paid|
+|---|---|---|
+|Current|{{currentMonarch.displayName}}|{{currentMonarch.claimPricePaid}}|
+{%- for pastMonarch in pastMonarchs %}
+|{{pastMonarch.number}}|{{pastMonarch.displayName}}|{{pastMonarch.claimPricePaid}}|
+{%- endfor %}
 
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **{{currentClaimPrice}}**.
+The power of the Ether Throne can be yours for the **current claim price** of just **{{currentClaimPrice}}** (as of {{lastUpdatedBlockTimestampReadable}}).
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -50,10 +60,10 @@ Here's how you can pay the claim price and rule the Ether ...
 
 It's all a bit hemorrhaging-edge, but if you visit {% if targetIsGit %}the live version of this page at [kingoftheether.com](http://www.kingoftheether.com/){% elif targetIsWeb %}this page{% endif %} - not in your normal browser, but inside a special Ethereum ÐApp browser such as [Mist (developer preview)](https://github.com/ethereum/mist/releases/tag/0.3.6) then you should see the ÐApp interface {% if targetIsGit %}appear where you can interact with the contract via your local Ethereum node.{% elif targetIsWeb %} appear right here in this section.{% endif %}
 
-This may also work in your normal browser (Chrome, Firefox) if you have the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client running locally with RPC calls enabled so your browser can talk to it - e.g. like this:
+Unfortunately Mist is still under heavy development (I keep getting 'invalid address' errors), so you might have more luck if you use your normal browser (Chrome, Firefox) with the Ethereum [geth](https://github.com/ethereum/go-ethereum/wiki/geth) client running locally. You'll need to enable RPC calls so the ÐApp in your browser can talk to it - e.g. start geth like this:
 ```
-# warning: insecure
-geth --rpc --rpccorsdomain '*'
+# NB: the DApp always uses the first account, so unlock it:
+geth --rpc --rpccorsdomain 'http://www.kingoftheether.com' --unlock 0 console
 ```
 
 {% if targetIsWeb %}
@@ -62,10 +72,6 @@ Anyway, here's the ÐApp interface:
 **Sorry, this web page couldn't seem to create the ÐApp interface.**
 </div>
 
-You might need to unlock your wallet account to make it work - e.g. in the [geth](https://github.com/ethereum/go-ethereum/wiki/geth) console:
-```
-personal.unlockAccount(web3.eth.accounts[0]);
-```
 {% endif %}
 
 If that doesn't work, don't worry, read on for more ways to claim your throne ...
@@ -82,10 +88,10 @@ We'll use your Ethereum address as your name, though if you like you can put you
 ```
 eth.sendTransaction({
   from: eth.accounts[0],
-  value: web3.toWei(15, 'ether'),
+  value: web3.toWei(15, 'ether'), // change this
   to: '{{contractAddress}}',
   gas: 500000,
-  data: web3.fromAscii('Your Kingly Name')
+  data: web3.fromAscii('Your Kingly Name') // change this
 });
 ```
 
@@ -121,14 +127,16 @@ kingOfTheEtherThrone.claimThrone(
 
 If you're using the (still experimental!) Mist Ethereum Wallet - e.g. from [https://github.com/ethereum/mist/releases](https://github.com/ethereum/mist/releases) - go to Contracts -> Add Contract, then fill in the details from the [Contract Details](#TheContract) section below. Yes, you do need to copy and paste that big long bit of JSON.
 
-After you've added the Contract, if you click "Show Contract Information", you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right. Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
+After you've added the Contract, if you click "Show Contract Information" (and perhaps click what appears underneath?), you should be able to see the Current Claim Price on the left and a 'claimThrone' function you can select and execute on the right. Don't forget to include the payment when executing the claimThrone function. The Current Claim Price is shown in Wei, so you might need to do a little conversion.
 
 This worked (once) in version 0.3.8 of the wallet client on Windows, anyway. Unfortunately you might find in some versions that you cannot add a payment when executing a function - which isn't much good.
 
 <a name="InteractChainExplorers"/>
 ### Interacting via Chain Explorers
 
-You can watch transactions and storage changes happening in this contract on chain viewers at e.g. [etherchain.org](https://etherchain.org/account/{{contractAddress}}), [etherscan.io](https://etherscan.io/address/{{contractAddress}}), and [ethercamp](https://live.ether.camp/account/{{contractAddress}}). Some don't seem to be very good at showing transactions generated by the contract though.
+You can watch transactions and storage changes happening in this contract on chain viewers at e.g. [etherchain.org](https://etherchain.org/account/{{contractAddress}}), [etherscan.io](https://etherscan.io/address/{{contractAddress}}), and [ethercamp](https://live.ether.camp/account/{{contractAddress}}).
+
+Some don't seem to be very good at showing transactions generated by the contract though. Ether.camp has the best visualisation but appears to be lagging behind a bit as of 7th Feb - don't panic if transactions not appearing!
 
 <a name="TheContract"/>
 ## Contract Details
@@ -152,17 +160,9 @@ You can use these details to interact with the King of the Ether Throne contract
 
 The Solidarity source code for the contract lives at [KingOfTheEtherThrone.sol](https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol). It was compiled with solidity version `0.2.1-fad2d4df` with optimization, just in case you want to verify the code matches the bytecode.
 
-<a name="GreatHall"/>
-## Hall of Monarchs
-
-|Number|Name|Claim Price Paid|
-|---|---|---|
-|Current|{{currentMonarch.displayName}}|{{currentMonarch.claimPricePaid}}|
-{%- for pastMonarch in pastMonarchs %}
-|{{pastMonarch.number}}|{{pastMonarch.displayName}}|{{pastMonarch.claimPricePaid}}|
-{%- endfor %}
-
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp {{lastUpdatedBlockTimestampReadable}}); read above for how you can interact with the contract via the Ethereum blockchain to find out the true history of the throne.*
+{% if targetIsWeb %}
+The Javascript that powers the KingOfTheEtherThrone ÐApp and which generates this website are also available at [github.com/kieranelby/KingOfTheEtherThrone](https://github.com/kieranelby/KingOfTheEtherThrone) (warning - not pretty!).
+{% endif %}
 
 <a name="BitsAndBobs"/>
 ## Other Bits and Pieces
