@@ -34,16 +34,17 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 <a name="WhoMonarch"/>
 ## Who is the Monarch?
 
-Since 2016-02-07T10:02:10.000Z, the illustrious current ruler of the Ether Throne is **Firescar96 (0xf031f36717cb524b883d440e3837c138180a0289)**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
+Since 2016-02-07T10:15:06.000Z, the illustrious current ruler of the Ether Throne is **0xcb4046e50f71409a3af23da0961b5ce2f769de31**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T10:09:02.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T10:19:46.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
 
 |Number|Name|Claim Price Paid|
 |---|---|---|
-|Current|Firescar96 (0xf031f36717cb524b883d440e3837c138180a0289)|19 ether|
+|Current|0xcb4046e50f71409a3af23da0961b5ce2f769de31|28.5 ether|
+|14|Firescar96 (0xf031f36717cb524b883d440e3837c138180a0289)|19 ether|
 |13|0x60cea93e5d7b98027f7e7e433673f9b30448b001|12.7 ether|
 |12|Sir Buterin (0x71e3c9097edd8cf3b3136cdc2eb69ce2cec80f02)|8.52 ether|
 |11|Aakil Fernandes  (0xdc99b79555385ab2fe0ff28c3c954a07b28aac5e)|5.68 ether|
@@ -62,7 +63,7 @@ Since 2016-02-07T10:02:10.000Z, the illustrious current ruler of the Ether Thron
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **28.5 ether** (as of 2016-02-07T10:09:02.000Z).
+The power of the Ether Throne can be yours for the **current claim price** of just **42.7 ether** (as of 2016-02-07T10:19:46.000Z).
 
 Here's how you can pay the claim price and rule the Ether ...
 
