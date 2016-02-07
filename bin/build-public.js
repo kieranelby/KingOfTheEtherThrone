@@ -13,6 +13,7 @@ var publishEnabled = true;
 console.log("Building public content ...");
 
 var contractAddress = "0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0";
+var contractAddressDisplayed = "TEMPORARILY REMOVED AS A PRECAUTION";
 var contractAbiJson =
   '[{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"sweepCommission","outputs":[],"type":"function"},'+
   '{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},'+
@@ -108,6 +109,7 @@ var readmeContext = {
   targetIsGit: false,
   targetIsWeb: false,
   contractAddress: contractAddress,
+  contractAddressDisplayed: contractAddressDisplayed,
   contractAbi: contractAbi,
   contractAbiJson: contractAbiJson,
   startingClaimPrice: startingClaimPrice,

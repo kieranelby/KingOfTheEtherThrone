@@ -85,7 +85,7 @@ If that doesn't work, don't worry, read on for more ways to claim your throne ..
 <a name="PayManually"/>
 ### Pay by Sending a Manual Payment
 
-You can simply manually send your payment to `{{contractAddress}}`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
+You can simply manually send your payment to `{{contractAddressDisplayed}}`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
 
 **WARNING**: Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this [reddit thread](https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf) for details. Refunds are not possible - pay at your own risk.
 
@@ -97,7 +97,7 @@ We'll use your Ethereum address as your name, though if you like you can put you
 eth.sendTransaction({
   from: eth.accounts[0],
   value: web3.toWei(15, 'ether'), // change this
-  to: '{{contractAddress}}',
+  to: '{{contractAddressDisplayed}}',
   gas: 500000,
   data: web3.fromAscii('Your Kingly Name') // change this
 });
@@ -117,7 +117,7 @@ If you're running a geth node, you can interact with the contract using a little
 var kingOfTheEtherThroneContract = web3.eth.contract({{contractAbiJson | safe}});
 
 // tell web3 where the contract is
-var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('{{contractAddress}}');
+var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('{{contractAddressDisplayed}}');
 
 // ask contract what the current claim price is
 web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
@@ -159,7 +159,7 @@ You can use these details to interact with the King of the Ether Throne contract
 `KingOfTheEtherThrone`
 
 #### CONTRACT ADDRESS
-`{{contractAddress}}`
+`{{contractAddressDisplayed}}`
 
 #### JSON INTERFACE (CONTRACT ABI)
 
