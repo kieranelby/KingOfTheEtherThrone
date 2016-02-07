@@ -78,7 +78,7 @@
 <p><a name="WhoMonarch"/></p>
 <h2 id="who-is-the-monarch-">Who is the Monarch?</h2>
 <p>Since 2016-02-07T11:58:16.000Z, the illustrious current ruler of the Ether Throne is <strong>Major Tom (0x9dec4be08b93838697fba22c3cdd28c1a03ed159)</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
-<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-07T12:38:51.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.</em></p>
+<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-07T12:47:55.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.</em></p>
 <p><a name="GreatHall"/></p>
 <h2 id="hall-of-monarchs">Hall of Monarchs</h2>
 <table>
@@ -179,7 +179,7 @@
 </table>
 <p><a name="HowIRule"/></p>
 <h2 id="how-can-i-rule-the-ether-">How Can I Rule the Ether?</h2>
-<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>64 ether</strong> (as of 2016-02-07T12:38:51.000Z).</p>
+<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>64 ether</strong> (as of 2016-02-07T12:47:55.000Z).</p>
 <p>Here&#39;s how you can pay the claim price and rule the Ether ...</p>
 <p><a name="PayDappBrowser"/></p>
 <h3 id="pay-using-an-ethereum-app-browser">Pay Using an Ethereum ÐApp Browser</h3>
@@ -198,14 +198,14 @@ geth --rpc --rpccorsdomain &#39;http://www.kingoftheether.com&#39; --unlock 0 co
 <p>If that doesn&#39;t work, don&#39;t worry, read on for more ways to claim your throne ...</p>
 <p><a name="PayManually"/></p>
 <h3 id="pay-by-sending-a-manual-payment">Pay by Sending a Manual Payment</h3>
-<p>You can simply manually send your payment to <code>0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0</code>. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.</p>
+<p>You can simply manually send your payment to <code>TEMPORARILY REMOVED AS A PRECAUTION</code>. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.</p>
 <p><strong>WARNING</strong>: Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this <a href="https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf">reddit thread</a> for details. Refunds are not possible - pay at your own risk.</p>
 <p>If another monarch comes along and takes your throne, we&#39;ll send your compensation payment to the address you sent your payment from - so make sure you send the payment from an address you control.</p>
 <p>We&#39;ll use your Ethereum address as your name, though if you like you can put your name in the data field - might need to convert from ASCII. e.g. with the geth Javascript console:</p>
 <pre><code>eth.sendTransaction({
   from: eth.accounts[0],
   value: web3.toWei(15, &#39;ether&#39;), // change this
-  to: &#39;0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0&#39;,
+  to: &#39;TEMPORARILY REMOVED AS A PRECAUTION&#39;,
   gas: 500000,
   data: web3.fromAscii(&#39;Your Kingly Name&#39;) // change this
 });
@@ -218,7 +218,7 @@ geth --rpc --rpccorsdomain &#39;http://www.kingoftheether.com&#39; --unlock 0 co
 var kingOfTheEtherThroneContract = web3.eth.contract([{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;amount&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;newOwner&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;transferOwnership&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;}]);
 
 // tell web3 where the contract is
-var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(&#39;0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0&#39;);
+var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at(&#39;TEMPORARILY REMOVED AS A PRECAUTION&#39;);
 
 // ask contract what the current claim price is
 web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),&#39;ether&#39;);
@@ -245,7 +245,7 @@ kingOfTheEtherThrone.claimThrone(
 <h4 id="contract-name">CONTRACT NAME</h4>
 <p><code>KingOfTheEtherThrone</code></p>
 <h4 id="contract-address">CONTRACT ADDRESS</h4>
-<p><code>0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0</code></p>
+<p><code>TEMPORARILY REMOVED AS A PRECAUTION</code></p>
 <h4 id="json-interface-contract-abi-">JSON INTERFACE (CONTRACT ABI)</h4>
 <pre><code>[{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;amount&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;newOwner&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;transferOwnership&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;}]
 </code></pre><h4 id="contract-source-code">CONTRACT SOURCE CODE</h4>
@@ -270,10 +270,10 @@ kingOfTheEtherThrone.claimThrone(
 
     </div>
   </div>
-  <script type="text/javascript" src="web3.js?v=1454848805604"></script>
-  <script type="text/javascript" src="nunjucks-slim.js?v=1454848805604"></script>
-  <script type="text/javascript" src="templates.js?v=1454848805604"></script>
-  <script type="text/javascript" src="interface.js?v=1454848805604"></script>
+  <script type="text/javascript" src="web3.js?v=1454849341615"></script>
+  <script type="text/javascript" src="nunjucks-slim.js?v=1454849341615"></script>
+  <script type="text/javascript" src="templates.js?v=1454849341615"></script>
+  <script type="text/javascript" src="interface.js?v=1454849341615"></script>
   <script type="text/javascript">
   <!--
   var interfaceConfig = {

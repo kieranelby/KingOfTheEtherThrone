@@ -40,7 +40,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-07T11:58:16.000Z, the illustrious current ruler of the Ether Throne is **Major Tom (0x9dec4be08b93838697fba22c3cdd28c1a03ed159)**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T12:38:51.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-07T12:47:55.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
@@ -68,7 +68,7 @@ Since 2016-02-07T11:58:16.000Z, the illustrious current ruler of the Ether Thron
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **64 ether** (as of 2016-02-07T12:38:51.000Z).
+The power of the Ether Throne can be yours for the **current claim price** of just **64 ether** (as of 2016-02-07T12:47:55.000Z).
 
 Here's how you can pay the claim price and rule the Ether ...
 
@@ -92,7 +92,7 @@ If that doesn't work, don't worry, read on for more ways to claim your throne ..
 <a name="PayManually"/>
 ### Pay by Sending a Manual Payment
 
-You can simply manually send your payment to `0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
+You can simply manually send your payment to `TEMPORARILY REMOVED AS A PRECAUTION`. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.
 
 **WARNING**: Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this [reddit thread](https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf) for details. Refunds are not possible - pay at your own risk.
 
@@ -104,7 +104,7 @@ We'll use your Ethereum address as your name, though if you like you can put you
 eth.sendTransaction({
   from: eth.accounts[0],
   value: web3.toWei(15, 'ether'), // change this
-  to: '0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0',
+  to: 'TEMPORARILY REMOVED AS A PRECAUTION',
   gas: 500000,
   data: web3.fromAscii('Your Kingly Name') // change this
 });
@@ -124,7 +124,7 @@ If you're running a geth node, you can interact with the contract using a little
 var kingOfTheEtherThroneContract = web3.eth.contract([{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"sweepCommission","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"currentClaimPrice","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pastMonarchs","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"}],"name":"claimThrone","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"numberOfMonarchs","outputs":[{"name":"n","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"currentMonarch","outputs":[{"name":"etherAddress","type":"address"},{"name":"name","type":"string"},{"name":"claimPrice","type":"uint256"},{"name":"coronationTimestamp","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"usurperEtherAddress","type":"address"},{"indexed":false,"name":"usurperName","type":"string"},{"indexed":false,"name":"newClaimPrice","type":"uint256"}],"name":"ThroneClaimed","type":"event"}]);
 
 // tell web3 where the contract is
-var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0');
+var kingOfTheEtherThrone = kingOfTheEtherThroneContract.at('TEMPORARILY REMOVED AS A PRECAUTION');
 
 // ask contract what the current claim price is
 web3.fromWei(kingOfTheEtherThrone.currentClaimPrice(),'ether');
@@ -166,7 +166,7 @@ You can use these details to interact with the King of the Ether Throne contract
 `KingOfTheEtherThrone`
 
 #### CONTRACT ADDRESS
-`0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0`
+`TEMPORARILY REMOVED AS A PRECAUTION`
 
 #### JSON INTERFACE (CONTRACT ABI)
 
