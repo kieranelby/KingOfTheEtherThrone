@@ -40,7 +40,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-07T20:22:06.000Z, the illustrious current ruler of the Ether Throne is **0xc0e22f23ff54ca58d93a65044a18a3f245552144**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-08T19:59:48.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-08T20:09:31.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
@@ -70,7 +70,7 @@ Since 2016-02-07T20:22:06.000Z, the illustrious current ruler of the Ether Thron
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **144 ether** (as of 2016-02-08T19:59:48.000Z).
+The power of the Ether Throne can be yours for the **current claim price** of just **144 ether** (as of 2016-02-08T20:09:31.000Z).
 
 Here's how you can pay the claim price and rule the Ether ...
 
