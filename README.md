@@ -5,7 +5,7 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 <a name="Important"/>
 ## Important Notice
 
-A SERIOUS ISSUE has been identified that can cause monarch compensation payments to not be sent. Do not send payments to the contract previously referenced on this page, or attempt to claim the throne. Refunds will CERTAINLY NOT be made for any payments made after this issue was identified on 2016-02-07.
+A SERIOUS ISSUE has been identified that can cause monarch compensation payments to not be sent. DO NOT send payments to the contract previously referenced on this page, or attempt to claim the throne. Refunds will CERTAINLY NOT be made for any payments made after this issue was identified on 2016-02-07.
 
 This issue involves a somewhat surprising interation between contract-to-contract calls, low gas, and/or some wallet contracts, and is particularly likely to occur if one monarch claimed the throne using a contract-based wallet, and then the next monarch included only a small amount of gas with their payment. See this [reddit thread](https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/) for details as they emerge. However, the issue may also occur in other situations.
 
@@ -49,7 +49,7 @@ The Ether Throne awaits you. It can be yours for a price - here are the rules as
 
 Since 2016-02-07T20:22:06.000Z, the illustrious current ruler of the Ether Throne is **0xc0e22f23ff54ca58d93a65044a18a3f245552144**, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the [Hall of Monarchs](#GreatHall).
 
-*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-11T22:59:23.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
+*NB: You don't have to trust this page (which was last updated based on a block with timestamp 2016-02-11T23:08:38.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.*
 
 <a name="GreatHall"/>
 ## Hall of Monarchs
@@ -79,7 +79,7 @@ Since 2016-02-07T20:22:06.000Z, the illustrious current ruler of the Ether Thron
 <a name="HowIRule"/>
 ## How Can I Rule the Ether?
 
-The power of the Ether Throne can be yours for the **current claim price** of just **144 ether** (as of 2016-02-11T22:59:23.000Z).
+The power of the Ether Throne can be yours for the **current claim price** of just **144 ether** (as of 2016-02-11T23:08:38.000Z).
 
 Here's how you can pay the claim price and rule the Ether ...
 
