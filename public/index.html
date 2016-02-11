@@ -43,8 +43,13 @@
     <div class="content">
       <h1 id="king-of-the-ether-throne">King of the Ether Throne</h1>
 <p>An Ethereum ÐApp (a &quot;contract&quot;), living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
-<h2 id="warning">Warning</h2>
-<p>Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this <a href="https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf">reddit thread</a> for details. Refunds are not possible - pay at your own risk.</p>
+<p><a name="Important"/></p>
+<h2 id="important-notice">Important Notice</h2>
+<p>A SERIOUS ISSUE has been identified that can cause monarch compensation payments to not be sent. Do not send payments to the contract previously referenced on this page, or attempt to claim the throne. Refunds will CERTAINLY NOT be made for any payments made after this issue was identified on 2016-02-07.</p>
+<p>This issue involves a somewhat surprising interation between contract-to-contract calls, low gas, and/or some wallet contracts, and is particularly likely to occur if one monarch claimed the throne using a contract-based wallet, and then the next monarch included only a small amount of gas with their payment. See this <a href="https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/">reddit thread</a> for details as they emerge. However, the issue may also occur in other situations.</p>
+<p>Investigation is continuing to understand which payments succeeded and which failed. This is hindered by most blockchain explorers not showing or indexing all contract-to-contract calls (aka &quot;internal transactions&quot; or &quot;message calls&quot;) - suggestions appreciated. A further update will be posted here by 2016-02-21 at the latest.</p>
+<p>Following the investigation, a new Kingdom of the Ether is expected to arise (possibly with a twist) - and don&#39;t worry, those brave, noble (and maybe a little foolhardy) monarchs who entered the Hall of Monarchs during this turbulent Early Age of Kings will not be forgotten - may their names be remembered evermore.</p>
+<p>Thank you for your patience and understanding.</p>
 <h2 id="contents">Contents</h2>
 <ul>
 <li><a href="#WhatItDo">What does it do?</a></li>
@@ -60,7 +65,7 @@
 </li>
 <li><a href="#TheContract">Contract Details</a></li>
 <li><a href="#BitsAndBobs">Other Bits and Pieces</a></li>
-<li><a href="#AndFinally">And Finally</a></li>
+<li><a href="#Disclaimer">Disclaimer</a></li>
 </ul>
 <p><a name="WhatItDo"/></p>
 <h2 id="what-does-it-do-">What does it do?</h2>
@@ -78,7 +83,7 @@
 <p><a name="WhoMonarch"/></p>
 <h2 id="who-is-the-monarch-">Who is the Monarch?</h2>
 <p>Since 2016-02-07T20:22:06.000Z, the illustrious current ruler of the Ether Throne is <strong>0xc0e22f23ff54ca58d93a65044a18a3f245552144</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
-<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-11T14:49:58.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.</em></p>
+<p><em>NB: You don&#39;t have to trust this page (which was last updated based on a block with timestamp 2016-02-11T22:51:24.000Z); read on for how you can interact with the contract via the Ethereum blockchain to find out who is our ruler - and usurp them.</em></p>
 <p><a name="GreatHall"/></p>
 <h2 id="hall-of-monarchs">Hall of Monarchs</h2>
 <table>
@@ -189,7 +194,7 @@
 </table>
 <p><a name="HowIRule"/></p>
 <h2 id="how-can-i-rule-the-ether-">How Can I Rule the Ether?</h2>
-<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>144 ether</strong> (as of 2016-02-11T14:49:58.000Z).</p>
+<p>The power of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong>144 ether</strong> (as of 2016-02-11T22:51:24.000Z).</p>
 <p>Here&#39;s how you can pay the claim price and rule the Ether ...</p>
 <p><a name="PayDappBrowser"/></p>
 <h3 id="pay-using-an-ethereum-app-browser">Pay Using an Ethereum ÐApp Browser</h3>
@@ -197,7 +202,7 @@
 <p>Unfortunately Mist is still under heavy development (I keep getting &#39;invalid address&#39; errors), so you might have more luck if you use your normal browser (Chrome, Firefox) with the Ethereum <a href="https://github.com/ethereum/go-ethereum/wiki/geth">geth</a> client running locally. You&#39;ll need to enable RPC calls so the ÐApp in your browser can talk to it - e.g. start geth like this:</p>
 <pre><code># NB: the DApp always uses the first account, so unlock it:
 geth --rpc --rpccorsdomain &#39;http://www.kingoftheether.com&#39; --unlock 0 console
-</code></pre><p><strong>WARNING</strong>: Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this <a href="https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf">reddit thread</a> for details. Refunds are not possible - pay at your own risk.</p>
+</code></pre><p><strong>IMPORTANT</strong>: A SERIOUS ISSUE has been identified with this ÐApp/contract that can cause LOSS OF FUNDS - DO NOT send payments or attempt to claim the throne. See the <a href="#Important">Important Notice</a> at the top of the page.</p>
 <p>Anyway, here&#39;s the ÐApp interface:</p>
 <div id="interfacePlaceholder" class="badMood">
 <strong>Sorry, this web page couldn&#39;t seem to create the ÐApp interface.</strong>
@@ -209,7 +214,7 @@ geth --rpc --rpccorsdomain &#39;http://www.kingoftheether.com&#39; --unlock 0 co
 <p><a name="PayManually"/></p>
 <h3 id="pay-by-sending-a-manual-payment">Pay by Sending a Manual Payment</h3>
 <p>You can simply manually send your payment to <code>TEMPORARILY REMOVED AS A PRECAUTION</code>. You could use a wallet app such as Mist, an online wallet, or with some Javascript in the geth console.</p>
-<p><strong>WARNING</strong>: Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this <a href="https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf">reddit thread</a> for details. Refunds are not possible - pay at your own risk.</p>
+<p><strong>IMPORTANT</strong>: A SERIOUS ISSUE has been identified with this ÐApp/contract that can cause LOSS OF FUNDS - DO NOT send payments or attempt to claim the throne. See the <a href="#Important">Important Notice</a> at the top of the page.</p>
 <p>If another monarch comes along and takes your throne, we&#39;ll send your compensation payment to the address you sent your payment from - so make sure you send the payment from an address you control.</p>
 <p>We&#39;ll use your Ethereum address as your name, though if you like you can put your name in the data field - might need to convert from ASCII. e.g. with the geth Javascript console:</p>
 <pre><code>eth.sendTransaction({
@@ -239,7 +244,7 @@ kingOfTheEtherThrone.claimThrone(
   { from: eth.accounts[0],
     value: kingOfTheEtherThrone.currentClaimPrice(),
     gas: 500000 } )
-</code></pre><p><strong>WARNING</strong>: Odd behaviour has been reported on the blockchain since around 2016-02-06 21:30 UTC - as a precaution, you may want to avoid claiming the throne until this has been understood. See this <a href="https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/czqyomf">reddit thread</a> for details. Refunds are not possible - pay at your own risk.</p>
+</code></pre><p><strong>IMPORTANT</strong>: A SERIOUS ISSUE has been identified with this ÐApp/contract that can cause LOSS OF FUNDS - DO NOT send payments or attempt to claim the throne. See the <a href="#Important">Important Notice</a> at the top of the page.</p>
 <p><a name="PayAddContract"/></p>
 <h3 id="pay-by-adding-the-contract-in-the-mist-wallet">Pay by Adding the Contract in the Mist Wallet</h3>
 <p>If you&#39;re using the (still experimental!) Mist Ethereum Wallet - e.g. from <a href="https://github.com/ethereum/mist/releases">https://github.com/ethereum/mist/releases</a> - go to Contracts -&gt; Add Contract, then fill in the details from the <a href="#TheContract">Contract Details</a> section below. Yes, you do need to copy and paste that big long bit of JSON.</p>
@@ -259,7 +264,7 @@ kingOfTheEtherThrone.claimThrone(
 <h4 id="json-interface-contract-abi-">JSON INTERFACE (CONTRACT ABI)</h4>
 <pre><code>[{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;amount&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;sweepCommission&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentClaimPrice&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;pastMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;claimThrone&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfMonarchs&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;n&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;currentMonarch&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;etherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;claimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;coronationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;newOwner&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;transferOwnership&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},{&quot;inputs&quot;:[],&quot;type&quot;:&quot;constructor&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperEtherAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;usurperName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newClaimPrice&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;ThroneClaimed&quot;,&quot;type&quot;:&quot;event&quot;}]
 </code></pre><h4 id="contract-source-code">CONTRACT SOURCE CODE</h4>
-<p>The Solidarity source code for the contract lives at <a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol">KingOfTheEtherThrone.sol</a>. It was compiled with solidity version <code>0.2.1-fad2d4df</code> with optimization, just in case you want to verify the code matches the bytecode.</p>
+<p>The Solidarity source code for the contract lives at <a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol">KingOfTheEtherThrone.sol</a>. It was compiled with solidity version <code>0.2.1-fad2d4df</code> with optimization, just in case you want to verify the code matches the bytecode. <strong>IMPORTANT</strong>: A SERIOUS ISSUE has been identified with this contract that can cause LOSS OF FUNDS - DO NOT send payments or attempt to claim the throne using it. See the <a href="#Important">Important Notice</a> at the top of the page. Avoid basing your own ÐApps/contracts on this source code until the issue is fully understood!</p>
 <p>The Javascript that powers the KingOfTheEtherThrone ÐApp and which generates this website are also available at <a href="https://github.com/kieranelby/KingOfTheEtherThrone">github.com/kieranelby/KingOfTheEtherThrone</a> (warning - not pretty!).</p>
 <p><a name="BitsAndBobs"/></p>
 <h2 id="other-bits-and-pieces">Other Bits and Pieces</h2>
@@ -269,21 +274,23 @@ kingOfTheEtherThrone.claimThrone(
 <p>Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemed to involve owning a magnificent gem or a special coin).</p>
 <p>The difference with Ethereum is that you don&#39;t have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.</p>
 <p>This contract was somewhat inspired by <a href="http://ethereumpyramid.com/">ethereumpyramid.com</a> (to which this is in no way affiliated).</p>
-<h3 id="can-you-make-me-a-throne-too-">Can you make me a throne too?</h3>
-<p>Hmm, perhaps we need a contract for creating thrones (for a small commission, of course) ... drop me an email (kieran@dunelm.org.uk) if interested.</p>
 <h3 id="i-think-something-went-wrong-can-i-have-my-money-back-">I think something went wrong. Can I have my money back?</h3>
 <p>Long answer: Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So you&#39;ll agree that refunds are impossible and unethical.</p>
-<p>Short answer: No.</p>
-<p><a name="AndFinally"/></p>
-<h2 id="and-finally">And Finally</h2>
-<p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun. And if you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives). Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract.</p>
+<p>Short answer: No. See the Disclaimer below.</p>
+<p><a name="Disclaimer"/></p>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun.</p>
+<p>If you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
+<p>Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract or list your name.</p>
+<p>Under no circumstances will refunds or compensation be paid even if the contract steals all your money and/or shoots your dog. The author disclaims all liability for the operation of the contract which should be considered its own autonomous legal entity - it is your responsiblity to study its likely behaviour before interacting with it, including taking into account that the actual behaviour of the compiled EVM bytecode in a real eth/geth note may differ from the assumed behaviour based on the solidity source code.</p>
+<p>By interacting with the contract you agree to accept the conditions in this section as well as those listed at <a href="https://www.ethereum.org/agreement">ethereum.org/agreement</a>.</p>
 
     </div>
   </div>
-  <script type="text/javascript" src="web3.js?v=1455202207074"></script>
-  <script type="text/javascript" src="nunjucks-slim.js?v=1455202207074"></script>
-  <script type="text/javascript" src="templates.js?v=1455202207074"></script>
-  <script type="text/javascript" src="interface.js?v=1455202207074"></script>
+  <script type="text/javascript" src="web3.js?v=1455231139567"></script>
+  <script type="text/javascript" src="nunjucks-slim.js?v=1455231139567"></script>
+  <script type="text/javascript" src="templates.js?v=1455231139567"></script>
+  <script type="text/javascript" src="interface.js?v=1455231139567"></script>
   <script type="text/javascript">
   <!--
   var interfaceConfig = {
