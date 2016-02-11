@@ -5,7 +5,7 @@ An Ethereum ÐApp (a "contract"), living on the blockchain, that will make you a
 <a name="Important"/>
 ## Important Notice
 
-A SERIOUS ISSUE has been identified that can cause monarch compensation payments to not be sent. Do not send payments to the contract previously referenced on this page, or attempt to claim the throne. Refunds will CERTAINLY NOT be made for any payments made after this issue was identified on 2016-02-07.
+A SERIOUS ISSUE has been identified that can cause monarch compensation payments to not be sent. DO NOT send payments to the contract previously referenced on this page, or attempt to claim the throne. Refunds will CERTAINLY NOT be made for any payments made after this issue was identified on 2016-02-07.
 
 This issue involves a somewhat surprising interation between contract-to-contract calls, low gas, and/or some wallet contracts, and is particularly likely to occur if one monarch claimed the throne using a contract-based wallet, and then the next monarch included only a small amount of gas with their payment. See this [reddit thread](https://www.reddit.com/r/ethereum/comments/44h1m1/a_new_%C3%B0app_king_of_the_ether_throne/) for details as they emerge. However, the issue may also occur in other situations.
 
