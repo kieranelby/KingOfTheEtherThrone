@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>KotET - Post-Mortem Investigation</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <style>
+  body {
+    background-color: #FFF7F0;
+  }
+  .content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 2px;
+  }
+  .badMood {
+    background-color: #ffcccc;
+  }
+  .goodMood {
+    background-color: #ccffcc;
+  }
+  h2 {
+    background-image: url("kotelogotiny.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding: 0 30px;
+    height: 60px;
+    line-height: 60px;
+  }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="content">
+
+<h1 id="king-of-the-ether-throne">Post-Mortem Investigation</h1>
+<p>
+During the 'Second Age' (06 Feb 2016 to 08 Feb 2016) of the <a href="https://www.kingoftheether.com/">King of the Ether Throne ÐApp</a>, a serious issue caused some monarch compensation payments and over/under payment refunds to fail to be sent. This web page explains the issue, the causes, the response, and the recommended solutions.</p>
+<p><a name="Important"/></p>
+
+<h2 id="important-notice">Important Notice</h2>
+<p>DO NOT send payments to any contract addresses mentioned on this page - further refunds will NOT be paid. See the <a href="https://www.kingoftheether.com/">King of the Ether Throne</a> home page for the latest ÐApp.</p>
+
+<h2 id="contents">Contents</h2>
+<ul>
+<li><a href="#TLDR">TL;DR</a></li>
+<li><a href="#Issue">The Issue</a></li>
+<li><a href="#Causes">Causes</a></li>
+<li><a href="#Response">Immediate Response</a></li>
+<li><a href="#Fix">Recommended Solutions</a></li>
+<li><a href="#AppendixA">Appendix A - Transaction History</a></li>
+</ul>
+
+<p><a name="TLDR"/></p>
+<h2>TL;DR</h2>
+<p>Sending ether from one contract to another contract  - such as from the King of the Ether contract to an Ethereum Mist "contract-based wallet" contract - is quite likely to fail if implemented in the "obvious" way in the Solidity contract language due to insufficient gas. Luckily, all ether was returned to its rightful owners in this case.</p>
+<p><a name="Issue"/></p>
+<h2>The Issue</h2>
+<h3>But First A Little Background</h3>
+<p>
+Ether is stored in accounts. There are two fundamental types of accounts - <b>"externally-owned accounts"</b> and <b>"contract accounts"</b>. The "externally-owned accounts" are normally controlled by a human, whereas the "contract accounts" are under the control of a contract. The Ethereum Mist Wallet Client encourages Ethereum users to create "contract-based wallets" (that is, "contract accounts") to hold their ether. All Ethereum transactions such as payments and calls are always started by an "externally-owned account" - if you pay someone from a "contract-based wallet", your "externally-owned account" must have told your "contract-based wallet" to do so.
+</p>
+<p>
+The King of the Ether Throne contract ("KotET contract" for short) is another example of a "contract account". The <b>normal operation of the KotET contract</b> is (essentially) this:
+<ul>
+<li>Suppose the current claim price for the throne is 10 ether.</li>
+<li>You want to be King/Queen, so you send 10 ether to the contract.</li>
+<li>The contract sends your 10 ether (less a 1% commission) to the previous King/Queen, as a "compensation payment".</li>
+<li>The contract makes you the new King/Queen of the Ether Throne.</li>
+<li>The new claim price for the throne goes up by 50%, to 15 ether in this case.</li>
+<li>If an usurper comes along who is willing to pay 15 ether, they depose you and become King/Queen, and you receive their payment of 15 ether as your "compensation payment".</li>
+</ul>
+<p>For more detail, you can look at the original Solidarity source code at <a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v0.4.0/contracts/KingOfTheEtherThrone.sol">KingOfTheEtherThrone.sol (v0.4.0)</a>.
+</p>
+<p>In Ethereum, carrying out a <b>"transaction"</b> such as sending a payment to a contract, or calling a contract, costs <b>"gas"</b>. The amount of "gas" consumed depends on what sort of operations the contract you call does (and how many). This "gas" is a small payment which goes to the miners and helps pay for providing the Etherum network and block-chain storage. The gas is paid for by the "externally-owned account" which stared the transaction. When making a transaction, you include a little gas with the transaction (unused gas is refunded). Often Ethereum clients do this for you.</p>
+<h3>So What Went Wrong?</h3>
+<p>
+The King of the Ether Throne contract behaved correctly in all cases apart from when it sent a payment to a "contract account" such as an Ethereum Mist "contract-based wallet".</p>
+<p>When the King of the Ether Throne contract sent a payment to a "contract account", it inadvertently included only a small amount of gas with the payment - 2300 gas. This was not enough gas for an Ethereum Mist "contract-based wallet" contract to succesfully process a payment - instead the wallet contract failed.</p>
+<p>When a wallet contract failed to process the payment sent to it by the KotET contract, the ether paid was returned to the KotET contract. The KotET was not aware that the payment had failed and it continued processing, making the caller King despite the compensation payment not having been sent to the previous monarch.</p>
+<p>The specific line of Solidity code used to send payments was: <code>currentMonarch.etherAddress.send(compensation);</code></p>
+<h3>Concrete Example</h3>
+<p>
+Ethereum Transaction <span class="txnHash">6d41b1d3e9b01efc0cc63b5c7ee162bccffe5af00fba3940850b09bfcbee0c9e</span> in Block <span class="blockNumber">967395</span> is a good example of this issue.</p>
+<p>Here, 'Major Tom' sent 42.7 ether to the KotET contract from his external account <span class="ethAddress">b2afec1da55c15ad57b3310f9008c47f4e028de3</span>. The current monarch at the time was the nameless <span class="ethAddress">0xcb4046e50f71409a3af23da0961b5ce2f769de31</span> (contract account) - they had paid 28.5 ether in an earlier transaction from their wallet contract to become King. Let's call them "cb..31" for short.</p>
+<p>The KotET contract attempted to send "cb..31" his "compensation payment" of 42.273 ether using the Solidity <code>address.send(amount)</code> technique. You can see this on the live.ether.camp explorer in the 'Produced 1 internal transaction' section.</p>
+<p>Sending this compensation payment caused the wallet contract at <span class="ethAddress">0xcb4046e50f71409a3af23da0961b5ce2f769de31</span> to start executing with 2300 gas available, which is the standard "stipend" included when a contract uses an Ethereum Virtual Machine <code>CALL</code> operation to interact with another contract (sending a payment to a contract is actually just a type of message call).</p>
+<p>The wallet contract managed to execute some of its operations, but eventually reached an Ethereum Virtual Machine <code>CALLCODE</code> operation which was too expensive for the amount of gas it had. This caused the Ethereum Virtual Machine (EVM) to undo any work the wallet contract at <span class="ethAddress">0xcb4046e50f71409a3af23da0961b5ce2f769de31</span> had managed to acheive. EVM experts can see this in the <a href="https://live.ether.camp/transaction/6d41b1d3e9b01e/vmtrace#172">VM Trace</a> tab on live.ether.camp for the transaction - points of interest in the operations list are the CALL at (DEEP = 0, PC = 1015), the CALLCODE at (DEEP = 1, PC = 39), and the SSTORE at (DEEP = 0, PC = 1871).</p>
+<p>The KoET contract continued executing after this compensation payment failed (its work was <i>not</i> undone), and it went on to update the block-chain storage to increase the currentClaimPrice to 64 ether and record 'Major Tom' as the new King.</p>
+<h3>Other Scenarios</h3>
+<p>
+This issue affected two monarch compensation payments (including the concrete example above), and also affected one refund payment which should have returned 7.77 ether to a failed usurper who tried to pay less than the current claim price. Details of these are in <a href="#AppendixA">Appendix A - Transaction History</a>.
+</p>
+<p><a name="Causes"/></p>
+<h2>Causes</h2>
+<p>TODO - 5 whys</p>
+
+<p><a name="Response"/></p>
+<h2>Immediate Response</h2>
+<p>TODO - timeline</p>
+
+<p><a name="Fix"/></p>
+<h2>Recommended Solutions</h2>
+<p>TODO - solutions</p>
+
+<p><a name="AppendixA"/></p>
+<h2>Appendix A - Transaction History</h2>
+<table>
+<thead>
+<tr>
+  <th>Date</th>
+  <th>Block Number</th>
+  <th>Transaction Hash</th>
+  <th>Narrative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td class="isoDate">2016-02-06T16:12:18.000Z</td>
+  <td class="blockNumber">963186</td>
+  <td class="txnHash">c076a813d03be06ad0c0f0b39167860806513edc71363362f5dd202d48b29ab6</td>
+  <td class="narrative">King of the Ether Throne contract (v0.4.0) created at contract account <span class="ethAddress">b336a86e2feb1e87a328fcb7dd4d04de3df254d0</span> by wizard <span class="ethAddress">b2afec1da55c15ad57b3310f9008c47f4e028de3</span> (externally-owned account).</td>
+</tr>
+<tr>
+  <td class="isoDate">TODO</td>
+  <td class="blockNumber">TODO</td>
+  <td class="txnHash">TODO</td>
+  <td class="narrative">TODO</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+  </div>
+  <script type="text/javascript">
+  <!--
+  // TODO - some decoration of blockNumber / txnHash / ethAddress elements (e.g. add explorer links).
+  // -->
+  </script>
+</body>
+</html>
