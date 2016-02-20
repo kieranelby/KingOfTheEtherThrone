@@ -17,6 +17,8 @@ Following the investigation, a new Kingdom of the Ether is expected to arise (po
 
 Thank you for your patience and understanding.
 
+**UPDATE**: A draft [post-mortem page](http://www.kingoftheether.com/postmortem.html) has been created with some more details of the issue. Watch this space.
+
 ## Contents
 
 - [What does it do?](#WhatItDo)
