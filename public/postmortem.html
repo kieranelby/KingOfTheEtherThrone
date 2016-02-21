@@ -133,23 +133,34 @@ The possible existence of an issue was spotted when the balance of the contract 
 <li>10 Feb - Added more details to the 'Important Notice' on the KotET website.</li>
 <li>19 Feb - Three refunds for a total of 98.5 ether manually sent to the affected wallet contracts.</li>
 <li>20 Feb - First draft of this Post-Mortem posted.</li>
+<li>21 Feb - Second draft of this Post-Mortem posted.</li>
 </ul>
 </p>
 
 <p><a name="Recommend"/></p>
 <h2>Recommendations</h2>
-<p>TODO - recommendations</p>
-
+<p>Based on this issue, the author intends to:</p>
+<ol>
+  <li>Avoid using the Solidity code <code>&lt;address&gt;.send(&lt;amount&gt;)</code> unless sure the address is an externally-owned address or is a contract whose fallback function can happily cope with only 2300 gas.</li>
+  <li>Consider using throw to send a full refund back to the current caller rather than trying to use send/call.</li>
+  <li>Consider using something like <code>&lt;address&gt;.call.value(value).gas(extraGasAmt)()</code> to send a payment to an arbitrary contract, though choosing a sensible extraGasAmt that is high enough for most receiving wallet contracts but low enough for most callers of the current contract might be hard.</li>
+  <li>Examine the return value of send() and call() and take appropriate action. Throwing on failure might sometimes be appropriate, but see the point below about poison contracts.</li>
+  <li>Especially for something like the King of the Ether Throne, where person A's payment triggers a payment to person B, be wary of "poison" contracts that need an extremely large amount of gas to call - this could lead to the game getting stuck in a state where no-one can send enough gas to send a payment to such a poison contract.</li>
+  <li>Find or develop tools that can search for the blockchain for contract-to-contract calls, or work-around by having the contract store <code>tx.origin</code> as well as <code>msg.sender</code>. Logging events would be good (but tool support for logs are also poor).</li>
+  <li>Do not develop Solidity contracts without a reasonable grasp of the underlying Ethereum Virtual Machine execution model, particularly around gas costs.</li>
+  <li>Carry out more testing!</li>
+</ol>
+</p>
 <p><a name="Fix"/></p>
 <h2>Chosen Fix</h2>
 <p>TODO - explain chosen fix</p>
 
 <p><a name="AppendixA"/></p>
 <h2>Appendix A - Transaction History</h2>
+<p>This section shows relevant transactions that involved the KotET contract.</p>
 <table width="1400" style="margin-left:-300px">
 <thead>
 <tr>
-  <th>Date</th>
   <th>Block Number</th>
   <th>Transaction Hash</th>
   <th>Narrative</th>
@@ -157,7 +168,6 @@ The possible existence of an issue was spotted when the balance of the contract 
 </thead>
 <tbody>
 <tr>
-  <td class="isoDate">2016-02-06T16:12:18.000Z</td>
   <td class="blockNumber">963186</td>
   <td class="txnHash">c076a813d03be06ad0c0f0b39167860806513edc71363362f5dd202d48b29ab6</td>
   <td class="narrative">
@@ -165,48 +175,69 @@ The possible existence of an issue was spotted when the balance of the contract 
   </td>
 </tr>
 <tr>
-  <td class="isoDate">TODO</td>
-  <td class="blockNumber">TODO</td>
-  <td class="txnHash">TODO</td>
+  <td class="blockNumber">964881</td>
+  <td class="txnHash">8ce1c76342526038ebefc4d3bfcb997decf1e9cc0f37d07c7c9fbb2f2d6e9474</td>
   <td class="narrative">
-  TODO - list all the transactions!
+  Received 7.77 Ether from <span class="ethAddress">64589e97f7b3ed412d89daf98839abb080416cf1</span> (contract account) as a result of origin <span class="ethAddress">d63b8ae7f1ccc24b44105452cab9566614d8bb40</span> (external account), amount was below the claim price, attempted to refund 7.77 by calling back into <span class="ethAddress">64589e97f7b3ed412d89daf98839abb080416cf1</span> (contract), ran out of gas due to 2300 stipend being too low for wallet contract to operate.
   </td>
 </tr>
 <tr>
-  <td class="isoDate">TODO</td>
-  <td class="blockNumber">TODO</td>
-  <td class="txnHash">TODO</td>
+  <td class="blockNumber">967037</td>
+  <td class="txnHash">161da349d10ea9aa9b4089706a5409643f62946a0769177aa244077507f25af5</td>
   <td class="narrative">
-  TODO - list all the transactions!
+  Received 28.5 ether from <span class="ethAddress">cb4046e50f71409a3af23da0961b5ce2f769de31</span> (contract account), as a result of origin <span class="ethAddress">8bb4038aa9923103b0c8edf23eae3dfceb1ac97e</span>. Sent compensation of 28.215 ether to <span class="ethAddress">f031f36717cb524b883d440e3837c138180a0289</span> (external account).
   </td>
 </tr>
 <tr>
-  <td class="isoDate">2016-02-19</td>
-  <td class="blockNumber">TODO</td>
+  <td class="blockNumber">967395</td>
+  <td class="txnHash">161da349d10ea9aa9b4089706a5409643f62946a0769177aa244077507f25af5</td>
+  <td class="narrative">
+  Received 42.7 Ether from <span class="ethAddress">9dec4be08b93838697fba22c3cdd28c1a03ed159</span> (external account), attempted to send 42.273 ether to <span class="ethAddress">cb4046e50f71409a3af23da0961b5ce2f769de31</span> (contract account) but failed due to insufficient gas within the <span class="ethAddress">cb4046e50f71409a3af23da0961b5ce2f769de31</span> contract, due to only 2300 being supplied by the KotET contract. The KotET contract did not realise this and continued.
+  </td>
+</tr>
+<tr>
+  <td class="blockNumber">967880</td>
+  <td class="txnHash">926875349a71718687d3cb0f8c3ec3aef60ffebea5b1a561b678983c0518ab5a</td>
+  <td class="narrative">
+  Received 64 Ether from d585c0c36d09164ab3b54a1ddcc2a26bef055925 (external account), paid compensation of 63.36 ether to 9dec4be08b93838697fba22c3cdd28c1a03ed159 (external account).
+  </td>
+</tr>
+<tr>
+  <td class="blockNumber">968739</td>
+  <td class="txnHash">72d6a76f5098eb7eb92b5802b35366ad9d17533fc78a426a8ba8382907f53e77</td>
+  <td class="narrative">
+  Interesting one, looks like received 96 ether from 107c98584d4b18bc54e1d74f4d7a0bf505ca466f (external account), tried to pay 95.04 ether to d585c0c36d09164ab3b54a1ddcc2a26bef055925 (external account) but it failed due to gas. This time the whole txn failed and was rolled-back, not just the compensation payment.
+  </td>
+</tr>
+<tr>
+  <td class="blockNumber">969205</td>
+  <td class="txnHash">f79a26ed0d66a4f3d374bb67f2a605bf0b8f69bd764c16ce880fb782ab3b4500</td>
+  <td class="narrative">
+  Origin <span class="ethAddress">60cea93e5d7b98027f7e7e433673f9b30448b001</span> told contract <span class="ethAddress">c0e22f23ff54ca58d93a65044a18a3f245552144</span> to send 144 ether to KotET contract, which was too high (claim price was 96), so it tried to refund 48 ether by calling back into <span class="ethAddress">c0e22f23ff54ca58d93a65044a18a3f245552144</span>. Due to low default gas stipend, that failed, KotET contract didn't check return value and continued, succesfully sending compensation of 95.04 ether to <span class="ethAddress">d585c0c36d09164ab3b54a1ddcc2a26bef055925</span> and making <span class="ethAddress">c0e22f23ff54ca58d93a65044a18a3f245552144</span> the King (which so far he remains).</td>
+</tr>
+<tr>
+  <td class="blockNumber">1029675</td>
   <td class="txnHash">61674b7648f410056fed0154e685d6166567fabe8436838bd693a9a935e8668c</td>
   <td class="narrative">
   Wizard <span class="ethAddress">b2afec1da55c15ad57b3310f9008c47f4e028de3</span> called <code>sweepComission</code> function on KotET contract to withdraw the entire contract balance of 101.30877 ether.
   </td>
 </tr>
 <tr>
-  <td class="isoDate">2016-02-19</td>
-  <td class="blockNumber">1029675</td>
+  <td class="blockNumber">1029687</td>
   <td class="txnHash">b29f1cb2f487ed33ebed5c42386c60ac12837def628f4fdba8e9a7160bb4769a</td>
   <td class="narrative">
   42.273 ether sent manually back to <span class="ethAddress">0xcb4046e50f71409a3af23da0961b5ce2f769de31</span> by wizard <span class="ethAddress">b2afec1da55c15ad57b3310f9008c47f4e028de3</span>.
   </td>
 </tr>
 <tr>
-  <td class="isoDate">2016-02-19</td>
-  <td class="blockNumber">TODO</td>
+  <td class="blockNumber">1029722</td>
   <td class="txnHash">29a1457cb4e267e7fa75ba2b59c0a7db3e21de0805d2a3da9e2e0ceb61106418</td>
   <td class="narrative">
   7.77 ether sent manually back to <span class="ethAddress">0x64589e97f7b3ed412d89daf98839abb080416cf1</span> by wizard <span class="ethAddress">b2afec1da55c15ad57b3310f9008c47f4e028de3</span>.
   </td>
 </tr>
 <tr>
-  <td class="isoDate">2016-02-19</td>
-  <td class="blockNumber">TODO</td>
+  <td class="blockNumber">1029733</td>
   <td class="txnHash">119d79c43b92a1e6cf05991ebd9820ebb1805b30e107376f0dc6e80f4dff9f2e</td>
   <td class="narrative">
   48 ether sent manually back to <span class="ethAddress">0xc0e22f23ff54ca58d93a65044a18a3f245552144</span> by wizard <span class="ethAddress">b2afec1da55c15ad57b3310f9008c47f4e028de3</span>.
