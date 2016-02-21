@@ -1,24 +1,29 @@
 // A chain-game contract that maintains a 'throne' which agents may pay to rule.
 // See www.kingoftheether.com & https://github.com/kieranelby/KingOfTheEtherThrone .
 // (c) Kieran Elby 2016. All rights reserved.
-// v0.4.0.
+// v0.5.0.
 // Inspired by ethereumpyramid.com and the (now-gone?) "magnificent bitcoin gem".
 
-// This contract lives on the blockchain at 0xb336a86e2feb1e87a328fcb7dd4d04de3df254d0
-// and was compiled (using optimization) with:
-// Solidity version: 0.2.1-fad2d4df/.-Emscripten/clang/int linked to libethereum
+// This contract lives on the blockchain at TODO
+// and was compiled (without optimization) with:
+// TODO
 
 // For future versions it would be nice to ...
 // TODO - enforce time-limit on reign (can contracts do that without external action)?
 // TODO - add a random reset?
 // TODO - add bitcoin bridge so agents can pay in bitcoin?
-// TODO - maybe allow different return payment address?
+// TODO - use e.g. byte32 instead of string to avoid long strings causing trouble.
 
 contract KingOfTheEtherThrone {
 
+    enum PaymentStatus { NoneDue, Good, Failed }
+
     struct Monarch {
-        // Address to which their compensation will be sent.
-        address etherAddress;
+        // Address to which their compensation payment will be sent.
+        address compensationAddress;
+        // Keep a record of the tx.origin from which they claimed the
+        // throne - makes finding transactions easier.
+        address originAddress;
         // A name by which they wish to be known.
         // NB: Unfortunately "string" seems to expose some bugs in web3.
         string name;
@@ -26,6 +31,11 @@ contract KingOfTheEtherThrone {
         uint claimPrice;
         // When did their rule start (based on block.timestamp)?
         uint coronationTimestamp;
+        // Did they receive their compensation payment?
+        PaymentStatus compensationStatus;
+        // How much compensation were they paid?
+        // (Or should have been paid in the case of a failed payment).
+        uint compensationPaid;
     }
 
     // The wizard is the hidden power behind the throne; they
@@ -59,6 +69,10 @@ contract KingOfTheEtherThrone {
     // Earliest-first list of previous throne holders.
     Monarch[] public pastMonarchs;
 
+    // Keep track of the value of any failed payments - this will
+    // allow us to ring-fence them in case the wizard turns evil.
+    uint totalFailedPaymentsValue;
+
     // Create a new throne, with the creator as wizard and first ruler.
     // Sets up some hopefully sensible defaults.
     function KingOfTheEtherThrone() {
@@ -66,9 +80,12 @@ contract KingOfTheEtherThrone {
         currentClaimPrice = startingClaimPrice;
         currentMonarch = Monarch(
             wizardAddress,
+            wizardAddress,
             "[Vacant]",
             0,
-            block.timestamp
+            block.timestamp,
+            PaymentStatus.NoneDue,
+            0
         );
     }
 
@@ -79,7 +96,7 @@ contract KingOfTheEtherThrone {
     // Fired when the throne is claimed.
     // In theory can be used to help build a front-end.
     event ThroneClaimed(
-        address usurperEtherAddress,
+        address usurperOriginAddress,
         string usurperName,
         uint newClaimPrice
     );
@@ -90,22 +107,31 @@ contract KingOfTheEtherThrone {
         claimThrone(string(msg.data));
     }
 
-    // Claim the throne for the given name by paying the currentClaimFee.
+    // Claim the throne in the given name.
+    // The caller will need to include payment of currentClaimFee with the transaction.
+    // This function assumes that any compensation payment later due should be sent
+    // to the account that called this contract.
     function claimThrone(string name) {
+        claimThroneFor(name, msg.sender);
+    }
+
+    // Claim the throne in the given name, specifying an address to which any
+    // compensation payment should later be sent. Don't get it wrong - can't change.
+    // The caller will need to include payment of currentClaimFee with the transaction.
+    function claimThroneFor(string name, address compensationAddress) {
 
         uint valuePaid = msg.value;
 
-        // If they paid too little, reject claim and refund their money.
+        // If they paid too little, blow up - this should refund them.
         if (valuePaid < currentClaimPrice) {
-            msg.sender.send(valuePaid);
-            return;
+            throw;
         }
 
-        // If they paid too much, continue with claim but refund the excess.
+        // If they paid too much, blow up - this should refund them.
+        // (Earlier contract versions tried to send the excess back, but
+        //  that got too fiddly with the possibility of failure).
         if (valuePaid > currentClaimPrice) {
-            uint excessPaid = valuePaid - currentClaimPrice;
-            msg.sender.send(excessPaid);
-            valuePaid = valuePaid - excessPaid;
+            throw;
         }
 
         // The claim price payment goes to the current monarch as compensation
@@ -113,22 +139,46 @@ contract KingOfTheEtherThrone {
         // payments accumulate to avoid wasting gas sending small fees.
 
         uint wizardCommission = (valuePaid * wizardCommissionFractionNum) / wizardCommissionFractionDen;
-        
         uint compensation = valuePaid - wizardCommission;
 
-        if (currentMonarch.etherAddress != wizardAddress) {
-            currentMonarch.etherAddress.send(compensation);
+        if (currentMonarch.compensationAddress == wizardAddress) {
+            // When the throne is vacant (that is, the wizard reigns), the
+            // claim fee accumulates for the wizard to sweep as commission.
+            currentMonarch.compensationStatus = PaymentStatus.NoneDue;
+            currentMonarch.compensationPaid = 0;
         } else {
-            // When the throne is vacant, the fee accumulates for the wizard.
+            // Sending ether to a contract address can fail if the destination
+            // contract runs out of gas receiving it (or otherwise mis-behaves).
+            // We include some extra gas (paid for by the current caller) to help
+            // avoid failure. It might be that the current caller hasn't included
+            // enough gas to even start the call - but that's OK, the next line
+            // will just blow up and they will be refunded and everything undone.
+            // However, if sending the payment fails, we don't throw an exception
+            // since we don't want the throne to get stuck because of one badly
+            // behaved contract. Instead, we record the failure and move on -
+            // they can get their money back later using resendFailedPayment().
+            // Experiments suggest 10000 + 2300 gas should be enough for wallets.
+            uint compensationExtraGas = 10000;
+            bool ok = sendWithGas(currentMonarch.compensationAddress, compensation, compensationExtraGas);
+            if (ok) {
+                currentMonarch.compensationStatus = PaymentStatus.Good;
+            } else {
+                currentMonarch.compensationStatus = PaymentStatus.Failed;
+                totalFailedPaymentsValue += compensation;
+            }
+            currentMonarch.compensationPaid = compensation;
         }
 
         // Usurp the current monarch, replacing them with the new one.
         pastMonarchs.push(currentMonarch);
         currentMonarch = Monarch(
-            msg.sender,
+            compensationAddress,
+            tx.origin,
             name,
             valuePaid,
-            block.timestamp
+            block.timestamp,
+            PaymentStatus.NoneDue,
+            0
         );
 
         // Increase the claim fee for next time.
@@ -153,15 +203,72 @@ contract KingOfTheEtherThrone {
         }
 
         // Hail the new monarch!
-        ThroneClaimed(currentMonarch.etherAddress, currentMonarch.name, currentClaimPrice);
+        ThroneClaimed(currentMonarch.originAddress, currentMonarch.name, currentClaimPrice);
+    }
+
+    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
+    // isn't enough to send ether to some wallet contracts - use this to add more.
+    function sendWithGas(address destination, uint256 value, uint256 extraGasAmt) internal returns (bool) {
+      return destination.call.value(value).gas(extraGasAmt)();
+    }
+
+    // Re-send a compensation payment that previously failed, in the hope that
+    // either adding more gas or sending to the origin instead will make it work.
+    // Can be called by the monarch involved or the wizard - but payments can
+    // never go to a different address.
+    function resendFailedPayment(uint monarchNumber, bool sendToOriginalOrigin) {
+        // Only failed payments can be re-sent!
+        if (pastMonarchs[monarchNumber].compensationStatus != PaymentStatus.Failed) {
+            throw;
+        }
+        // Only the wizard or the monarch involved can do this:
+        bool isAuthorised = false;
+        if (msg.sender == wizardAddress) {
+            isAuthorised = true;
+        } else if (msg.sender == pastMonarchs[monarchNumber].compensationAddress) {
+            isAuthorised = true;
+        } else if (tx.origin == pastMonarchs[monarchNumber].originAddress) {
+            isAuthorised = true;
+        }
+        if (!isAuthorised) {
+            throw;
+        }
+        address destination;
+        uint compensation = pastMonarchs[monarchNumber].compensationPaid;
+        uint extraGas;
+        if (sendToOriginalOrigin) {
+            destination = pastMonarchs[monarchNumber].originAddress;
+            // origin isn't a contract so no need for extra gas
+            extraGas = 0;
+        } else {
+            destination = pastMonarchs[monarchNumber].compensationAddress;
+            // Try to give the called contract all our gas apart from this:
+            uint reserveGas = 25000;
+            uint gasAvail = msg.gas;
+            if (gasAvail < reserveGas) {
+                throw;
+            }
+            extraGas = gasAvail - reserveGas;
+        }
+        bool ok = sendWithGas(destination, compensation, extraGas);
+        if (!ok) {
+            throw;
+        }
+        pastMonarchs[monarchNumber].compensationStatus = PaymentStatus.Good;
+        totalFailedPaymentsValue -= compensation;
     }
 
     // Used only by the wizard to collect his commission.
     function sweepCommission(uint amount) onlywizard {
+        // Don't let him take failed payments though.
+        if (amount + totalFailedPaymentsValue > this.balance) {
+            throw;
+        }
         wizardAddress.send(amount);
     }
 
-    // Used only by the wizard to collect his commission.
+    // Used only by the wizard to transfer the contract to his successor.
+    // It is probably unwise for the newOwner to be a contract.
     function transferOwnership(address newOwner) onlywizard {
         wizardAddress = newOwner;
     }
