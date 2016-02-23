@@ -4,14 +4,17 @@
   "private": true,
   "license": "proprietary",
   "scripts": {
-    "build-public": "node ./bin/build-public.js"
+    "build-public": "node ./bin/build-public.js",
+    "test": "node ./node_modules/mocha/bin/mocha tests/**/test-*.js --reporter spec"
   },
   "devDependencies": {
     "marked" : "0.3.5",
     "nunjucks" : "2.3.0",
     "web3" : "0.15.1",
     "cp" : "0.2.0",
-    "markdown-escape": "1.0.1"
+    "markdown-escape": "1.0.1",
+    "chai": "3.5.0",
+    "mocha": "2.4.5"
   },
   "dependencies": {
   }
