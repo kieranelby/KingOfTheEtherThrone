@@ -8,6 +8,25 @@
  * and so need to wait for one transaction to be mined before starting the next.
  * dapp-test-runner also helps with efficiently distributing ether to test accounts
  * (and sweeping it back at the end), as well as helping with checking wei amounts.
+ *
+ * I've been starting my private testnet like this:
+ * geth \
+ *   --datadir e:/ethereum/easychain \
+ *   -rpc -rpcport 8646 -rpcapi "eth,web3,personal" --rpccorsdomain '*' \
+ *   --nodiscover --maxpeers 0 --networkid 123 \
+ *   --genesis ..\Documents\KingOfTheEtherThrone\genesis_block.json \
+ *   --mine --etherbase 0xa537e84cd9dd3cda475338bcf12bd5ef48d15599 \
+ *   --verbosity 4
+ *
+ * TODO:
+ *   - re-use existing test accounts
+ *   - sweep funds from test accounts afterwards
+ *   - clean-up functions
+ *   - report to html for inclusion on web-site
+ *   - detect when contracts created become usable
+ *   - generally less sucky
+ *   - documentation
+ *   - can we speed things up at all?
 */
 function DAppTestRunner(suiteTitle) {
   this._ethApi = new EthApi();
@@ -91,7 +110,7 @@ DAppTestRunner.prototype._getTestsReady = function () {
 // blocks of txns by limiting max number of tests in progress at once?
 DAppTestRunner.prototype._advance = function () {
   if (!this._ethApi.checkBlockReadyToken(this._blockReadyToken)) {
-    setTimeout(this._advance.bind(this), 1000);
+    setTimeout(this._advance.bind(this), 5000);
     return;
   }
   this._emit('cycle');
@@ -245,7 +264,6 @@ EthApi.prototype._extendWeb3 = function (web3) {
   }
 
   function toBoolVal(val) {
-    console.log(val);
     if (String(val) == 'true') {
       return true;
     } else {
@@ -433,7 +451,36 @@ function TestHelper(wrapper, ethApi) {
   this._waitingForTxns = [];
 }
 
-// TODO - might need to provide some help with balance assertions?
+TestHelper.prototype.assertEqual = function(actual, expected, message) {
+  if (actual != expected) {
+    this.fail(actual + ' vs ' + expected + '; ' + message);
+  }
+}
+
+TestHelper.prototype.assertStrictEqual = function(actual, expected, message) {
+  if (actual !== expected) {
+    this.fail(str + ' vs ' + expected + '; ' + message);
+  }
+}
+
+// Yes, this is the other way round to lots of other libraries. Sorry.
+TestHelper.prototype.assertWeiEqual = function(amount, expected, message) {
+  var result = this.cmpWei(amount, expected);
+  if (result != 0) {
+    this.fail(amount + ' vs ' + expected + '; ' + message);
+  }
+}
+
+TestHelper.prototype.assertWeiRoughlyEqual = function(amount, expected, epsilon, message) {
+  var bigA = this.toBigNumber(amount);
+  var bigB = this.toBigNumber(expected);
+  var diff = bigA.minus(bigB).abs();
+  var result = this.cmpWei(diff, epsilon);
+  if (result > 0) {
+    this.fail(amount + ' vs ' + expected + '; ' + message);
+  }
+}
+
 TestHelper.prototype.toBigNumber = function(numberOrString) {
   return this.web3.toBigNumber(numberOrString);
 }
@@ -444,12 +491,16 @@ TestHelper.prototype.cmpWei = function(numberOrStringOrBigNumA, numberOrStringOr
   return bigA.cmp(bigB);
 }
 
-// Yes, this is the other way round to lots of other libraries. Sorry.
-TestHelper.prototype.assertWeiEqual = function(amount, expected, message) {
-  var result = this.cmpWei(amount, expected);
-  if (result != 0) {
-    this.fail(amount + ' vs ' + expected + '; ' + message);
-  }
+TestHelper.prototype.addWei = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
+  var bigA = this.toBigNumber(numberOrStringOrBigNumA);
+  var bigB = this.toBigNumber(numberOrStringOrBigNumB);
+  return bigA.add(bigB);
+}
+
+TestHelper.prototype.subtractWei = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
+  var bigA = this.toBigNumber(numberOrStringOrBigNumA);
+  var bigB = this.toBigNumber(numberOrStringOrBigNumB);
+  return bigA.sub(bigB);
 }
 
 TestHelper.prototype.assertWeiLessThan = function(amount, comparedTo, message) {
@@ -477,16 +528,6 @@ TestHelper.prototype.assertWeiNotAbove = function(amount, comparedTo, message) {
   var result = this.cmpWei(amount, comparedTo);
   if (result < 0) {
     this.fail(amount + ' vs ' + comparedTo + '; ' + message);
-  }
-}
-
-TestHelper.prototype.assertWeiRoughlyEqual = function(amount, expected, epsilon, message) {
-  var bigA = this.toBigNumber(amount);
-  var bigB = this.toBigNumber(expected);
-  var diff = bigA.minus(bigB).abs();
-  var result = this.cmpWei(diff, epsilon);
-  if (result > 0) {
-    this.fail(amount + ' vs ' + expected + '; ' + message);
   }
 }
 
@@ -520,14 +561,13 @@ TestHelper.prototype.createContractInstance = function(registeredContractName, c
     txnObj.from = this._ethApi.masterAccount;
   }
   txnObj.data = contractDetails.contractBytecode;
-  var callArgs = constructorArgsArray.splice();
+  var callArgs = constructorArgsArray.slice();
   callArgs.push(txnObj);
   var contractInstance = contract.new.apply(contract, callArgs);
-  this._waitingForTxns.push(contractInstance.transactionHash);
-  // won't be usable until next cycle!
-  // there is a bit of a risk that this won't be mined but our
-  // end-of-cycle test transaction will be mined ... suppose should
-  // track them really?
+  this.waitForTxn(contractInstance.transactionHash);
+  // TODO consider wrapping with functions that watch for txn hashes
+  // created when contract functions called?
+  // NB: Won't be usable until next cycle - or possibly later due to bug?
   return contractInstance;
 }
 
@@ -545,6 +585,7 @@ TestHelper.prototype.fail = function(reason) {
 }
 
 TestHelper.prototype.waitForTxn = function(txnHash) {
+  console.log('@ saw txnHash ' + txnHash);
   this._waitingForTxns.push(txnHash);
 }
 
@@ -557,15 +598,12 @@ TestHelper.prototype._preTest = function() {
 }
 
 TestHelper.prototype._checkWaitingTxnsAppeared = function() {
-  console.log('~~ checking waiting txns');
   if (this._waitingForTxns.length > 0) {
     var self = this;
     // TODO isn't there a danger we will get stuck on some tests ...!
     this._waitingForTxns.forEach(function (txnHash) {
       var receipt = self.web3.eth.getTransactionReceipt(txnHash);
-      console.log('~~ got receipt ', receipt);
       if (!receipt) {
-        console.log('~~ still need to wait for ' + txnHash);
         return false;
       }
     });
