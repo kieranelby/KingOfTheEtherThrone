@@ -19,14 +19,17 @@
  *   --verbosity 4
  *
  * TODO:
- *   - re-use existing test accounts
- *   - sweep funds from test accounts afterwards
+ *   - limit number of tests run at once
+ *   - re-use existing test accounts (only create if none available)
+ *   - time-out if it takes too long? why does it get stuck sometimes?
+ *   - sweep back at start?
  *   - clean-up functions
- *   - report to html for inclusion on web-site
- *   - detect when contracts created become usable
+ *   - report to html for inclusion on web-site (incl. txn hashes)
+ *   - detect when contracts created become usable (use callbacks)
  *   - generally less sucky
  *   - documentation
- *   - can we speed things up at all?
+ *   - make it easier to clean up after Ctrl-C? e.g. keep log? or just sweep at start?
+ *   - can we speed things up at all? if use callbacks don't need block ready test?
 */
 function DAppTestRunner(suiteTitle) {
   this._ethApi = new EthApi();
@@ -35,6 +38,7 @@ function DAppTestRunner(suiteTitle) {
   this._blockReadyToken = undefined;
   this._eventObserversFor = {};
   this._suite = new TestSuite(suiteTitle);
+  this._registerStandardContracts();
 };
 
 DAppTestRunner.prototype.add = function (test) {
@@ -69,7 +73,7 @@ DAppTestRunner.prototype.setWeb3MasterAccount = function (accountAddress, option
 
 /*
  * Register an event listener - deliberately very similar to mocha runner
- * so we can make use of their reporters. Events are:
+ * so we can make use of their reporters for now. Events are:
  *   - `start` execution started
  *   - `end`  execution complete
  *   - `suite` (suite) test suite execution started
@@ -98,6 +102,46 @@ DAppTestRunner.prototype.registerContract = function (contractName, contractAbi,
     contractBytecode: contractBytecode
   };
 };
+
+// See TestContracts.sol ...
+DAppTestRunner.prototype._registerStandardContracts = function () {
+
+  // Fallback + reject function always throw an exception.
+  this.registerContract(
+    'dtr.Rejector',
+    [{"constant":false,"inputs":[],"name":"reject","outputs":[],"type":"function"}],
+    '6060604052605b8060106000396000f360606040523615603a576000357c0100000000000000000000000000000000' +
+    '000000000000000000000000900480634dc415de14604857603a565b60465b60436055565b5b565b005b6053600480' + 
+    '50506055565b005b6002565b56'
+  );
+
+  // A basic wallet with adjustable gas cost for deposits.
+  this.registerContract(
+    'dtr.ExpensiveWallet',
+    [{"constant":false,"inputs":[{"name":"dst","type":"address"},{"name":"value","type":"uint256"},{"name":"data","type":"bytes"}],"name":"spend","outputs":[],"type":"function"},
+     {"constant":false,"inputs":[],"name":"kill","outputs":[],"type":"function"},{"inputs":[{"name":"eatGas","type":"uint256"}],"type":"constructor"},
+     {"anonymous":false,"inputs":[{"indexed":false,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"DepositMade","type":"event"},
+     {"anonymous":false,"inputs":[{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"WithdrawalMade","type":"event"}],
+    '60606040526040516020806102f9833981016040528080519060200190919050505b32600060006101000a81548173' + 
+    'ffffffffffffffffffffffffffffffffffffffff02191690830217905550806001600050819055505b506102938061' + 
+    '00666000396000f360606040523615610048576000357c010000000000000000000000000000000000000000000000' + 
+    '00000000009004806330475cb4146100e957806341c0e1b51461015157610048565b6100e75b600060005a91507fd1' + 
+    '5c9547ea5c06670c0010ce19bc32d54682a4b3801ece7f3ab0c3f17106b4bb3234604051808373ffffffffffffffff' + 
+    'ffffffffffffffffffffffff1681526020018281526020019250505060405180910390a1600190505b816001600050' + 
+    '545a011015156100e25780604051808281526020019150506040518091039020600190048101905080506100ad565b' + 
+    '5b5050565b005b61014f60048080359060200190919080359060200190919080359060200190820180359060200191' + 
+    '91908080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050' + 
+    '50505050909091905050610160565b005b61015e60048050506101ff565b005b8273ffffffffffffffffffffffffff' + 
+    'ffffffffffffff16346000366040518083838082843782019150509250505060006040518083038185876185025a03' +
+    'f192505050507fbc158bb64f05d6383aea69bbb0b20c1bbf4b7a18f63359c5649b7c39e29d38848383604051808373' + 
+    'ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a15b5050' + 
+    '50565b3273ffffffffffffffffffffffffffffffffffffffff16600060009054906101000a900473ffffffffffffff' + 
+    'ffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161415610290576000600090' + 
+    '54906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffff' + 
+    'ffffffff16ff5b5b56'
+  );
+
+}
 
 DAppTestRunner.prototype._getTestsReady = function () {
   var self = this;
@@ -157,6 +201,7 @@ DAppTestRunner.prototype._start = function () {
 };
 
 DAppTestRunner.prototype._end = function () {
+  this._ethApi._sweepFundsBack();
   this._emit('suite end', this._suite);
   this._emit('end');
 };
@@ -173,6 +218,8 @@ function EthApi() {
   this.testPassphrase = 'password';
   this.internalTestAccount = undefined;
   this.registeredContracts = {};
+  // non-contract accounts only:
+  this.testAccountsUsed = [];
 }
 
 EthApi.prototype.setWeb3 = function(web3ObjectOrUrl) {
@@ -197,6 +244,8 @@ EthApi.prototype.init = function () {
   }
 
   // Not available by default, needs special -rpcapi "eth,web3,personal" option to geth.
+  // TODO - consider giving caller option of giving us a pool of existing accounts
+  // to use rather than us having to create new ones?
   if (!this.web3.personal) {
     this._extendWeb3(this.web3);
   }
@@ -229,6 +278,7 @@ EthApi.prototype.createAccount = function() {
   var account = this.web3.personal.newAccount(this.testPassphrase);
   console.log('~~ created new test account ' + account);
   this.web3.personal.unlockAccount(account, this.testPassphrase, 86400);
+  this.testAccountsUsed.push(account);
   return account;
 }
 
@@ -253,8 +303,38 @@ EthApi.prototype.checkBlockReadyToken = function (blockToken) {
   return (receipt != null);
 }
 
+// Currently we share a web3 object between tests so try to undo
+// things that tests might have messed with -
+// tests must not assume that these settings will be preserved between steps.
 EthApi.prototype.reset = function () {
   this.web3.eth.defaultAccount = this.masterAccount;
+}
+
+EthApi.prototype._sweepFundsBack = function () {
+  var self = this;
+  var eth = self.web3.eth;
+  self.testAccountsUsed.forEach(function (account) {
+    try {
+      var balance = eth.getBalance(account);
+      if (balance === undefined) throw new Error("unknown balance");
+      var txn = {
+        from: account,
+        to: eth.accounts[1],
+        value: balance
+      };
+      // bizarrely this makes txn.value lose its bignum-ness
+      var estGasAmt = eth.estimateGas(txn);
+      var estGasCost = eth.gasPrice.mul(estGasAmt);
+      txn.gas = estGasAmt;
+      txn.value = balance.sub(estGasCost);
+      if (txn.value.greaterThan(0)) {
+        var txnHash = eth.sendTransaction(txn);
+        console.log('sent txn to sweep ', self.web3.fromWei(balance,'finney').toString(), ' from ', account, ' as ', txnHash);
+      }
+    } catch (e) {
+      console.log('could not sweep ', account, ' due to ', e);
+    }
+  });
 }
 
 EthApi.prototype._extendWeb3 = function (web3) {
@@ -342,6 +422,8 @@ TestSuite.prototype.fullTitle = function () {
 /*
  * Wraps each client-supplied test to add extra functionality.
  * Not exposed to clients, though it is passed to the reporter.
+ * TODO - keep a record of all txns so can inspect on blockchain.
+ * TODO - in theory could use VM Traces to get coverage stats ...
 */
 function TestWrapper(test, emitFn) {
 
@@ -401,7 +483,7 @@ TestWrapper.prototype.advance = function() {
       stepFn.apply(this._underlyingTest, [this._helper]);
       this._nextStepIdx++;
     } catch (err) {
-      if (err instanceof WaitMoreError) {
+      if (err instanceof BackOffError) {
         // that's ok, just need to wait for next cycle
       } else {
         console.log('~~ failing test "' + this.title + '" step ' + this._nextStepIdx + ' due to ' + err);
@@ -459,23 +541,23 @@ TestHelper.prototype.assertEqual = function(actual, expected, message) {
 
 TestHelper.prototype.assertStrictEqual = function(actual, expected, message) {
   if (actual !== expected) {
-    this.fail(str + ' vs ' + expected + '; ' + message);
+    this.fail(actual + ' vs ' + expected + '; ' + message);
   }
 }
 
 // Yes, this is the other way round to lots of other libraries. Sorry.
-TestHelper.prototype.assertWeiEqual = function(amount, expected, message) {
-  var result = this.cmpWei(amount, expected);
+TestHelper.prototype.assertNumEqual = function(amount, expected, message) {
+  var result = this.cmpNum(amount, expected);
   if (result != 0) {
     this.fail(amount + ' vs ' + expected + '; ' + message);
   }
 }
 
-TestHelper.prototype.assertWeiRoughlyEqual = function(amount, expected, epsilon, message) {
+TestHelper.prototype.assertNumRoughlyEqual = function(amount, expected, epsilon, message) {
   var bigA = this.toBigNumber(amount);
   var bigB = this.toBigNumber(expected);
   var diff = bigA.minus(bigB).abs();
-  var result = this.cmpWei(diff, epsilon);
+  var result = this.cmpNum(diff, epsilon);
   if (result > 0) {
     this.fail(amount + ' vs ' + expected + '; ' + message);
   }
@@ -485,48 +567,48 @@ TestHelper.prototype.toBigNumber = function(numberOrString) {
   return this.web3.toBigNumber(numberOrString);
 }
 
-TestHelper.prototype.cmpWei = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
+TestHelper.prototype.cmpNum = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
   var bigA = this.toBigNumber(numberOrStringOrBigNumA);
   var bigB = this.toBigNumber(numberOrStringOrBigNumB);
   return bigA.cmp(bigB);
 }
 
-TestHelper.prototype.addWei = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
+TestHelper.prototype.addNum = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
   var bigA = this.toBigNumber(numberOrStringOrBigNumA);
   var bigB = this.toBigNumber(numberOrStringOrBigNumB);
   return bigA.add(bigB);
 }
 
-TestHelper.prototype.subtractWei = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
+TestHelper.prototype.subtractNum = function(numberOrStringOrBigNumA, numberOrStringOrBigNumB) {
   var bigA = this.toBigNumber(numberOrStringOrBigNumA);
   var bigB = this.toBigNumber(numberOrStringOrBigNumB);
   return bigA.sub(bigB);
 }
 
-TestHelper.prototype.assertWeiLessThan = function(amount, comparedTo, message) {
-  var result = this.cmpWei(amount, comparedTo);
-  if (result >= 0) {
+TestHelper.prototype.assertNumLessThan = function(amount, comparedTo, message) {
+  var result = this.cmpNum(amount, comparedTo);
+  if (!(result < 0)) {
     this.fail(amount + ' vs ' + comparedTo + '; ' + message);
   }
 }
 
-TestHelper.prototype.assertWeiNotBelow = function(amount, comparedTo, message) {
-  var result = this.cmpWei(amount, comparedTo);
-  if (result > 0) {
+TestHelper.prototype.assertNumNotAbove = function(amount, comparedTo, message) {
+  var result = this.cmpNum(amount, comparedTo);
+  if (!(result <= 0)) {
     this.fail(amount + ' vs ' + comparedTo + '; ' + message);
   }
 }
 
-TestHelper.prototype.assertWeiMoreThan = function(amount, comparedTo, message) {
-  var result = this.cmpWei(amount, comparedTo);
-  if (result <= 0) {
+TestHelper.prototype.assertNumMoreThan = function(amount, comparedTo, message) {
+  var result = this.cmpNum(amount, comparedTo);
+  if (!(result > 0)) {
     this.fail(amount + ' vs ' + comparedTo + '; ' + message);
   }
 }
 
-TestHelper.prototype.assertWeiNotAbove = function(amount, comparedTo, message) {
-  var result = this.cmpWei(amount, comparedTo);
-  if (result < 0) {
+TestHelper.prototype.assertNumNotBelow = function(amount, comparedTo, message) {
+  var result = this.cmpNum(amount, comparedTo);
+  if (!(result >= 0)) {
     this.fail(amount + ' vs ' + comparedTo + '; ' + message);
   }
 }
@@ -584,13 +666,27 @@ TestHelper.prototype.fail = function(reason) {
   throw new Error(reason);
 }
 
+// Don't start the next step until this txn gets mined.
 TestHelper.prototype.waitForTxn = function(txnHash) {
   console.log('@ saw txnHash ' + txnHash);
   this._waitingForTxns.push(txnHash);
 }
 
-TestHelper.prototype.waitMore = function() {
-  throw new WaitMoreError();
+// Go back to the start of this step and sleep a bit.
+// Shouldn't really be needed ...
+TestHelper.prototype.backOff = function() {
+  throw new BackOffError();
+}
+
+TestHelper.prototype.getLatestBlockTime = function() {
+  return this.web3.eth.getBlock('latest').timestamp;
+}
+
+// Go back to the start of this step until we reach (or pass) the given time.
+TestHelper.prototype.retryUntilTime = function(posixTimeSeconds) {
+  if (this.cmpNum(this.getLatestBlockTime(), posixTimeSeconds) < 0) {
+    this.backOff();
+  }
 }
 
 TestHelper.prototype._preTest = function() {
@@ -612,8 +708,8 @@ TestHelper.prototype._checkWaitingTxnsAppeared = function() {
   return true;
 }
 
-// bit of a hack
-function WaitMoreError() {
+// bit of a hack; if a test step throws this we wait a bit and try again
+function BackOffError() {
 }
 
 /*

@@ -85,6 +85,9 @@ contract KingOfTheEtherThrone {
 
         // How long do we keep failed payments ring-fenced before voiding them?
         uint256 failedPaymentRingfenceDuration;
+
+        // Where is the contract that we use to make more thrones like this one?
+        ThroneMaker throneMaker;
     }
 
     // How the throne is set-up (owners, percentages, durations).
@@ -101,11 +104,11 @@ contract KingOfTheEtherThrone {
 
     // Keep track of the value of any failed payments - this will allow
     // us to ring-fence them in case the wizard or deity turn evil.
-    uint256 ringfencedFailedPaymentsBalance;
+    uint256 public ringfencedFailedPaymentsBalance;
 
     // Keep track of the value of fees that the wizard has accumulated
     // but not withdrawn (to save gas, they're not sent until 'swept').
-    uint256 wizardBalance;
+    uint256 public wizardBalance;
 
     // Create a new empty throne according to the caller's wishes.
     function KingOfTheEtherThrone(
@@ -115,7 +118,8 @@ contract KingOfTheEtherThrone {
         uint256 claimPriceAdjustPerMille,
         uint256 commissionPerMille,
         uint256 curseIncubationDuration,
-        uint256 failedPaymentRingfenceDuration
+        uint256 failedPaymentRingfenceDuration,
+        ThroneMaker throneMaker
     ) {
         // TODO - validate args for sanity
         // (though short durations sometimes make sense for testing?)
@@ -126,7 +130,8 @@ contract KingOfTheEtherThrone {
             claimPriceAdjustPerMille,
             commissionPerMille,
             curseIncubationDuration,
-            failedPaymentRingfenceDuration
+            failedPaymentRingfenceDuration,
+            throneMaker
         );
     }
 
@@ -380,10 +385,15 @@ contract KingOfTheEtherThrone {
         wizardBalance -= amount;
     }
 
+    // How much can the deity withdraw from the contract?
+    function deityBalance() constant returns (uint256 balance) {
+        return this.balance - (wizardBalance + ringfencedFailedPaymentsBalance);
+    }
+
     // Used only by the deity to collect his commission.
     function sweepDeityCommission(uint256 amount) onlydeity {
         // Even the deity cannot take the wizard's funds, nor the ring-fenced failed payments.
-        if (amount + wizardBalance + ringfencedFailedPaymentsBalance > this.balance) {
+        if (amount > deityBalance()) {
             throw;
         }
         // Include plenty of gas with the send (but leave some for us).
@@ -408,19 +418,19 @@ contract KingOfTheEtherThrone {
 
 }
 
-// Work around the "contracts can't clone themsleves" problem with this helper contract -
+// Work around the "contracts can't clone themselves" problem with this helper contract -
 // which also records all the paid-for alt-thrones so we can generate web-pages for them.
-contract MetaKingOfTheEtherThrone {
+contract ThroneMaker {
 
     // TODO - document
     address deityAddress;
 
-    // TODO - keep official record of paid-for alt-thrones
+    // TODO - keep official record (gazetteer) of paid-for alt-thrones
 
     // TODO - throne creation price
 
     // TODO - document
-    function MetaKingOfTheEtherThrone() {
+    function ThroneMaker() {
         deityAddress = msg.sender;
     }
 
@@ -433,6 +443,8 @@ contract MetaKingOfTheEtherThrone {
         uint256 commissionPerMille,
         uint256 curseIncubationDuration
     ) returns (KingOfTheEtherThrone contractAddress) {
+        // TODO - check fee paid
+        // TODO - record in gazetteer
         // TODO - validation
         uint256 failedPaymentRingfenceDuration = 30 days;
         return new KingOfTheEtherThrone(
@@ -442,7 +454,8 @@ contract MetaKingOfTheEtherThrone {
             claimPriceAdjustPerMille,
             commissionPerMille,
             curseIncubationDuration,
-            failedPaymentRingfenceDuration
+            failedPaymentRingfenceDuration,
+            this
         );
     }
 }
