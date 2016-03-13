@@ -5,7 +5,8 @@
   "license": "proprietary",
   "scripts": {
     "build-public": "node ./bin/build-public.js",
-    "test": "node tests/test-throne.js"
+    "test": "node tests/test-throne.js",
+    "lint": "jshint tests"
   },
   "dependencies": {
     "marked" : "0.3.5",
@@ -15,6 +16,7 @@
     "cp" : "0.2.0"
   },
   "devDependencies": {
-    "dapp-test-runner": "*"
+    "dapp-test-runner": "*",
+    "jshint": "2.5.0"
   }
 }

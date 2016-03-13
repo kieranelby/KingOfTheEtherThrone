@@ -1,15 +1,17 @@
 # "King of the Ether Throne Core" Report
 
-Generated at 2016-03-12T23:50:09.321Z by [dapp-test-runner](https://github.com/kieranelby/dapp-test-runner).
+Generated at 2016-03-13T11:17:29.117Z by [dapp-test-runner](https://github.com/kieranelby/dapp-test-runner).
 
 ## Run Summary
 
-**Good**:
+**Bad** - there were test failures:
 
 * Tests added: 12
-* Tests skipped: 10
-* Tests passed: 2
-* Tests failed: 0
+* Tests skipped: 7
+* Tests passed: 3
+* Tests failed: 2
+
+The first test that failed was "First monarch appears to die after standard test curse incubation period"
 
 ## Tests
 
@@ -23,17 +25,7 @@ Skipped
 
 ##### Status
 
-Passed
-
-##### Debug Messages
-
-* created instance of contract KingOfTheEtherThrone at 0x48aed31e9f4be3c1fb6829782cb1f83781eb2dfe
-* called contract function KingOfTheEtherThrone.claimThrone
-
-##### Transactions Generated
-
-* [0x7013e709292cb29ec2da6a2106b593a99e116b5d073287014d13355aa7c27c7b](http://testnet.etherscan.io/tx/0x7013e709292cb29ec2da6a2106b593a99e116b5d073287014d13355aa7c27c7b)
-* [0xcaf5cedd45df52c77d8402f02da90f3ac405263176fc80ae00541af745095daa](http://testnet.etherscan.io/tx/0xcaf5cedd45df52c77d8402f02da90f3ac405263176fc80ae00541af745095daa)
+Skipped
 
 ### Test - "Claim Throne below Starting Price should not Increase Claim Price but should refund"
 
@@ -63,47 +55,103 @@ Skipped
 
 ##### Status
 
-Passed
-
-##### Debug Messages
-
-* created instance of contract KingOfTheEtherThrone at 0xb9ee944d55e964ff23422f4ed77813be27569ca1
-* called contract function KingOfTheEtherThrone.claimThrone
-* called contract function KingOfTheEtherThrone.claimThrone
-
-##### Transactions Generated
-
-* [0xe9c6e0b9684c0dee0307ac322cad4815f5bd74d4784f609dbaec87ed28a9c92a](http://testnet.etherscan.io/tx/0xe9c6e0b9684c0dee0307ac322cad4815f5bd74d4784f609dbaec87ed28a9c92a)
-* [0x7baa2b66d2776ea5feffb030e825516e0c0de4c4e13fef9ca4f4575973ad9d98](http://testnet.etherscan.io/tx/0x7baa2b66d2776ea5feffb030e825516e0c0de4c4e13fef9ca4f4575973ad9d98)
-* [0x363e6a087c165451c116adc54ea317b23de0baf6a8671837db6f769ef42629d2](http://testnet.etherscan.io/tx/0x363e6a087c165451c116adc54ea317b23de0baf6a8671837db6f769ef42629d2)
+Skipped
 
 ### Test - "Claim Throne for Second Time should pay Compensation to First Player"
 
 ##### Status
 
-Skipped
+Passed
+
+##### Debug Messages
+
+* created instance of contract KingOfTheEtherThrone at 0x361adcef526bb1f9e8fb78527bd7b4b13678bebb
+* called contract function KingOfTheEtherThrone.claimThrone
+* called contract function KingOfTheEtherThrone.claimThrone
+
+##### Transactions Generated
+
+* [0xdb326d173ea68eff83c2b6b3272a445d58963136a65e309bed44b0c0ac09def7](http://testnet.etherscan.io/tx/0xdb326d173ea68eff83c2b6b3272a445d58963136a65e309bed44b0c0ac09def7)
+* [0xe297de9eead60b68cded7d992db2aa4d5095479ccf90e981822464bc7c89f811](http://testnet.etherscan.io/tx/0xe297de9eead60b68cded7d992db2aa4d5095479ccf90e981822464bc7c89f811)
+* [0xeae5836c3d64adb1a91c50a43c949056c7692cdd60f9e81539660f7c78b2d2ec](http://testnet.etherscan.io/tx/0xeae5836c3d64adb1a91c50a43c949056c7692cdd60f9e81539660f7c78b2d2ec)
 
 ### Test - "Claim Throne should pay Commission to the contract shared between wizard and deity"
 
 ##### Status
 
-Skipped
+Passed
+
+##### Debug Messages
+
+* created instance of contract KingOfTheEtherThrone at 0x29a6448975cda93a098716553c3c0038421d8112
+* called contract function KingOfTheEtherThrone.claimThrone
+* called contract function KingOfTheEtherThrone.claimThrone
+
+##### Transactions Generated
+
+* [0x2c8017c8c06bbb0cc80e3f2e0df3d19bd4bd89a9f12687a14937b9d7d5d09dfa](http://testnet.etherscan.io/tx/0x2c8017c8c06bbb0cc80e3f2e0df3d19bd4bd89a9f12687a14937b9d7d5d09dfa)
+* [0xb475d55e6225a7913620074fd04fb7c353d20a7d2be18d4e9843da0e72ebaefa](http://testnet.etherscan.io/tx/0xb475d55e6225a7913620074fd04fb7c353d20a7d2be18d4e9843da0e72ebaefa)
+* [0x6a5db4bce365c5fc67b50ecf45845c66f11856d8532fe5e19969d9ebb988cf78](http://testnet.etherscan.io/tx/0x6a5db4bce365c5fc67b50ecf45845c66f11856d8532fe5e19969d9ebb988cf78)
 
 ### Test - "Hall of Monarchs after Second Claim"
 
 ##### Status
 
-Skipped
+Passed
+
+##### Debug Messages
+
+* created instance of contract KingOfTheEtherThrone at 0x2f0acf3147342de55811a0d7a9e810397327d176
+* called contract function KingOfTheEtherThrone.claimThrone
+* called contract function KingOfTheEtherThrone.claimThrone
+
+##### Transactions Generated
+
+* [0x521b84bd129ecf8038f3bb9fa5a606b143138288e510b8df465b0b068ee72943](http://testnet.etherscan.io/tx/0x521b84bd129ecf8038f3bb9fa5a606b143138288e510b8df465b0b068ee72943)
+* [0x737b28680a5cb4d5fa51cecc4eb1817e80007a81f7549072fdbcc88784c83ae7](http://testnet.etherscan.io/tx/0x737b28680a5cb4d5fa51cecc4eb1817e80007a81f7549072fdbcc88784c83ae7)
+* [0xc52503e56248ba6f60c39e0d3c39e45645263553ca4b8d2551d121e148e13893](http://testnet.etherscan.io/tx/0xc52503e56248ba6f60c39e0d3c39e45645263553ca4b8d2551d121e148e13893)
 
 ### Test - "First monarch appears to die after standard test curse incubation period"
 
 ##### Status
 
-Skipped
+Failed
+
+##### Failure Cause
+
+TypeError: Cannot read property 'nextStep' of undefined
+
+Location: Step #2 at Object.<anonymous> (C:\Users\Kieran\Documents\KingOfTheEtherThrone\tests\test-throne.js:460:18)
+
+##### Debug Messages
+
+* created instance of contract KingOfTheEtherThrone at 0xf593f7ad9d09d029d336e54e0812db1985c361bc
+* called contract function KingOfTheEtherThrone.claimThrone
+
+##### Transactions Generated
+
+* [0x374a147452e72a4ca2ba1c57e3be46c27204966566b267fca99e0658530c909e](http://testnet.etherscan.io/tx/0x374a147452e72a4ca2ba1c57e3be46c27204966566b267fca99e0658530c909e)
+* [0x303c10ee3aecc882bc7b70c543fca627528c06121b55430dff94669fd0538525](http://testnet.etherscan.io/tx/0x303c10ee3aecc882bc7b70c543fca627528c06121b55430dff94669fd0538525)
 
 ### Test - "Claim throne from dead first monarch does not pay compensation"
 
 ##### Status
 
-Skipped
+Failed
+
+##### Failure Cause
+
+TypeError: helper.getLatestBlockTime is not a function
+
+Location: Step #2 at Object.<anonymous> (C:\Users\Kieran\Documents\KingOfTheEtherThrone\tests\test-throne.js:490:30)
+
+##### Debug Messages
+
+* created instance of contract KingOfTheEtherThrone at 0xbba34d43ef40451b5a8f686b2a2fd076289166b8
+* called contract function KingOfTheEtherThrone.claimThrone
+
+##### Transactions Generated
+
+* [0xf2e4d59fa5b902876d2e2ca9d5eb1950901cc7fe8cafd02d27955260d579e35a](http://testnet.etherscan.io/tx/0xf2e4d59fa5b902876d2e2ca9d5eb1950901cc7fe8cafd02d27955260d579e35a)
+* [0xa9fb608e0f0b377e7e0a7be8babe0a3a912d343a8df660164aa78857f2e44732](http://testnet.etherscan.io/tx/0xa9fb608e0f0b377e7e0a7be8babe0a3a912d343a8df660164aa78857f2e44732)
 
