@@ -78,6 +78,7 @@ function createStandardTestThrone(helper) {
 
 runner.addTest({
   title: 'Can inspect throne config',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -102,6 +103,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim Throne at Starting Price should Increase Claim Price',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -128,6 +130,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim Throne below Starting Price should not Increase Claim Price but should refund',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -161,6 +164,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim Throne above Starting Price should not Increase Claim Price but should refund',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -194,6 +198,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Hall of Monarchs before Throne Ever Claimed',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne
@@ -215,6 +220,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Hall of Monarchs after First Claim',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -256,6 +262,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim Throne for Second Time should Increase Claim Price Again',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and two players
@@ -290,6 +297,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim Throne for Second Time should pay Compensation to First Player',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and two players
@@ -328,6 +336,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim Throne should pay Commission to the contract shared between wizard and deity',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and two players
@@ -371,6 +380,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Hall of Monarchs after Second Claim',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -431,6 +441,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'First monarch appears to die after standard test curse incubation period',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and one player
@@ -463,6 +474,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Claim throne from dead first monarch does not pay compensation',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne and two players (this time player two only needs 1 eth)
@@ -482,9 +494,9 @@ runner.addTest({
       // make a note of when player one claimed the throne and how much money they had left
       var claimedAt = helper.txn.getLatestBlockTime();
       var config = decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
-      this.expectDieBy = helper.addNum(claimedAt, config.curseIncubationDuration);
-      this.contractBalanceAfterFirstClaim = helper.txn.getBalance(this.throne.address);
-      this.playerOneBalanceAfterTheyClaimed = helper.txn.getBalance(this.playerOneAccount);
+      this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
+      this.contractBalanceAfterFirstClaim = helper.account.getBalance(this.throne.address);
+      this.playerOneBalanceAfterTheyClaimed = helper.account.getBalance(this.playerOneAccount);
     },
     function(helper) {
       // when we wait until the monarch should have died
@@ -523,6 +535,8 @@ runner.addTest({
 // no name / long name / invalid name
 // ownership transfer
 // creation of alt-thrones
+
+//runner.excludeCategory('safe');
 
 // Run the tests.
 runner.run(function (results) {
