@@ -10,6 +10,12 @@
  * cd Desktop
  * geth --testnet --port 31313 --datadir e:/ethereum -rpc -rpcport 8646 -rpcapi "eth,web3,personal" -unlock 0
  *
+ * or using the test.ether.camp test met:
+ *
+ * geth --datadir 'E:\Ethereum\camptest' --networkid 161  --nodiscover --port 32323 \
+ *   --port 32323 -verbosity 3 -rpc -rpcport 8646 -rpcapi "eth,web3,personal" \
+ *   --genesis E:/Ethereum/camptest/frontier-test.json -unlock 0  --verbosity 5 --gpomin "50000000000"
+ *
  * Alternatively running against private testnet with low difficulty is much faster (but fiddly to setup).
  *
  * NB: I guess we could try breaking up the contract into smaller mini-contracts to make testing
@@ -497,10 +503,10 @@ runner.addTest({
       this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
       this.contractBalanceAfterFirstClaim = helper.account.getBalance(this.throne.address);
       this.playerOneBalanceAfterTheyClaimed = helper.account.getBalance(this.playerOneAccount);
+      // when we wait until the monarch should have died
+      helper.nextStep.needsBlockTime(this.expectDieBy);
     },
     function(helper) {
-      // when we wait until the monarch should have died
-      helper.backOff.untilBlockTime(this.expectDieBy);
       // and then let player 2 claim the throne
       this.throne.claimThrone('playerTwo', {
         from: this.playerTwoAccount,
@@ -516,6 +522,83 @@ runner.addTest({
       var contractBalanceNow = helper.account.getBalance(this.throne.address);
       var expectedContractBalance = helper.math.add(helper.math.toWei('1', 'ether'), this.contractBalanceAfterFirstClaim);
       helper.assert.equal(expectedContractBalance, contractBalanceNow, 'contract balance');
+    }
+  ]
+});
+
+runner.addTest({
+  title: 'Claim throne anonymously via fallback succeeds',
+  categories: ['safe'],
+  steps: [
+    function(helper) {
+      // given a new throne and a player:
+      this.throne = createStandardTestThrone(helper);
+      this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
+    },
+    function(helper) {
+      // given that the  player claimed the throne by sending the starting price according
+      // to the contract to the contract address:
+      var claimPrice = this.throne.currentClaimPrice();
+      helper.txn.send({
+        from: this.playerOneAccount,
+        to: this.throne.address,
+        value: claimPrice,
+        gas: 500000
+      });
+    },
+    function(helper) {
+      // then the claim price increases
+      var newClaimPrice = this.throne.currentClaimPrice();
+      helper.assert.equal(helper.math.toWei('1.5','ether'), newClaimPrice, 'expected new claim price to increase by 50%');
+    }
+  ]
+});
+
+// TODO - fixme
+// TODO - cleanup
+runner.addTest({
+  title: 'Claim throne anonymously via fallback using wallet contract succeeds',
+  steps: [
+    function(helper) {
+      // given a new throne and a player
+      this.throne = createStandardTestThrone(helper);
+      this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1.1', 'ether'));
+    },
+    function(helper) {
+	    helper.debug.log('i think i am creating the wallet from', this.playerOneAccount);
+	    helper.txn.rawWeb3.eth.defaultAccount = this.playerOneAccount;
+      // and given the player has their own wallet contract
+      this.playerOneWallet = helper.txn.createContractInstance('DTRExpensiveWallet', [0], {
+        from: this.playerOneAccount
+      });
+    },
+    function(helper) {
+      // and given that the player has sent money to their wallet:
+      var claimPrice = this.throne.currentClaimPrice();
+      helper.txn.send({
+        from: this.playerOneAccount,
+        to: this.playerOneWallet.address,
+        value: claimPrice,
+        gas: 500000
+      });
+    },
+    function(helper) {
+      // when the player instructs their wallet to send money to the throne,
+      // specifying a decent wodge of gas:
+      var extraGasAmount = 250000;
+      var claimPrice = this.throne.currentClaimPrice();
+	    helper.debug.log('i think i am telling the wallet to spend from', this.playerOneAccount);
+	    helper.txn.rawWeb3.eth.defaultAccount = this.playerOneAccount;
+      this.playerOneWallet.spendWithGas(this.throne.address, claimPrice, extraGasAmount, {
+        from: this.playerOneAccount,
+        gas: 500000
+      });
+    },
+    function(helper) {
+      // then the claim price increases
+      var newClaimPrice = this.throne.currentClaimPrice();
+      helper.assert.equal(helper.math.toWei('1500','finney'), newClaimPrice,
+        'expected claim price to increase as normal when contract claims throne');
     }
   ]
 });
