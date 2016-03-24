@@ -4,11 +4,99 @@
 // v0.9.0.
 // Inspired by ethereumpyramid.com and the (now-gone?) "magnificent bitcoin gem".
 
-// This contract lives on the blockchain at TODO
-// and was compiled (without optimization) with:
-// TODO
 
-contract KingOfTheEtherThrone {
+// We don't actually create this contract - it just has some shared functions
+// for carefully sending ether to addresses.
+contract CarefulSender {
+
+    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
+    // isn't enough to send ether to some wallet contracts - use this to add more.
+    // Caller MUST check the return value - true on success, false on failure.
+    function sendWithExtraGas(address destination, uint256 value, uint256 extraGasAmt) internal returns (bool) {
+      return destination.call.value(value).gas(extraGasAmt)();
+    }
+
+    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
+    // isn't enough to send ether to some wallet contracts - use this to add all the
+    // gas we have available, minus a reserve amount we keep back for ourselves.
+    // Caller MUST check the return value - true on success, false on failure.
+    function sendWithAllOurGasExcept(address destination, uint256 value, uint256 reserveGasAmt) internal returns (bool) {
+        uint gasAvail = msg.gas;
+        if (gasAvail < reserveGasAmt) {
+            return false;
+        }
+        uint extraGas = gasAvail - reserveGasAmt;
+        return sendWithExtraGas(destination, value, extraGas);
+    }
+
+}
+
+
+// We don't actually create this contract - it just has some shared functions
+// for checking names are safe to use.
+contract NameValidator {
+
+    // Throw if the given name is not considered "safe" to use.
+    // TODO - maybe return false/true since can't catch...!
+    // Rules are: must be no more than 30 bytes, must be pure 7-bit ASCII, must be A-z,0-9,-,space only.
+    function validateName(bytes name) constant internal {
+        uint256 len = name.length;
+        // Not really much of a name if it is blank.
+        if (len == 0) {
+            throw;
+        }
+        // Either web3 or the solidity ABI has problems with bytes/strings above ~32 bytes.
+        // See https://github.com/ethereum/web3.js/issues/357.
+        if (len > 30) {
+            throw;
+        }
+        // ASCII space, dash, 0-9, A-Z, a-z
+        for (uint256 i = 0; i < len; i++) {
+            byte b = name[i];
+            if (!(b == 32 || b == 45 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122))) {
+              throw;
+            }
+        }
+    }
+}
+
+
+// We don't actually create this contract - it just has some shared functions
+// for checking if names are the same.
+contract NameHasher is NameValidator {
+
+    // Hash the name down to a number, case-folding and ignoring spaces and dashes.
+    // This isn't a good hash - but it doesn't matter since the input is always smaller
+    // than the hash! Assumes pure 7-bit ASCII.
+    // Important: assumes that the name has passed the NameValidator.validateName check!
+    function computeNameHash(bytes name) constant internal returns (uint256 nameHash) {
+        uint256 h = 0;
+        uint256 len = name.length;
+        if (len > 30) {
+          throw;
+        }
+        for (uint256 idx = 0; idx < len; idx++) {
+            byte b = name[idx];
+            // space or dash
+            if (b == 32 || b == 45) {
+              continue;
+            }
+            // lower -> upper
+            if (b >= 97 && b <= 122) {
+              b = byte(uint256(b) - 32);
+            }
+            h += uint256(b);
+            h *= 256;
+        }
+        return h;
+    }
+
+}
+
+
+// A throne. This is the main contract.
+// TODO - can we break some more bits out for easier testing (e.g. commission balances? rounding?)
+contract KingOfTheEtherThrone is CarefulSender, NameValidator {
 
     // Represents whether we managed to send a payment or not.
     enum PaymentStatus { NotApplicable, Good, Failed, Void }
@@ -70,8 +158,10 @@ contract KingOfTheEtherThrone {
         uint256 startingClaimPrice;
 
         // The next claimPrice is calculated from the previous claimPrice
-        // by multiplying by 1000+claimPriceAdjustPerMille then dividing by 1000.
+        // by multiplying by (1000 + claimPriceAdjustPerMille) then dividing by 1000.
         // For example, claimPriceAdjustPerMille=500 would cause a 50% increase.
+        // And claimPriceAdjustPerMille=2000 would cause the new claim price to be
+        // three times the previous claim price (i.e. a 200% increase).
         uint256 claimPriceAdjustPerMille;
 
         // How much of each claimPrice goes to the wizard and deity.
@@ -99,6 +189,33 @@ contract KingOfTheEtherThrone {
     // Used to ensure only the deity can do some things.
     modifier onlydeity { if (msg.sender == config.deityAddress) _ }
 
+    // Generated when the throne is claimed successfully.
+    event ThroneClaimed(uint256 newMonarchIndex, uint256 valuePaid);
+
+    // Generated when a compensation payment is successfully sent first time.
+    event CompensationPaymentSent(uint256 compensatedMonarchIndex, uint256 paymentValue);
+    
+    // Generated if a compensation payment could not be sent.
+    event CompensationPaymentFailed(uint256 notCompensatedMonarchIndex, uint256 paymentValue);
+
+    // Generated if a failed payment is re-sent successfully.
+    event FailedCompensationPaymentResent(uint256 compensatedMonarchIndex, uint256 paymentValue);
+
+    // Generated if a failed payment is voided.
+    event FailedCompensationPaymentVoided(uint256 notCompensatedMonarchIndex, uint256 paymentValue);
+
+    // Generated when the wizard collects fees.
+    event WizardCommissionSwept(address toWizardAddress, uint256 amount);
+
+    // Generated when the wizard transfers ownership rights to another.
+    event WizardSwitched(address newWizardAddress);
+
+    // Generated when the deity collects fees.
+    event DeityCommissionSwept(address toDeityAddress, uint256 amount);
+
+    // Generated when the deity transfers ownership rights to another.
+    event DeitySwitched(address newDeityAddress);
+
     // Earliest-first list of throne holders.
     Monarch[] public monarchs;
 
@@ -121,8 +238,8 @@ contract KingOfTheEtherThrone {
         uint256 failedPaymentRingfenceDuration,
         ThroneMaker throneMaker
     ) {
-        // TODO - validate args for sanity
-        // (though short durations sometimes make sense for testing?)
+        // We don't bother with validation since we assume the
+        // majority of thrones will be created via the ThroneMaker.
         config = ThroneConfig(
             wizardAddress,
             deityAddress,
@@ -193,26 +310,29 @@ contract KingOfTheEtherThrone {
     // Fallback function to claim the throne - simple transactions trigger this.
     // Assumes the message data is their desired name in ASCII (nameless if none).
     // The caller will need to include payment of currentClaimPrice with the transaction.
-    // They will also need to include plenty of gas - 500,000 recommended.
+    // They will also need to include plenty of gas - 400,000 recommended.
     function() {
-        claimThrone(readNameFromMsgData());
+        claimThrone(msg.data);
     }
 
     // Claim the throne in the given name.
     // The caller will need to include payment of currentClaimPrice with the transaction.
     // This function assumes that any compensation payment later due should be sent
     // to the account that called this contract (which might itself be a contract).
-    // They will also need to include plenty of gas - 500,000 recommended.
+    // They will also need to include plenty of gas - 400,000 recommended.
     function claimThrone(bytes name) {
         claimThroneFor(name, msg.sender);
     }
 
     // Claim the throne in the given name, specifying an address to which any
-    // compensation payment should later be sent. Don't get it wrong - can't change!
+    // compensation payment should later be sent. Don't get it wrong - can't change it!
     // The caller will need to include payment of currentClaimPrice with the transaction.
-    // They will also need to include plenty of gas - 500,000 recommended.
+    // They will also need to include plenty of gas - 400,000 recommended.
     function claimThroneFor(bytes name, address compensationAddress) {
 
+        if (name.length == 0) {
+            name = "Anonymous";
+        }
         validateName(name);
 
         uint256 valuePaid = msg.value;
@@ -230,7 +350,7 @@ contract KingOfTheEtherThrone {
         if (valuePaid > correctPrice) {
             throw;
         }
-
+        
         if (!isLivingMonarch()) {
 
             // When the throne is vacant, the claim price payment accumulates
@@ -263,9 +383,11 @@ contract KingOfTheEtherThrone {
                                        compensation, compensationExtraGas);
             if (ok) {
                 monarchs[monarchs.length-1].compensationStatus = PaymentStatus.Good;
+                CompensationPaymentSent(monarchs.length-1, compensation);
             } else {
                 monarchs[monarchs.length-1].compensationStatus = PaymentStatus.Failed;
                 ringfencedFailedPaymentsBalance += compensation;
+                CompensationPaymentFailed(monarchs.length-1, compensation);
             }
             monarchs[monarchs.length-1].compensationTimestamp = block.timestamp;
             monarchs[monarchs.length-1].compensationPaid = compensation;
@@ -282,22 +404,8 @@ contract KingOfTheEtherThrone {
             0
         ));
 
-    }
-
-    // TODO - DOCUMENT
-    function readNameFromMsgData() internal returns (bytes name) {
-        return msg.data;
-    }
-
-    // TODO - DOCUMENT
-    function validateName(bytes name) internal {
-        // Either web3 or the solidity ABI has problems with bytes/strings above ~32 bytes.
-        // See https://github.com/ethereum/web3.js/issues/357.
-        if (name.length > 30) {
-            throw;
-        }
-        // TODO - consider checking code points are reasonable?
-        // But perhaps this isn't the place to do that?
+        uint256 newMonarchIndex = monarchs.length - 1;
+        ThroneClaimed(newMonarchIndex, valuePaid);
     }
 
     // The wizard and deity split comission 50:50. To keep them honest,
@@ -305,24 +413,6 @@ contract KingOfTheEtherThrone {
     // (We could do the same for the deity, but it would be redundant).
     function recordCommission(uint256 commission) internal {
       wizardBalance += commission / 2;
-    }
-
-    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
-    // isn't enough to send ether to some wallet contracts - use this to add more.
-    function sendWithExtraGas(address destination, uint256 value, uint256 extraGasAmt) internal returns (bool) {
-      return destination.call.value(value).gas(extraGasAmt)();
-    }
-
-    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
-    // isn't enough to send ether to some wallet contracts - use this to add all the
-    // gas we have available, minus a reserve amount we keep back for ourselves.
-    function sendWithAllOurGasExcept(address destination, uint256 value, uint256 reserveGasAmt) internal returns (bool) {
-        uint gasAvail = msg.gas;
-        if (gasAvail < reserveGasAmt) {
-            throw;
-        }
-        uint extraGas = gasAvail - reserveGasAmt;
-        return sendWithExtraGas(destination, value, extraGas);
     }
 
     // Re-send a compensation payment that previously failed, in the hope that
@@ -344,6 +434,7 @@ contract KingOfTheEtherThrone {
         // No longer need to ring-fence it.
         monarchs[monarchNumber].compensationStatus = PaymentStatus.Good;
         ringfencedFailedPaymentsBalance -= compensation;
+        FailedCompensationPaymentResent(monarchNumber, compensation);
     }
 
     // Void a failed compensation payment and award the ether to the wizard and the deity.
@@ -369,6 +460,7 @@ contract KingOfTheEtherThrone {
         recordCommission(compensation);
         // Don't let it be resent/voided again!
         monarchs[monarchNumber].compensationStatus = PaymentStatus.Void;
+        FailedCompensationPaymentVoided(monarchNumber, compensation);
     }
 
     // Used only by the wizard to collect his commission.
@@ -383,6 +475,7 @@ contract KingOfTheEtherThrone {
             throw;
         }
         wizardBalance -= amount;
+        WizardCommissionSwept(config.wizardAddress, amount);
     }
 
     // How much can the deity withdraw from the contract?
@@ -390,7 +483,7 @@ contract KingOfTheEtherThrone {
         return this.balance - (wizardBalance + ringfencedFailedPaymentsBalance);
     }
 
-    // Used only by the deity to collect his commission.
+    // Used only by the deity to collect their commission.
     function sweepDeityCommission(uint256 amount) onlydeity {
         // Even the deity cannot take the wizard's funds, nor the ring-fenced failed payments.
         if (amount > deityBalance()) {
@@ -402,52 +495,167 @@ contract KingOfTheEtherThrone {
         if (!ok) {
             throw;
         }
+        DeityCommissionSwept(config.deityAddress, amount);
     }
 
-    // Used only by the wizard to transfer the contract to a successor.
-    // It is probably unwise for the newWizard to be a contract.
+    // Used only by the wizard to transfer all rights to a successor.
+    // It is probably unwise for the newWizard to be a contract unless
+    // it is able to call sweepWizardComission, switchWizard, voidFailedPayment
+    // and it has a suitably cheap fallback function.
     function switchWizard(address newWizard) onlywizard {
         config.wizardAddress = newWizard;
+        WizardSwitched(newWizard);
     }
 
-    // Used only by the deity to transfer the contract to a successor.
-    // It is probably unwise for the newDeity to be a contract.
+    // Used only by the deity to transfer all rights to a successor.
+    // It is probably unwise for the newDeity to be a contract unless
+    // it is able to call sweepDeityComission, switchDeity, voidFailedPayment
+    // and it has a suitably cheap fallback function.
     function switchDeity(address newDeity) onlydeity {
         config.deityAddress = newDeity;
+        DeitySwitched(newDeity);
     }
 
 }
 
 // Work around the "contracts can't clone themselves" problem with this helper contract -
-// which also records all the paid-for alt-thrones so we can generate web-pages for them.
-contract ThroneMaker {
+// which also records all the official thrones so we can generate web-pages for them.
+// TODO - can we break more bits out to separate contracts for testing (e.g. validation)?
+contract ThroneMaker is CarefulSender, NameHasher {
 
-    // TODO - document
-    address deityAddress;
-
-    // TODO - keep official record (gazetteer) of paid-for alt-thrones
-
-    // TODO - throne creation price
-
-    // TODO - document
-    function ThroneMaker() {
-        deityAddress = msg.sender;
+    // Each official throne has one of these entries.
+    struct GazetteerEntry {
+        // The name of the throne is the title of the holder.
+        // e.g. 'King of the Ether', 'Queen of Goats'.
+        bytes throneName;
+        // The address of the KingOfTheEther contract for this throne.
+        address throneContractAddress;
+        // How much was paid to create this throne (in wei)?
+        uint256 creationPricePaid;
+        // When was this throne created (block timestamp)?
+        uint256 creationTimestamp;
     }
 
-    // TODO - document
-    // TODO - throne creation price
+    // The deity is the source of power; he delegates some to the wizard who in turn delegates some to the king.
+    address deityAddress;
+
+    // Used to ensure only the deity can do some things.
+    modifier onlydeity { if (msg.sender == deityAddress) _ }
+
+    // How much must someone currently pay to create their own throne?
+    uint256 public throneCreationPrice;
+
+    // Directory of all officially-recognised thrones.
+    GazetteerEntry[] public gazetteer;
+
+    // Mapping from nameHash to (throneIndex+1)
+    // (we add the one so that we can recognise the default storage value of zero as bogus)
+    mapping (uint256 => uint256) throneNumberByNameHash;
+
+    // Generated when a throne is created.
+    event ThroneCreated(uint256 throneIndex);
+
+    // Generated when the throne creation price is set.
+    event ThroneCreationPriceSet(uint256 newThroneCreationPrice);
+
+    // Generated when the deity collects fees.
+    event DeityCommissionSwept(address toDeityAddress, uint256 amount);
+
+    // Generated when the deity transfers ownership rights to another.
+    event DeitySwitched(address newDeityAddress);
+
+    // And so it begins.
+    function ThroneMaker(uint256 throneCreationPrice_) {
+        deityAddress = msg.sender;
+        setThroneCreationPrice(throneCreationPrice_);
+    }
+    
+    // How many monarchs have there been (including the current one, live or dead)?
+    function numberOfThrones() constant returns (uint256 numberOfThrones) {
+        return gazetteer.length;
+    }
+
+    // Don't think a fallback makes sense really for this contract.
+    function () {
+      throw;
+    }
+
+    // Create a new throne.
+    // The caller will need to include payment equal to the current throneCreationPrice,
+    // as well as a very large amount of gas - about 2,000,000.
+    // optionalWizardAddress can be zero to indicate the caller should be the wizard
+    // behind the throne, or non-zero for a different wiazrd address.
+    // The other parameters here are documented in KingOfTheEtherThrone.ThroneConfig.
+    // NB: like all non-constant functions, the return value isn't actually returned
+    // outside the VM - use findThroneCalled(throneName) to get the throne you created.
+    // NB2: Yes, i suppose someone else could create one with the same name just before
+    // you - double-check the config of the throne contract created.
     function createThrone(
-        address wizardAddress,
+        bytes   throneName,
+        address optionalWizardAddress,
         uint256 startingClaimPrice,
         uint256 claimPriceAdjustPerMille,
         uint256 commissionPerMille,
         uint256 curseIncubationDuration
-    ) returns (KingOfTheEtherThrone contractAddress) {
-        // TODO - check fee paid
-        // TODO - record in gazetteer
-        // TODO - validation
+    ) returns (uint256 throneIndex) {
+
+        // Technically zero is a valid address, but we use to indicate that the
+        // caller should be made the wizard. Careful if calling from a contract!
+        address wizardAddress = optionalWizardAddress;
+        if (wizardAddress == 0) {
+          wizardAddress = msg.sender;
+        }
+
+        uint256 valuePaid = msg.value;
+        
+        // If they paid too little, blow up - this should refund them (tho they lose all gas).
+        if (valuePaid < throneCreationPrice) {
+            throw;
+        }
+
+        // If they paid too much, blow up - this should refund them (tho they lose all gas).
+        if (valuePaid > throneCreationPrice) {
+            throw;
+        }
+
+        // Check the name is "safe" and doesn't already exist.
+        
+        validateName(throneName);
+        uint256 nameHash = computeNameHash(throneName);
+        if (findThroneByNameHash(nameHash) != uint256(-1)) {
+          throw;
+        }
+        
+        // Check the configuration looks vaguely plausible.
+
+        if (startingClaimPrice < 1 szabo) {
+            throw;
+        }
+        if (startingClaimPrice > 1000000 ether) {
+            throw;
+        }
+        if (claimPriceAdjustPerMille < 10) {
+            throw;
+        }
+        if (claimPriceAdjustPerMille > 9000) {
+            throw;
+        }
+        if (commissionPerMille < 10) {
+            throw;
+        }
+        if (commissionPerMille > 100) {
+            throw;
+        }
+        if (curseIncubationDuration < 5 minutes) {
+            throw;
+        }
+        if (curseIncubationDuration > 999 years) {
+            throw;
+        }
+
         uint256 failedPaymentRingfenceDuration = 30 days;
-        return new KingOfTheEtherThrone(
+
+        KingOfTheEtherThrone throneContract = new KingOfTheEtherThrone(
             wizardAddress,
             deityAddress,
             startingClaimPrice,
@@ -457,5 +665,98 @@ contract ThroneMaker {
             failedPaymentRingfenceDuration,
             this
         );
+
+        return registerThrone(throneName, nameHash, throneContract, valuePaid, block.timestamp);
     }
+
+    // Return the index in the gazetteer of the throne with the given name.
+    // Maxint (that is, uint(-1)) means not found
+    // NB: validates name as a side-effect
+    function findThroneCalled(bytes throneName) constant returns (uint256 throneIndex) {
+        validateName(throneName);
+        return findThroneByNameHash(computeNameHash(throneName));
+    }
+
+    // Return the index in the gazetteer of the throne with the given name hash according to computeNameHash.
+    // Maxint (that is, uint(-1)) means not found
+    function findThroneByNameHash(uint256 nameHash) constant internal returns (uint256 throneIndex) {
+        uint256 throneNumber = throneNumberByNameHash[nameHash];
+        return throneNumber - 1;
+    }
+
+    // Used only by the deity to register thrones created by some other means.
+    function registerExistingThrone(bytes throneName, address throneContractAddress, uint256 creationPricePaid, uint256 creationTimestamp) onlydeity returns (uint256 throneIndex) {
+        validateName(throneName);
+        uint256 nameHash = computeNameHash(throneName);
+        if (findThroneByNameHash(nameHash) != uint256(-1)) {
+          throw;
+        }
+        return registerThrone(throneName, nameHash, throneContractAddress, creationPricePaid, creationTimestamp);
+    }
+
+    // This is our "value-add" above just creating the contract; we add it to the offical list of thrones.
+    function registerThrone(bytes throneName, uint256 nameHash, address throneContractAddress, uint256 creationPricePaid, uint256 creationTimestamp) internal returns (uint256 throneIndex) {
+        gazetteer.push(GazetteerEntry(
+            throneName,
+            throneContractAddress,
+            creationPricePaid,
+            creationTimestamp
+        ));
+        uint256 newThroneIndex = gazetteer.length - 1;
+        uint256 throneNumber = newThroneIndex + 1;
+        throneNumberByNameHash[nameHash] = throneNumber;
+        ThroneCreated(newThroneIndex);
+        return newThroneIndex;
+    }
+
+    // Used only by the deity to change the throne creation price.
+    function setThroneCreationPrice(uint256 newThroneCreationPrice) onlydeity {
+        throneCreationPrice = newThroneCreationPrice;
+        ThroneCreationPriceSet(throneCreationPrice);
+    }
+   
+    // Used only by the deity to collect their throne creation fees.
+    function sweepDeityCommission(uint256 amount) onlydeity {
+        // Include plenty of gas with the send (but leave some for us).
+        uint reserveGas = 10000;
+        bool ok = sendWithAllOurGasExcept(deityAddress, amount, reserveGas);
+        if (!ok) {
+            throw;
+        }
+        DeityCommissionSwept(deityAddress, amount);
+    }
+
+    // Used only by the deity to transfer the throne making rights to a successor.
+    // It is probably unwise for the newDeity to be a contract unless it is able to
+    // call sweepDeityComission and switchDeity and it has a suitably cheap fallback function.
+    function switchDeity(address newDeity) onlydeity {
+        deityAddress = newDeity;
+        DeitySwitched(newDeity);
+    }
+
+}
+
+
+// Expose normally internal functions for testing in isolation.
+// (arguably a poor testing practice, but contracts are a bit unusual -
+//  we don't really want to have to purely black-box-test name hashing by
+// creating loads of thrones with similar names 'cos they're expensive ...)
+contract ThroneInternalsForTesting is CarefulSender, NameValidator, NameHasher {
+
+    function sendWithExtraGasExt(address destination, uint256 value, uint256 extraGasAmt) returns (bool) {
+      return sendWithExtraGas(destination, value, extraGasAmt);
+    }
+
+    function sendWithAllOurGasExceptExt(address destination, uint256 value, uint256 reserveGasAmt) returns (bool) {
+      return sendWithAllOurGasExcept(destination, value, reserveGasAmt);
+    }
+
+    function validateNameExt(bytes name) constant {
+      validateName(name);
+    }
+
+    function computeNameHashExt(bytes name) constant returns (uint256 nameHash) {
+      return computeNameHash(name);
+    }
+
 }
