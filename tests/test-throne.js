@@ -978,8 +978,10 @@ runner.addTest({
       this.throneTwoGazetteerEntry = decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneTwoIndex), helper.txn.rawWeb3);
       helper.assert.notEqual(this.throneOneIndex, this.throneTwoIndex, 'not same as throne one');
       // and we can find the throne contract from the gazetteer entry
-      this.throneTwoAddress = this.throneOneGazetteerEntry.throneContractAddress;
+      this.throneTwoAddress = this.throneTwoGazetteerEntry.throneContractAddress;
       this.throneTwo = helper.txn.getRegisteredContractInstanceAt('KingOfTheEtherThrone', this.throneTwoAddress);
+      // and it has expected properties
+      helper.assert.equal(this.throneTwoStartingClaimPrice, this.throneTwo.currentClaimPrice(), 'throne 2 should have customised starting price');
     },
     function(helper) {
       // and when we claim the newly create throne

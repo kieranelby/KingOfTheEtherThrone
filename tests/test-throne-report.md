@@ -1,17 +1,15 @@
 # "King of the Ether Throne Core" Report
 
-Generated at 2016-03-24T07:42:40.480Z by [dapp-test-runner](https://github.com/kieranelby/dapp-test-runner).
+Generated at 2016-03-24T22:15:05.949Z by [dapp-test-runner](https://github.com/kieranelby/dapp-test-runner).
 
 ## Run Summary
 
-**Bad** - there were test failures:
+**Good**:
 
 * Tests added: 20
 * Tests skipped: 0
-* Tests passed: 19
-* Tests failed: 1
-
-The first test that failed was "Create second bespoke throne via ThroneMaker with different name has expected properties, appears in gazetteer and can be claimed"
+* Tests passed: 20
+* Tests failed: 0
 
 ## Tests
 
@@ -23,11 +21,11 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xef0691f5d24ce10fe1954a60f4b9754351c16522
+* created instance of contract KingOfTheEtherThrone at 0x508f6e80d5cf825239341509aee32a635980d4e9
 
 ##### Transactions Generated
 
-* [0x76796de6cc7d4f6c97b23155d2c3c09e31e657ebba9d0170a6695c86d8057d4d](http://testnet.etherscan.io/tx/0x76796de6cc7d4f6c97b23155d2c3c09e31e657ebba9d0170a6695c86d8057d4d)
+* [0x8f16ebcf13c14cf224c1c1c4f1a817a5386d281b185a7f137a1c67e735c1ab8e](http://testnet.etherscan.io/tx/0x8f16ebcf13c14cf224c1c1c4f1a817a5386d281b185a7f137a1c67e735c1ab8e)
 
 ### Test - "Claim Throne at Starting Price should Increase Claim Price"
 
@@ -37,13 +35,13 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xa96604b6cf75a6636f24e43f95663222ff5a924c
+* created instance of contract KingOfTheEtherThrone at 0x25de672b4993ecc310e4c758330dfec99147da45
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0xb3fa3c6402337337327e04218b0acf059705306ce78d8cda7f76392877421d29](http://testnet.etherscan.io/tx/0xb3fa3c6402337337327e04218b0acf059705306ce78d8cda7f76392877421d29)
-* [0x399368ee3b09e16fa795bec2cc8eced4cc915d9f759d3a56372497b5b044e073](http://testnet.etherscan.io/tx/0x399368ee3b09e16fa795bec2cc8eced4cc915d9f759d3a56372497b5b044e073)
+* [0xf783f0d1c41cf9dcf38b17813dd8ce1d25d906e4ecca15758a220ad63ccf5765](http://testnet.etherscan.io/tx/0xf783f0d1c41cf9dcf38b17813dd8ce1d25d906e4ecca15758a220ad63ccf5765)
+* [0xad6364cb7d1ac4e16a2257e468aa6d5319da0a838bbdf3c2cdd5d5fbe910256b](http://testnet.etherscan.io/tx/0xad6364cb7d1ac4e16a2257e468aa6d5319da0a838bbdf3c2cdd5d5fbe910256b)
 
 ##### Contract Events
 
@@ -57,13 +55,13 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xf1890f9f205fd116e65e03b2fe5c94c4b372e911
+* created instance of contract KingOfTheEtherThrone at 0x7e8aadb91e0e62675c79ea264a999c942ab4f568
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x021055f56a3ad331dc34a094c50a5d2307d4531bbdc41dfd2bdf2e0e55b2e323](http://testnet.etherscan.io/tx/0x021055f56a3ad331dc34a094c50a5d2307d4531bbdc41dfd2bdf2e0e55b2e323)
-* [0x5714e9857fa2ad38734ebc43b7686f4ea8a58d4ca41195464bd11b651bf884fb](http://testnet.etherscan.io/tx/0x5714e9857fa2ad38734ebc43b7686f4ea8a58d4ca41195464bd11b651bf884fb)
+* [0x2b3aa1623e6db69f166992ce1d7b829323565d115f01c8b7b6bc92c95e10bd8c](http://testnet.etherscan.io/tx/0x2b3aa1623e6db69f166992ce1d7b829323565d115f01c8b7b6bc92c95e10bd8c)
+* [0xdfabb22df621fa8dfcf7a730d455ddff1f97f771a7005192ff34a63baf5ac1a5](http://testnet.etherscan.io/tx/0xdfabb22df621fa8dfcf7a730d455ddff1f97f771a7005192ff34a63baf5ac1a5)
 
 ### Test - "Claim Throne above Starting Price should not Increase Claim Price but should refund"
 
@@ -73,13 +71,13 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x3b2236eccd416f4dae10c423f3cebe9e5699a6eb
+* created instance of contract KingOfTheEtherThrone at 0x62ddd2e84bd8f7bdbf4d8699105cdfcaa642a5ed
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x0048eac5b82b279566ad127a8e6d152fd56ba11bf5c653f8a462dd9421d0f34e](http://testnet.etherscan.io/tx/0x0048eac5b82b279566ad127a8e6d152fd56ba11bf5c653f8a462dd9421d0f34e)
-* [0x87fa00abe38453a38e02cb3e2283190e6138779b5f414e6f3acc1b3d85ea6851](http://testnet.etherscan.io/tx/0x87fa00abe38453a38e02cb3e2283190e6138779b5f414e6f3acc1b3d85ea6851)
+* [0xdea1dad9534cf2a5da269e1df421ef6163fd6aad0a671b2cd6db35ca38adfd38](http://testnet.etherscan.io/tx/0xdea1dad9534cf2a5da269e1df421ef6163fd6aad0a671b2cd6db35ca38adfd38)
+* [0x58969705a9c7dcc611fa6ae19af12f605a03999478a2e1df94905ab9975f4423](http://testnet.etherscan.io/tx/0x58969705a9c7dcc611fa6ae19af12f605a03999478a2e1df94905ab9975f4423)
 
 ### Test - "Hall of Monarchs before Throne Ever Claimed"
 
@@ -89,11 +87,11 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x33950d62655fa56dc5b206ab33d44d6063ca3703
+* created instance of contract KingOfTheEtherThrone at 0x1802bb1450bb3676f7d6af1bccabac35c1e00e94
 
 ##### Transactions Generated
 
-* [0xe47ced9f1d615091fccf8aa67df810a9c63a571581d22c87bb4fb4dc2f7b1b70](http://testnet.etherscan.io/tx/0xe47ced9f1d615091fccf8aa67df810a9c63a571581d22c87bb4fb4dc2f7b1b70)
+* [0xa8e391c5514b90d0d12b6b5e09bba3ecc036c8fbb811be90cdbfa8aba65813d9](http://testnet.etherscan.io/tx/0xa8e391c5514b90d0d12b6b5e09bba3ecc036c8fbb811be90cdbfa8aba65813d9)
 
 ### Test - "Hall of Monarchs after First Claim"
 
@@ -103,13 +101,13 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xde4290c1e8820c8e4d8305c906434c972429e864
+* created instance of contract KingOfTheEtherThrone at 0xb9655ea75896e79a99ba787160b322f0af08d61e
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0xf8f1d190e8335c6f6a4dc92f4e4d95aef0cfe368d9917f78d9532defa9161c43](http://testnet.etherscan.io/tx/0xf8f1d190e8335c6f6a4dc92f4e4d95aef0cfe368d9917f78d9532defa9161c43)
-* [0x794f4fae8976cda551dbc6a744e320394bb61fa01b768e66661cc80070bbceb6](http://testnet.etherscan.io/tx/0x794f4fae8976cda551dbc6a744e320394bb61fa01b768e66661cc80070bbceb6)
+* [0x31e5a1d0ab7bd08aa6388ef41327411488a459f8c0a095a8ecd2b2a1ccf4b7ee](http://testnet.etherscan.io/tx/0x31e5a1d0ab7bd08aa6388ef41327411488a459f8c0a095a8ecd2b2a1ccf4b7ee)
+* [0xbf7715bb3c37cc1bd3e30fe7b2ad44949c65f7daf9ab73b99d882b91f6005e12](http://testnet.etherscan.io/tx/0xbf7715bb3c37cc1bd3e30fe7b2ad44949c65f7daf9ab73b99d882b91f6005e12)
 
 ##### Contract Events
 
@@ -123,15 +121,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x990738dbd5de2dacd7d72e98c56476f9714ef7f7
+* created instance of contract KingOfTheEtherThrone at 0x805066790978c0b5234f8541ba415ca0ef44fe84
 * called contract function KingOfTheEtherThrone.claimThrone
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x404c469d2ca2da4fb0d2baa2f079784d404898b1f50b72f2fdd3a4968ba13800](http://testnet.etherscan.io/tx/0x404c469d2ca2da4fb0d2baa2f079784d404898b1f50b72f2fdd3a4968ba13800)
-* [0x78d78e9bb78177ff12e8051b1348a1b9a7e151f390c0c07ec6c92e702390969c](http://testnet.etherscan.io/tx/0x78d78e9bb78177ff12e8051b1348a1b9a7e151f390c0c07ec6c92e702390969c)
-* [0x95e8eae60d7dcf3981cc1d39dd496d384c15635ce2556b51dd332cf9ae82aeb8](http://testnet.etherscan.io/tx/0x95e8eae60d7dcf3981cc1d39dd496d384c15635ce2556b51dd332cf9ae82aeb8)
+* [0x393359fe5694a26a29dd82cae9af45f886127b45cca2be58f3d2b312c289ba28](http://testnet.etherscan.io/tx/0x393359fe5694a26a29dd82cae9af45f886127b45cca2be58f3d2b312c289ba28)
+* [0x387363665c1fdfc490e126c039c67c6c3f9ff1a49d37afd294c17fe735ed0c71](http://testnet.etherscan.io/tx/0x387363665c1fdfc490e126c039c67c6c3f9ff1a49d37afd294c17fe735ed0c71)
+* [0xabf874e8cd7a04c99502a676e85de5097774b12bdbad92dc22d9bf979848eeb2](http://testnet.etherscan.io/tx/0xabf874e8cd7a04c99502a676e85de5097774b12bdbad92dc22d9bf979848eeb2)
 
 ##### Contract Events
 
@@ -147,15 +145,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x810dc4addc6b66a79eb1a6eae2900196af3e45dc
+* created instance of contract KingOfTheEtherThrone at 0x40e1d6a634365104f1dadd4be2798c40fa311a77
 * called contract function KingOfTheEtherThrone.claimThrone
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x19714f804256269813940ad1e122bdde0fde73da0883b982e4bdfb9977dceb10](http://testnet.etherscan.io/tx/0x19714f804256269813940ad1e122bdde0fde73da0883b982e4bdfb9977dceb10)
-* [0xc1ae9f6894114cbcfc4cda4a25aec48e903eec9d273d2bef4d40ccbc34d99689](http://testnet.etherscan.io/tx/0xc1ae9f6894114cbcfc4cda4a25aec48e903eec9d273d2bef4d40ccbc34d99689)
-* [0x133a3cf55e08a2e91e8a5f22b787be9fe908500fcc771aea7ccdc822679d7be8](http://testnet.etherscan.io/tx/0x133a3cf55e08a2e91e8a5f22b787be9fe908500fcc771aea7ccdc822679d7be8)
+* [0x1bafbe175a502b120d66071b36b3fdecd9bab3bd07738216ff319dd59f1e3e79](http://testnet.etherscan.io/tx/0x1bafbe175a502b120d66071b36b3fdecd9bab3bd07738216ff319dd59f1e3e79)
+* [0x4976fa31c295a21c2da11ce58ea080906bf2a0b07aad726d6218a5e5e727919d](http://testnet.etherscan.io/tx/0x4976fa31c295a21c2da11ce58ea080906bf2a0b07aad726d6218a5e5e727919d)
+* [0xa68cd614b8d46030e767d52225f3b2319eea2eaf7ba56fb2f16be6ec5da3f6ba](http://testnet.etherscan.io/tx/0xa68cd614b8d46030e767d52225f3b2319eea2eaf7ba56fb2f16be6ec5da3f6ba)
 
 ##### Contract Events
 
@@ -171,15 +169,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x24451b7963918918becb96e6989965b1528ee3ac
+* created instance of contract KingOfTheEtherThrone at 0xc95856e7ff6a99c69886c0afc4f4267d017261ea
 * called contract function KingOfTheEtherThrone.claimThrone
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0xc9b7fc5f49eb0acefcef46572aceedff477cdd77648c9acccbe8e8f0e71f7eb3](http://testnet.etherscan.io/tx/0xc9b7fc5f49eb0acefcef46572aceedff477cdd77648c9acccbe8e8f0e71f7eb3)
-* [0xa6fec617bf323cbec672468b0c7458d7657391db2e08feafaaaab4368e880442](http://testnet.etherscan.io/tx/0xa6fec617bf323cbec672468b0c7458d7657391db2e08feafaaaab4368e880442)
-* [0xb0efc3a3e78e7670800ebc75e340fa16bcc6268c33ad627ecaf95fbe3318341d](http://testnet.etherscan.io/tx/0xb0efc3a3e78e7670800ebc75e340fa16bcc6268c33ad627ecaf95fbe3318341d)
+* [0x41de069b0e5d8a5c33c89e67cb32b24ae4a4b04cb8f79abf7225c7faf848ad6e](http://testnet.etherscan.io/tx/0x41de069b0e5d8a5c33c89e67cb32b24ae4a4b04cb8f79abf7225c7faf848ad6e)
+* [0x03285a89f4cdf8d1ddff3d04d44bdb4b1e59dccfc6a666c3eb01e8478d3419c8](http://testnet.etherscan.io/tx/0x03285a89f4cdf8d1ddff3d04d44bdb4b1e59dccfc6a666c3eb01e8478d3419c8)
+* [0xb4c5e5733d7ca9cfcb11733786bdeea68e6cdf690e4d35a84f6da1da351a931c](http://testnet.etherscan.io/tx/0xb4c5e5733d7ca9cfcb11733786bdeea68e6cdf690e4d35a84f6da1da351a931c)
 
 ##### Contract Events
 
@@ -195,15 +193,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xf003f7b5c29fc4f99cb3f84b33463ae84a346ba9
+* created instance of contract KingOfTheEtherThrone at 0x2b2322ca22e2a565170ca29c9560d11501536906
 * called contract function KingOfTheEtherThrone.claimThrone
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0xaafe68c4cc3242668b9355aedc7914589f51e9c9cdb5445931ba82cc8ae3ee55](http://testnet.etherscan.io/tx/0xaafe68c4cc3242668b9355aedc7914589f51e9c9cdb5445931ba82cc8ae3ee55)
-* [0xc960d9c82f99e6746daa443dbcef880f0561aaa0cc8e8b701af5ee0ad37f58c5](http://testnet.etherscan.io/tx/0xc960d9c82f99e6746daa443dbcef880f0561aaa0cc8e8b701af5ee0ad37f58c5)
-* [0xf889a9d832a44db172af16cbd0481980bc87827b394aab613e1df67bfde7f23d](http://testnet.etherscan.io/tx/0xf889a9d832a44db172af16cbd0481980bc87827b394aab613e1df67bfde7f23d)
+* [0x91102fec64b3a2e2ebc579333f08d6a416d862c229f5bc4bf6bf7c352f48d2a2](http://testnet.etherscan.io/tx/0x91102fec64b3a2e2ebc579333f08d6a416d862c229f5bc4bf6bf7c352f48d2a2)
+* [0x09b21502530cb664cf2df818f7de974c756d1202e3c53d68fbf13071495b3fb8](http://testnet.etherscan.io/tx/0x09b21502530cb664cf2df818f7de974c756d1202e3c53d68fbf13071495b3fb8)
+* [0x8f540eaff8f9563f437489cb60aed830ecbc103efe7de6dbc3c1dbe31b6fe593](http://testnet.etherscan.io/tx/0x8f540eaff8f9563f437489cb60aed830ecbc103efe7de6dbc3c1dbe31b6fe593)
 
 ##### Contract Events
 
@@ -219,13 +217,13 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x228d8ed0ebb1a2e0964094e53228c67552a28a65
+* created instance of contract KingOfTheEtherThrone at 0x0e9c2245baf802c7d5e0b05491cca725805325b6
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0xb44adfe017ee20c508e428d125c9205cec4e82a68490a73874dffbc6488ad91e](http://testnet.etherscan.io/tx/0xb44adfe017ee20c508e428d125c9205cec4e82a68490a73874dffbc6488ad91e)
-* [0xf32dd199f5c4f0290dbca11d3e6c183072572533d913927b8707c871261107a4](http://testnet.etherscan.io/tx/0xf32dd199f5c4f0290dbca11d3e6c183072572533d913927b8707c871261107a4)
+* [0x7e79221e712733d7c2118e789f4f9ef230a01d6df2041ab41d78997c26ebf5c2](http://testnet.etherscan.io/tx/0x7e79221e712733d7c2118e789f4f9ef230a01d6df2041ab41d78997c26ebf5c2)
+* [0x06adf859081a12d804686a0bbc6b974734e17fc6948ba342b5f93ed06a8c8bcd](http://testnet.etherscan.io/tx/0x06adf859081a12d804686a0bbc6b974734e17fc6948ba342b5f93ed06a8c8bcd)
 
 ##### Contract Events
 
@@ -239,15 +237,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x55fcc55224893c682e8651950ef60a0d68f8f9a7
+* created instance of contract KingOfTheEtherThrone at 0x09f275e452f08b487166e0985b9d133244d86ca9
 * called contract function KingOfTheEtherThrone.claimThrone
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x2fbd7fba9413d70ed121476314b32492da6a78f8644ebf1e16a904f292eb2013](http://testnet.etherscan.io/tx/0x2fbd7fba9413d70ed121476314b32492da6a78f8644ebf1e16a904f292eb2013)
-* [0x8dad48fb61ffd84531fe05167369bfe76582f63723f3a23c3f9659eb974022cd](http://testnet.etherscan.io/tx/0x8dad48fb61ffd84531fe05167369bfe76582f63723f3a23c3f9659eb974022cd)
-* [0x0ec4dae792a715c57159e00fa47f4be7131d59ccc05f6fc31b4aa0a0bab43ca7](http://testnet.etherscan.io/tx/0x0ec4dae792a715c57159e00fa47f4be7131d59ccc05f6fc31b4aa0a0bab43ca7)
+* [0x831205c6116fa40db6e11e8218a1b8df189282116f9e6491f294c739d91b4598](http://testnet.etherscan.io/tx/0x831205c6116fa40db6e11e8218a1b8df189282116f9e6491f294c739d91b4598)
+* [0x09899c9e4e84d259ffbf9fa07a8d22f4cda769ab8c6df8af459e54ca8cb7cd18](http://testnet.etherscan.io/tx/0x09899c9e4e84d259ffbf9fa07a8d22f4cda769ab8c6df8af459e54ca8cb7cd18)
+* [0x3b5474d9707a050bd99a97a69e42145d81d86d8bf05a0d9433b1e145abd41e70](http://testnet.etherscan.io/tx/0x3b5474d9707a050bd99a97a69e42145d81d86d8bf05a0d9433b1e145abd41e70)
 
 ##### Contract Events
 
@@ -263,15 +261,14 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0x5ca2796076cdf8ad27609df3ec9f695975d56426
+* created instance of contract KingOfTheEtherThrone at 0xd96f0757b87c347fcfa5571bbabce7efaa42bee5
 
 ##### Transactions Generated
 
-* [0xddf10b5988db54967f40ca22bccb725752b3ec59f5d618bcb6fafa7acad156c9](http://testnet.etherscan.io/tx/0xddf10b5988db54967f40ca22bccb725752b3ec59f5d618bcb6fafa7acad156c9)
+* [0xdffe5ad39c9fa1e64a4971c6c75d1242e80fc0a6d020ef5435c3338c118a2a12](http://testnet.etherscan.io/tx/0xdffe5ad39c9fa1e64a4971c6c75d1242e80fc0a6d020ef5435c3338c118a2a12)
 
 ##### Contract Events
 
-* ThroneClaimed(newMonarchIndex=0,valuePaid=1000000000000000000,)
 * ThroneClaimed(newMonarchIndex=0,valuePaid=1000000000000000000,)
 
 ### Test - "Claim throne anonymously via fallback using wallet contract succeeds"
@@ -282,23 +279,22 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xff3491afc41e3b25017a38671ed23c42401f1faf
-* created instance of contract DTRExpensiveWallet at 0x7d9ef70c917b185b75b9676365a41bbde820f799
+* created instance of contract KingOfTheEtherThrone at 0x25b1e56e66bf6923ca02090aa823f10c157a71d3
+* created instance of contract DTRExpensiveWallet at 0x989f02e56301155891617e55aef798abf05d59a8
 * called contract function DTRExpensiveWallet.spendWithGas
 
 ##### Transactions Generated
 
-* [0xd8e721cc55d39af88cc29c1c340d7f0f07d637538495bdb09d4ecfb7d2052a3d](http://testnet.etherscan.io/tx/0xd8e721cc55d39af88cc29c1c340d7f0f07d637538495bdb09d4ecfb7d2052a3d)
-* [0x0f37428d9446289e2f3840ad1918b8f1dda73caf2b634857551192e83b9b88e3](http://testnet.etherscan.io/tx/0x0f37428d9446289e2f3840ad1918b8f1dda73caf2b634857551192e83b9b88e3)
-* [0x99f2341c5718e3aa3996387c6d339a17906c4f5fd93c930cf1df1499524560b8](http://testnet.etherscan.io/tx/0x99f2341c5718e3aa3996387c6d339a17906c4f5fd93c930cf1df1499524560b8)
+* [0x408d94d9cb06afc49f062663fbd67840a61c50720f3316ce3e39a268e5fc861b](http://testnet.etherscan.io/tx/0x408d94d9cb06afc49f062663fbd67840a61c50720f3316ce3e39a268e5fc861b)
+* [0x0dfcd0479180500eba03c8920def22a1dc2e20b6191028ea033acbfd2a000644](http://testnet.etherscan.io/tx/0x0dfcd0479180500eba03c8920def22a1dc2e20b6191028ea033acbfd2a000644)
+* [0x937565769927f5dce9a44d147115f29f45ed2da24f8c70cb0efaa8f6e96bd932](http://testnet.etherscan.io/tx/0x937565769927f5dce9a44d147115f29f45ed2da24f8c70cb0efaa8f6e96bd932)
 
 ##### Contract Events
 
-* WalletCreated(by=0x96384d8ee4275db3d9ff753ab0af81f431adb892,)
-* DepositMade(from=0x96384d8ee4275db3d9ff753ab0af81f431adb892,value=1000000000000000000,)
-* DepositMade(from=0x96384d8ee4275db3d9ff753ab0af81f431adb892,value=1000000000000000000,)
+* WalletCreated(by=0xa9f0fe5b0fe798f750e56405ae6454c072346b96,)
+* DepositMade(from=0xa9f0fe5b0fe798f750e56405ae6454c072346b96,value=1000000000000000000,)
 * ThroneClaimed(newMonarchIndex=0,valuePaid=1000000000000000000,)
-* WithdrawalMade(to=0xff3491afc41e3b25017a38671ed23c42401f1faf,value=1000000000000000000,)
+* WithdrawalMade(to=0x25b1e56e66bf6923ca02090aa823f10c157a71d3,value=1000000000000000000,)
 
 ### Test - "Compensation payment sent to king who claimed from cheap wallet contract"
 
@@ -308,26 +304,27 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract KingOfTheEtherThrone at 0xcbc572d33c6b480ab84d2f707307ec922d51ee72
-* created instance of contract DTRExpensiveWallet at 0x57e6cb6e49f70ecf72098374be3e4c598879db3b
+* created instance of contract KingOfTheEtherThrone at 0x8df37e7e510055074f5d99e2ed44927f4980dae1
+* created instance of contract DTRExpensiveWallet at 0x90bb6e9c7eff8b9f5d99a5dfd8810e9c809a140d
 * called contract function DTRExpensiveWallet.spendWithGas
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x7bf0688ff87aa76d07b35a34f10deff3ca49c85f7f5967b5ae07f0286344e813](http://testnet.etherscan.io/tx/0x7bf0688ff87aa76d07b35a34f10deff3ca49c85f7f5967b5ae07f0286344e813)
-* [0x27c9e09844b921b641c6cdb2e2254d62fed4d014f3009e45f5945fab3ad4161f](http://testnet.etherscan.io/tx/0x27c9e09844b921b641c6cdb2e2254d62fed4d014f3009e45f5945fab3ad4161f)
-* [0x473f2d42293804be47e3ebedfb443a87272e7feb2d4e0a10614144b79e14c45e](http://testnet.etherscan.io/tx/0x473f2d42293804be47e3ebedfb443a87272e7feb2d4e0a10614144b79e14c45e)
-* [0x8d87f8cdf54bda032a02b4c50841eba4a073e8e54fbb521f3462038458a5d797](http://testnet.etherscan.io/tx/0x8d87f8cdf54bda032a02b4c50841eba4a073e8e54fbb521f3462038458a5d797)
+* [0x2334ddfe60b9c0a4a32628762c1838bb2509c0ff90a4f4fe0d64b3a0e037b5c8](http://testnet.etherscan.io/tx/0x2334ddfe60b9c0a4a32628762c1838bb2509c0ff90a4f4fe0d64b3a0e037b5c8)
+* [0x39fed7f6161b5bf735b7c357b1ecf74d6719d25fdf9716c62b2f6a0c72522910](http://testnet.etherscan.io/tx/0x39fed7f6161b5bf735b7c357b1ecf74d6719d25fdf9716c62b2f6a0c72522910)
+* [0x9da59619a9a929ffa06571c2e8cf68d280d315b95301476de2a1a0efe49bcbad](http://testnet.etherscan.io/tx/0x9da59619a9a929ffa06571c2e8cf68d280d315b95301476de2a1a0efe49bcbad)
+* [0xe888dfb4db0dd9acf38b08386865cd0d3e7dc142880b0dc07d377ff34b898b30](http://testnet.etherscan.io/tx/0xe888dfb4db0dd9acf38b08386865cd0d3e7dc142880b0dc07d377ff34b898b30)
 
 ##### Contract Events
 
-* DepositMade(from=0x8c2076cae2cf7cf955d49a43764217ccdc1e1b57,value=1000000000000000000,)
+* WalletCreated(by=0x96384d8ee4275db3d9ff753ab0af81f431adb892,)
+* DepositMade(from=0x96384d8ee4275db3d9ff753ab0af81f431adb892,value=1000000000000000000,)
 * ThroneClaimed(newMonarchIndex=0,valuePaid=1000000000000000000,)
-* WithdrawalMade(to=0xcbc572d33c6b480ab84d2f707307ec922d51ee72,value=1000000000000000000,)
+* WithdrawalMade(to=0x8df37e7e510055074f5d99e2ed44927f4980dae1,value=1000000000000000000,)
 * CompensationPaymentSent(compensatedMonarchIndex=0,paymentValue=1470000000000000000,)
 * ThroneClaimed(newMonarchIndex=1,valuePaid=1500000000000000000,)
-* DepositMade(from=0x1c6ad57defb1cd81c183046995ededb3b3e78392,value=1470000000000000000,)
+* DepositMade(from=0x8c2076cae2cf7cf955d49a43764217ccdc1e1b57,value=1470000000000000000,)
 
 ### Test - "Create bespoke throne via ThroneMaker has expected properties, appears in gazetteer and can be claimed"
 
@@ -337,25 +334,24 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract ThroneMaker at 0x351d31894be8aa7367b519f551955e4c6097ba79
+* created instance of contract ThroneMaker at 0xd57e293d9a59e48d1d131284d36c9f640000df8e
 * called contract function ThroneMaker.createThrone
 * throneName is  myThrone
 * throneIndex is 0
-* rawGazetteerEntry is  0x6d795468726f6e65,0x3bdc212ca6026a5823085078090d667c55db0193,200000000000000000,1458805089
+* rawGazetteerEntry is  0x6d795468726f6e65,0xb902a71a38183b603bb5aa85aa41ea6ea35102a7,200000000000000000,1458857485
 * gazetteerEntry is  [object Object]
-* myThroneAddress is  0x3bdc212ca6026a5823085078090d667c55db0193
-* created instance of contract KingOfTheEtherThrone at 0x3bdc212ca6026a5823085078090d667c55db0193
+* myThroneAddress is  0xb902a71a38183b603bb5aa85aa41ea6ea35102a7
+* created instance of contract KingOfTheEtherThrone at 0xb902a71a38183b603bb5aa85aa41ea6ea35102a7
 * called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x2b9953dfdee67438e7cf1fa4e640efbf5b08e0fd813745b767616cae6a07c0ae](http://testnet.etherscan.io/tx/0x2b9953dfdee67438e7cf1fa4e640efbf5b08e0fd813745b767616cae6a07c0ae)
-* [0x4d503df29153cf66babaff1c99c2f2d6ae2397aba3a57c5fdc221a4e72d34f87](http://testnet.etherscan.io/tx/0x4d503df29153cf66babaff1c99c2f2d6ae2397aba3a57c5fdc221a4e72d34f87)
-* [0x9c0fe33904dc522e397b93657352813012f64a9b4122a388f4b6f920b5b29bbe](http://testnet.etherscan.io/tx/0x9c0fe33904dc522e397b93657352813012f64a9b4122a388f4b6f920b5b29bbe)
+* [0xd778cfbf4a0e9320df2d0e3a18cbed9955be1511021d42b68ac11db734a42719](http://testnet.etherscan.io/tx/0xd778cfbf4a0e9320df2d0e3a18cbed9955be1511021d42b68ac11db734a42719)
+* [0xdc0f98179b8991ce9c36d1c854e251ec246f506726769d19ee44a983aecf40e0](http://testnet.etherscan.io/tx/0xdc0f98179b8991ce9c36d1c854e251ec246f506726769d19ee44a983aecf40e0)
+* [0xdb6578a2e3b7daa2d05db15ee6ee5a998e5b5cb98d6cdcefc92230cf0ea375f4](http://testnet.etherscan.io/tx/0xdb6578a2e3b7daa2d05db15ee6ee5a998e5b5cb98d6cdcefc92230cf0ea375f4)
 
 ##### Contract Events
 
-* ThroneCreationPriceSet(newThroneCreationPrice=200000000000000000,)
 * ThroneCreationPriceSet(newThroneCreationPrice=200000000000000000,)
 * ThroneCreated(throneIndex=0,)
 * ThroneClaimed(newMonarchIndex=0,valuePaid=250000000000000000,)
@@ -368,15 +364,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract ThroneMaker at 0x5dfe87748ec8611e0c70a7c61133291cd5aea992
+* created instance of contract ThroneMaker at 0x406ae0792e500ee006f1130a60924eb5d4879173
 * called contract function ThroneMaker.createThrone
 * called contract function ThroneMaker.createThrone
 
 ##### Transactions Generated
 
-* [0xf5f5fbcbc71f85a02f6a6f547cd2e278dee83b2992e32b43129cf90d10c6a931](http://testnet.etherscan.io/tx/0xf5f5fbcbc71f85a02f6a6f547cd2e278dee83b2992e32b43129cf90d10c6a931)
-* [0x6fa611d9689c7a587383c27e8d5fd8bff0a2f4cda684d149ea846f0bd1858118](http://testnet.etherscan.io/tx/0x6fa611d9689c7a587383c27e8d5fd8bff0a2f4cda684d149ea846f0bd1858118)
-* [0x13374949adb80cc341998c10830a68452981e4a59f89d9e801351c10ca8a2b07](http://testnet.etherscan.io/tx/0x13374949adb80cc341998c10830a68452981e4a59f89d9e801351c10ca8a2b07)
+* [0xc91c8a7e0309b47d98bd069ddbaff69405158ab5f8774c7e63e843f3a898d7fe](http://testnet.etherscan.io/tx/0xc91c8a7e0309b47d98bd069ddbaff69405158ab5f8774c7e63e843f3a898d7fe)
+* [0x7832d7388bb56c77504f41ccaf2f9c709b3e710d3f624f6d9662b306978ea230](http://testnet.etherscan.io/tx/0x7832d7388bb56c77504f41ccaf2f9c709b3e710d3f624f6d9662b306978ea230)
+* [0x59322d0024417679a7e4d0af2c1bf7eafa8eb49c1b74f136a4b06f2b9ae5c9eb](http://testnet.etherscan.io/tx/0x59322d0024417679a7e4d0af2c1bf7eafa8eb49c1b74f136a4b06f2b9ae5c9eb)
 
 ##### Contract Events
 
@@ -391,15 +387,15 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract ThroneMaker at 0xcf700987be1ea967b01d4b8913e828bff3f203d1
+* created instance of contract ThroneMaker at 0x737b00edaf7e8935b3d24833502c90e72f5766c8
 * called contract function ThroneMaker.createThrone
 * called contract function ThroneMaker.createThrone
 
 ##### Transactions Generated
 
-* [0xa2ac36cbe4f5c2bce9e2c8896ce354235023ad73b0b5631e02f3c2c6983f458e](http://testnet.etherscan.io/tx/0xa2ac36cbe4f5c2bce9e2c8896ce354235023ad73b0b5631e02f3c2c6983f458e)
-* [0x6fadc6f3837ceb03957c415b3ff84c6079b4c126cdd8d42da2eedc47f244c856](http://testnet.etherscan.io/tx/0x6fadc6f3837ceb03957c415b3ff84c6079b4c126cdd8d42da2eedc47f244c856)
-* [0x077fe252969ddee276f34fa37a30265d8dc436074ac331d5d51d2cd230519684](http://testnet.etherscan.io/tx/0x077fe252969ddee276f34fa37a30265d8dc436074ac331d5d51d2cd230519684)
+* [0xb66a37e1597a42101f6bd5af24113623274b69415bd3ed7ec98e2b953cc23ec7](http://testnet.etherscan.io/tx/0xb66a37e1597a42101f6bd5af24113623274b69415bd3ed7ec98e2b953cc23ec7)
+* [0x1a78ba91aeaad4f61e0a48816969d2482230bd3a1a0087a7d31a37619daffb19](http://testnet.etherscan.io/tx/0x1a78ba91aeaad4f61e0a48816969d2482230bd3a1a0087a7d31a37619daffb19)
+* [0xcea28e7e16b1c84c28cc23891a637b795baacbf87b8769ed0a03894b38eeccbd](http://testnet.etherscan.io/tx/0xcea28e7e16b1c84c28cc23891a637b795baacbf87b8769ed0a03894b38eeccbd)
 
 ##### Contract Events
 
@@ -410,32 +406,30 @@ Passed
 
 ##### Status
 
-Failed
-
-##### Failure Cause
-
-Error: assertion failed: expected '0' got '1'; undefined
-
-Location: Step #4 at Object.runner.addTest.steps.helper.throneTwo.claimThrone.from (C:\Users\Kieran\Documents\KingOfTheEtherThrone\tests\test-throne.js:979:21)
+Passed
 
 ##### Debug Messages
 
-* created instance of contract ThroneMaker at 0xd14b3d53e5a45724b802a504664316d30a814f80
+* created instance of contract ThroneMaker at 0xff4b6fff104a95cc93e7cae15a48bd3c2d771665
 * called contract function ThroneMaker.createThrone
-* created instance of contract KingOfTheEtherThrone at 0x023f23dfde23119890acd132707952b81962d5cb
+* created instance of contract KingOfTheEtherThrone at 0x1736bc06fcbb824f85a1c9c79bd53d478f67d1a4
 * called contract function ThroneMaker.createThrone
+* created instance of contract KingOfTheEtherThrone at 0xce581e328866db56f8679f504b5fbc9507d6a8d6
+* called contract function KingOfTheEtherThrone.claimThrone
 
 ##### Transactions Generated
 
-* [0x4d259a8dc3018eabf64927414ea85591e8e648f393d300eb4afa948414ec3ecd](http://testnet.etherscan.io/tx/0x4d259a8dc3018eabf64927414ea85591e8e648f393d300eb4afa948414ec3ecd)
-* [0xb62a964eaad5ccac07db8a2dbff10ea0a37c2cb7592c62f18d35143c970b9d2f](http://testnet.etherscan.io/tx/0xb62a964eaad5ccac07db8a2dbff10ea0a37c2cb7592c62f18d35143c970b9d2f)
-* [0xcca06e90b0e7a511479822a51f954dd654560a6200ff558c19aa3620f0168096](http://testnet.etherscan.io/tx/0xcca06e90b0e7a511479822a51f954dd654560a6200ff558c19aa3620f0168096)
+* [0x8658b79094bdd0da29419f71f402caa2094bc0f668bc5f4d0968efa4bebaeddd](http://testnet.etherscan.io/tx/0x8658b79094bdd0da29419f71f402caa2094bc0f668bc5f4d0968efa4bebaeddd)
+* [0xe5d6a592360597ce2b595fb45cab3efdb970ea143cdc5e761e8d85ca2e701a7e](http://testnet.etherscan.io/tx/0xe5d6a592360597ce2b595fb45cab3efdb970ea143cdc5e761e8d85ca2e701a7e)
+* [0x2f7c7dd2f26cb655c57ea0457b4cb9eb6fe335057eb0e861b59a9309e6021d7c](http://testnet.etherscan.io/tx/0x2f7c7dd2f26cb655c57ea0457b4cb9eb6fe335057eb0e861b59a9309e6021d7c)
+* [0xf1bf3e1d1f250b82dca3732eaaddaadce815daf39c4c7573052a9c745c1884cd](http://testnet.etherscan.io/tx/0xf1bf3e1d1f250b82dca3732eaaddaadce815daf39c4c7573052a9c745c1884cd)
 
 ##### Contract Events
 
 * ThroneCreationPriceSet(newThroneCreationPrice=200000000000000000,)
 * ThroneCreated(throneIndex=0,)
 * ThroneCreated(throneIndex=1,)
+* ThroneClaimed(newMonarchIndex=0,valuePaid=100000000000000000,)
 
 ### Test - "Temp"
 
@@ -445,7 +439,7 @@ Passed
 
 ##### Debug Messages
 
-* created instance of contract ThroneInternalsForTesting at 0xf0708cad9db1cd0a0c0f4a5807b16ee47671182f
+* created instance of contract ThroneInternalsForTesting at 0x27f5118eb9f04cc0128ee6ea06aca43d85a73d54
 * a -> 16640
 * b -> 16896
 * hello -> 79462470012672
@@ -456,5 +450,5 @@ Passed
 
 ##### Transactions Generated
 
-* [0x2e518aad0939d51e72ca509436165e53f561997ae645c59879e69d974584bbc7](http://testnet.etherscan.io/tx/0x2e518aad0939d51e72ca509436165e53f561997ae645c59879e69d974584bbc7)
+* [0xa542710b555e49b694ff0779df5403517d5275f2302f5d1d4dfb147e43634226](http://testnet.etherscan.io/tx/0xa542710b555e49b694ff0779df5403517d5275f2302f5d1d4dfb147e43634226)
 
