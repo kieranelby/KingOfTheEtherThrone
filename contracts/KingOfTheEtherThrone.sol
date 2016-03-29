@@ -36,27 +36,27 @@ contract CarefulSender {
 // for checking names are safe to use.
 contract NameValidator {
 
-    // Throw if the given name is not considered "safe" to use.
-    // TODO - maybe return false/true since can't catch...!
+    // Return false if the given name is not considered "safe" to use, true if it's ok.
     // Rules are: must be no more than 30 bytes, must be pure 7-bit ASCII, must be A-z,0-9,-,space only.
-    function validateName(bytes name) constant internal {
+    function validateName(bytes name) constant internal returns (bool good) {
         uint256 len = name.length;
         // Not really much of a name if it is blank.
         if (len == 0) {
-            throw;
+            return false;
         }
         // Either web3 or the solidity ABI has problems with bytes/strings above ~32 bytes.
         // See https://github.com/ethereum/web3.js/issues/357.
         if (len > 30) {
-            throw;
+            return false;
         }
         // ASCII space, dash, 0-9, A-Z, a-z
         for (uint256 i = 0; i < len; i++) {
             byte b = name[i];
             if (!(b == 32 || b == 45 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122))) {
-              throw;
+                return false;
             }
         }
+        return true;
     }
 }
 
@@ -333,7 +333,9 @@ contract KingOfTheEtherThrone is CarefulSender, NameValidator {
         if (name.length == 0) {
             name = "Anonymous";
         }
-        validateName(name);
+        if (!validateName(name)) {
+            throw;
+        }
 
         uint256 valuePaid = msg.value;
 
@@ -620,7 +622,9 @@ contract ThroneMaker is CarefulSender, NameHasher {
 
         // Check the name is "safe" and doesn't already exist.
         
-        validateName(throneName);
+        if (!validateName(throneName)) {
+            throw;
+        }
         uint256 nameHash = computeNameHash(throneName);
         if (findThroneByNameHash(nameHash) != uint256(-1)) {
           throw;
@@ -673,7 +677,9 @@ contract ThroneMaker is CarefulSender, NameHasher {
     // Maxint (that is, uint(-1)) means not found
     // NB: validates name as a side-effect
     function findThroneCalled(bytes throneName) constant returns (uint256 throneIndex) {
-        validateName(throneName);
+        if (!validateName(throneName)) {
+            throw;
+        }
         return findThroneByNameHash(computeNameHash(throneName));
     }
 
@@ -686,7 +692,9 @@ contract ThroneMaker is CarefulSender, NameHasher {
 
     // Used only by the deity to register thrones created by some other means.
     function registerExistingThrone(bytes throneName, address throneContractAddress, uint256 creationPricePaid, uint256 creationTimestamp) onlydeity returns (uint256 throneIndex) {
-        validateName(throneName);
+        if (!validateName(throneName)) {
+            throw;
+        }
         uint256 nameHash = computeNameHash(throneName);
         if (findThroneByNameHash(nameHash) != uint256(-1)) {
           throw;
@@ -739,8 +747,8 @@ contract ThroneMaker is CarefulSender, NameHasher {
 
 // Expose normally internal functions for testing in isolation.
 // (arguably a poor testing practice, but contracts are a bit unusual -
-//  we don't really want to have to purely black-box-test name hashing by
-// creating loads of thrones with similar names 'cos they're expensive ...)
+//  e.g. we don't really want to have to purely black-box-test name hashing by
+//  creating loads of thrones with similar names 'cos they're expensive ...)
 contract ThroneInternalsForTesting is CarefulSender, NameValidator, NameHasher {
 
     function sendWithExtraGasExt(address destination, uint256 value, uint256 extraGasAmt) returns (bool) {
@@ -751,8 +759,8 @@ contract ThroneInternalsForTesting is CarefulSender, NameValidator, NameHasher {
       return sendWithAllOurGasExcept(destination, value, reserveGasAmt);
     }
 
-    function validateNameExt(bytes name) constant {
-      validateName(name);
+    function validateNameExt(bytes name) constant returns (bool good) {
+      return validateName(name);
     }
 
     function computeNameHashExt(bytes name) constant returns (uint256 nameHash) {

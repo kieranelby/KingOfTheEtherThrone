@@ -25,7 +25,11 @@
 var fs = require('fs'); // needing for reading contracts and writing reports
 
 var DAppTestRunner = require('dapp-test-runner');
-var runner = new DAppTestRunner('King of the Ether Throne Core');
+var runner = new DAppTestRunner('King of the Ether Throne');
+
+// Wrapper/helper functions for the throne contracts
+var ThroneSupport = require('./throne-support.js');
+var throneSupport = new ThroneSupport();
 
 // uncomment to debug concurrency problems
 //runner.disableParallelism();
@@ -34,63 +38,6 @@ var runner = new DAppTestRunner('King of the Ether Throne Core');
 var throneContractSource = fs.readFileSync('contracts/KingOfTheEtherThrone.sol', 'utf8');
 runner.registerSolidityContracts(throneContractSource);
 
-// NB: why doesn't web3 do this for us? anyway, should probably move this to production code so are testing it.
-function decodeMonarchArray(monarchArray, web3) {
-  return {
-    compensationAddress:   monarchArray[0],
-    originAddress:         monarchArray[1],
-    name:     web3.toAscii(monarchArray[2]),
-    claimPrice:            monarchArray[3],
-    coronationTimestamp:   monarchArray[4],
-    compensationStatus:    monarchArray[5],
-    compensationTimestamp: monarchArray[6],
-    compensationPaid:      monarchArray[7]
-  };
-}
-
-// NB: why doesn't web3 do this for us? anyway, should probably move this to production code so are testing it.
-function decodeThroneConfig(configArray, web3) {
-  return {
-    wizardAddress:                  configArray[0],
-    deityAddress:                   configArray[1],
-    startingClaimPrice:             configArray[2],
-    claimPriceAdjustPerMille:       configArray[3],
-    commissionPerMille:             configArray[4],    
-    curseIncubationDuration:        configArray[5],
-    failedPaymentRingfenceDuration: configArray[6],
-    throneMaker:                    configArray[7]
-  };
-}
-
-// NB: why doesn't web3 do this for us? anyway, should probably move this to production code so are testing it.
-function decodeGazetteerEntry(gazetteerEntryArray, web3) {
-  return {
-    throneName: web3.toAscii(gazetteerEntryArray[0]),
-    throneContractAddress:   gazetteerEntryArray[1],
-    creationPricePaid:       gazetteerEntryArray[2],
-    creationTimestamp:       gazetteerEntryArray[3]
-  };
-}
-
-function createStandardTestThrone(helper) {
-  // wizardAddress,
-  // deityAddress,
-  // startingClaimPrice,
-  // claimPriceAdjustPerMille,
-  // commissionPerMille,
-  // incubationDuration,
-  // failedPaymentRingfenceDuration
-  return helper.txn.createContractInstance('KingOfTheEtherThrone', [
-    helper.account.master,
-    helper.account.master,
-    helper.math.toWei('1','ether'),
-    '500',
-    '20',
-    '180',
-    '240',
-    0
-  ]);
-}
 
 runner.addTest({
   title: 'Can inspect throne config',
@@ -98,13 +45,13 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
     },
     function(helper) {
       // when we ask how the throne is configured
       var configArray = this.throne.config();
-      var config = decodeThroneConfig(configArray, helper.txn.rawWeb3);
-      // then we get the properties we asked for in createStandardTestThrone
+      var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+      // then we get the properties we asked for in throneSupport.createStandardTestThrone
       helper.assert.equal(helper.account.master, config.wizardAddress, 'wizardAddress');
       helper.assert.equal(helper.account.master, config.deityAddress, 'deityAddress');
       helper.assert.equal(helper.math.toWei('1','ether'), config.startingClaimPrice, 'startingClaimPrice');
@@ -123,7 +70,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
     },
     function(helper) {
@@ -150,7 +97,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
     },
     function(helper) {
@@ -184,7 +131,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1020', 'finney'));
     },
     function(helper) {
@@ -218,7 +165,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
     },
     function(helper) {
       // when we ask how many monarchs there have been
@@ -239,7 +186,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
     },
     function(helper) {
@@ -264,7 +211,7 @@ runner.addTest({
       // and when we look in the monarchs array
       // then playerOne is there:
       // (let's not worry about the timestamps here, they're harder to test)
-      var newMonarch = decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+      var newMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
       helper.assert.equal(this.playerOneAccount, newMonarch.compensationAddress, 'compensationAddress');
       helper.assert.equal(this.playerOneAccount, newMonarch.originAddress, 'originAddress');
       helper.assert.equal('playerOne', newMonarch.name, 'name');
@@ -281,7 +228,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and two players
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
       this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
     },
@@ -316,7 +263,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and two players
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
       this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
     },
@@ -355,7 +302,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and two players
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
       this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
     },
@@ -399,7 +346,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
       this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
     },
@@ -433,7 +380,7 @@ runner.addTest({
       // and when we look in the monarchs array
       // then playerOne and playerTwo are there with expected properties:
       // (TODO - let's not worry about the timestamps here, they're harder to test)
-      var firstMonarch = decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+      var firstMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
       helper.assert.equal(this.playerOneAccount, firstMonarch.compensationAddress, 'compensationAddress');
       helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
       helper.assert.equal('playerOne', firstMonarch.name, 'name');
@@ -443,7 +390,7 @@ runner.addTest({
       // should have got 1500 - 2% commission => 1470
       var expectedCompensation = helper.math.toWei('1470', 'finney');
       helper.assert.equal(expectedCompensation, firstMonarch.compensationPaid, 'compensationPaid');
-      var secondMonarch = decodeMonarchArray(this.throne.monarchs(1), helper.txn.rawWeb3);
+      var secondMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(1), helper.txn.rawWeb3);
       helper.assert.equal(this.playerTwoAccount, secondMonarch.compensationAddress, 'compensationAddress');
       helper.assert.equal(this.playerTwoAccount, secondMonarch.originAddress, 'originAddress');
       helper.assert.equal('playerTwo', secondMonarch.name, 'name');
@@ -460,7 +407,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and one player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
     },
     function(helper) {
@@ -474,7 +421,7 @@ runner.addTest({
     function(helper) {
       // when we wait until the monarch should have died
       var claimedAt = helper.txn.getLatestBlockTime();
-      var config = decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
+      var config = throneSupport.decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
       this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
       helper.nextStep.needsBlockTime(this.expectDieBy);
     },
@@ -493,7 +440,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and two players (this time player two only needs 1 eth)
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
     },
@@ -508,7 +455,7 @@ runner.addTest({
     function(helper) {
       // make a note of when player one claimed the throne and how much money they had left
       var claimedAt = helper.txn.getLatestBlockTime();
-      var config = decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
+      var config = throneSupport.decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
       this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
       this.contractBalanceAfterFirstClaim = helper.account.getBalance(this.throne.address);
       this.playerOneBalanceAfterTheyClaimed = helper.account.getBalance(this.playerOneAccount);
@@ -541,7 +488,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and a player:
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
     },
     function(helper) {
@@ -569,7 +516,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and a player
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1.1', 'ether'));
     },
     function(helper) {
@@ -613,7 +560,7 @@ runner.addTest({
   steps: [
     function(helper) {
       // given a new throne and two players
-      this.throne = createStandardTestThrone(helper);
+      this.throne = throneSupport.createStandardTestThrone(helper);
       this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1.5', 'ether'));
     },
@@ -670,7 +617,7 @@ runner.addTest({
         'only wallet balance should change');
       // and when we look in the hall of thrones then they are marked as compensated
       // note the origin vs the compensation address
-      var firstMonarch = decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+      var firstMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
       helper.assert.equal(this.playerOneWallet.address, firstMonarch.compensationAddress, 'compensationAddress');
       helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
       var goodPaymentStatusCode = 1;
@@ -682,6 +629,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Create bespoke throne via ThroneMaker has expected properties, appears in gazetteer and can be claimed',
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne maker and a player
@@ -721,7 +669,7 @@ runner.addTest({
 	    helper.debug.log('throneIndex is ' + this.throneIndex);
 	    this.rawGazetteerEntry = this.throneMaker.gazetteer(this.throneIndex);
 	    helper.debug.log('rawGazetteerEntry is ', this.rawGazetteerEntry);
-      this.gazetteerEntry = decodeGazetteerEntry(this.rawGazetteerEntry, helper.txn.rawWeb3);
+      this.gazetteerEntry = throneSupport.decodeGazetteerEntry(this.rawGazetteerEntry, helper.txn.rawWeb3);
 	    helper.debug.log('gazetteerEntry is ', this.gazetteerEntry);
       // and the entry matches what we expect
  	    helper.assert.equal(this.throneName, this.gazetteerEntry.throneName, 'throne name');
@@ -737,7 +685,7 @@ runner.addTest({
       helper.assert.equal(this.startingClaimPrice, this.myThrone.currentClaimPrice(),
         'expected claim price for newly created throne to match the starting claim price we specified');
       var configArray = this.myThrone.config();
-      var config = decodeThroneConfig(configArray, helper.txn.rawWeb3);
+      var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
       helper.assert.equal(this.wizardOneAccount, config.wizardAddress, 'wizardAddress');
       helper.assert.equal(helper.account.master, config.deityAddress, 'deityAddress');
       helper.assert.equal(this.claimPriceAdjustPerMille, config.claimPriceAdjustPerMille, 'claimPriceAdjustPerMille');
@@ -913,7 +861,7 @@ runner.addTest({
 
 runner.addTest({
   title: 'Create second bespoke throne via ThroneMaker with different name has expected properties, appears in gazetteer and can be claimed',
-  categories: ['broken'],
+  categories: ['safe'],
   steps: [
     function(helper) {
       // given a new throne maker, two wizards, and a player
@@ -949,7 +897,7 @@ runner.addTest({
     function(helper) {
       // then we can find its gazetteer entry
       this.throneOneIndex = this.throneMaker.findThroneCalled(this.throneOneName);
-      this.throneOneGazetteerEntry = decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneOneIndex), helper.txn.rawWeb3);
+      this.throneOneGazetteerEntry = throneSupport.decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneOneIndex), helper.txn.rawWeb3);
       // and we can find the throne contract from the gazetteer entry
       this.throneOneAddress = this.throneOneGazetteerEntry.throneContractAddress;
       this.throneOne = helper.txn.getRegisteredContractInstanceAt('KingOfTheEtherThrone', this.throneOneAddress);
@@ -975,7 +923,7 @@ runner.addTest({
     function(helper) {
       // then we can find its gazetteer entry
       this.throneTwoIndex = this.throneMaker.findThroneCalled(this.throneTwoName);
-      this.throneTwoGazetteerEntry = decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneTwoIndex), helper.txn.rawWeb3);
+      this.throneTwoGazetteerEntry = throneSupport.decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneTwoIndex), helper.txn.rawWeb3);
       helper.assert.notEqual(this.throneOneIndex, this.throneTwoIndex, 'not same as throne one');
       // and we can find the throne contract from the gazetteer entry
       this.throneTwoAddress = this.throneTwoGazetteerEntry.throneContractAddress;
@@ -1000,23 +948,93 @@ runner.addTest({
   ]
 });
 
-// TODO
 runner.addTest({
-  title: 'Temp',
+  title: 'Name Hashing',
   steps: [
     function(helper) {
       this.throneInternals = helper.txn.createContractInstance('ThroneInternalsForTesting', []);
     },
     function(helper) {
-	    helper.debug.log('a -> ' + this.throneInternals.computeNameHashExt('a'));
-	    helper.debug.log('b -> ' + this.throneInternals.computeNameHashExt('b'));
-	    helper.debug.log('hello -> ' + this.throneInternals.computeNameHashExt('hello'));
-	    helper.debug.log('-Hello- -> ' + this.throneInternals.computeNameHashExt('-Hello-'));
-	    helper.debug.log('-Hello- -> ' + this.throneInternals.computeNameHashExt('-Hello-'));
+      helper.assert.notEqual(this.throneInternals.computeNameHashExt('a'),
+                             this.throneInternals.computeNameHashExt('b'),
+                             'expect different names to have different hashes - single char');
+      helper.assert.notEqual(this.throneInternals.computeNameHashExt('ai'),
+                             this.throneInternals.computeNameHashExt('bi'),
+                             'expect different names to have different hashes - two chars');
+      helper.assert.notEqual(this.throneInternals.computeNameHashExt('apple'),
+                             this.throneInternals.computeNameHashExt('banana'),
+                             'expect different names to have different hashes - different lengths and prefix');
+      helper.assert.notEqual(this.throneInternals.computeNameHashExt('ab'),
+                             this.throneInternals.computeNameHashExt('abacus'),
+                             'expect different names to have different hashes - different lengths same prefix');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('a'),
+                          this.throneInternals.computeNameHashExt('a'),
+                          'expect identical names to have identical hashes - single char');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('apple BANANA 123 Zygote'),
+                          this.throneInternals.computeNameHashExt('apple BANANA 123 Zygote'),
+                          'expect identical names to have identical hashes - multiple varied chars');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('hello'),
+                          this.throneInternals.computeNameHashExt('hello  '),
+                          'expect similar names to have identical hashes - trailing space example');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('hello'),
+                          this.throneInternals.computeNameHashExt('  hello'),
+                          'expect similar names to have identical hashes - leading space example');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('heLLo'),
+                          this.throneInternals.computeNameHashExt('HellO'),
+                          'expect similar names to have identical hashes - case example');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('twenty-four hour shifts'),
+                          this.throneInternals.computeNameHashExt('twenty four-hour shifts'),
+                          'expect similar names to have identical hashes - dashes example');
+      helper.assert.equal(this.throneInternals.computeNameHashExt('HELLO'),
+                          this.throneInternals.computeNameHashExt(' -- h e l l o -- '),
+                          'expect similar names to have identical hashes - complex example');
+    }
+  ]
+});
+
+runner.addTest({
+  title: 'Name Validation',
+  steps: [
+    function(helper) {
+      this.throneInternals = helper.txn.createContractInstance('ThroneInternalsForTesting', []);
     },
     function(helper) {
-	    helper.debug.log('good -> ' + this.throneInternals.validateNameExt('good'));
-	    helper.debug.log('B@A@D -> ' + this.throneInternals.validateNameExt('B@A@D'));
+      var expectGood = [
+        'a', 'single-char ok',
+        '-', 'dash ok',
+        ' ', 'space ok',
+        '1', 'number ok',
+        'Z', 'upper-case ok',
+        ' abc ', 'padding ok',
+        'abcdefghijklmnopqrstuvwxyz1234', '30 chars just ok',
+        'My Amazing Throne', 'typical name 1',
+        'The Awesome Queen of Goats', 'typical name 2'
+      ];
+      for (var i = 0; i < expectGood.length; i += 2) {
+        var str = expectGood[i];
+        var reason = expectGood[i+1];
+        helper.assert.equal(true, this.throneInternals.validateNameExt(helper.txn.rawWeb3.fromAscii(str)), reason);
+      }
+    },
+    function(helper) {
+      var expectBad = [
+        '', 'empty',
+        'B@D', 'at symbol not strictly alphanumeric',
+        'B@@D', 'two wrongs do not make a right',
+        'BAD!', 'exclamation mark not strictly alphanumeric',
+        'BAD?', 'question mark not strictly alphanumeric',
+        'a\tb', 'tab not allowed',
+        'a\nb', 'newline not allowed',
+        '\u00C1', 'non-ASCII (iso8859-1) not allowed',
+        '\u570B', 'non-ASCII (chinese) not allowed',
+        '-------------------------------', 'more than 30 chars not allowed',
+        '                               ', 'more than 30 chars not allowed (even if all spaces)'
+      ];
+      for (var i = 0; i < expectBad.length; i += 2) {
+        var str = expectBad[i];
+        var reason = expectBad[i+1];
+        helper.assert.equal(false, this.throneInternals.validateNameExt(helper.txn.rawWeb3.fromAscii(str)), reason);
+      }
     }
   ]
 });
