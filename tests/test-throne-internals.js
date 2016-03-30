@@ -12,6 +12,7 @@ TestThroneInternals.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Name Hashing',
+    categories: ['safe'],
     steps: [
       function(helper) {
         this.throneInternals = helper.txn.createContractInstance('ThroneInternalsForTesting', []);
@@ -56,6 +57,7 @@ TestThroneInternals.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Name Validation',
+    categories: ['safe'],
     steps: [
       function(helper) {
         this.throneInternals = helper.txn.createContractInstance('ThroneInternalsForTesting', []);

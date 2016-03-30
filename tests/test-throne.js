@@ -59,7 +59,6 @@ subTestModules.forEach(function (stm) {
 // rounding
 // wizard balance
 // deity funds avail
-// failed payments
 // ring-fencing of failed payments
 // ring-fencing between wizard + deity
 // king with no name / long name / invalid name
@@ -69,17 +68,16 @@ subTestModules.forEach(function (stm) {
 // - deity of throne maker 
 // creation of alt-thrones:
 // - correct fee (even when fee changed)
-// - exactly same name
-// - very similar names
 // - bogus properties
 // - resulting thrones behave ok
 // - sweeping of comission
 // - deity and wizard ownership assigned correctly
+// multi-geth-node tests
 
 
 // Uncomment these to control which tests are run.
 
-//runner.excludeCategory('safe');
+runner.excludeCategory('safe');
 //runner.excludeCategory('broken');
 
 // Run the tests.

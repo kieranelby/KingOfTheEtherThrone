@@ -108,7 +108,9 @@ contract KingOfTheEtherThrone is CarefulSender, NameValidator {
         address compensationAddress;
 
         // Keep a record of the tx.origin from which they claimed the
-        // throne - makes finding transactions easier.
+        // throne - makes finding transactions easier. We don't use
+        // this for anything important though since tx.origin may be
+        // deprecated.
         address originAddress;
 
         // A name by which they wish to be known.
@@ -268,9 +270,8 @@ contract KingOfTheEtherThrone is CarefulSender, NameValidator {
             return config.startingClaimPrice;
         } else {
             // Work out the claim fee from the last one.
-            uint256 lastClaimPrice = monarchs[monarchs.length - 1].claimPrice;
-            // Stop number of trailing decimals getting silly - we round it a bit.
-            uint256 rawNewClaimPrice = lastClaimPrice * (1000 + config.claimPriceAdjustPerMille) / 1000;
+            uint256 rawNewClaimPrice = lastClaimPrice() * (1000 + config.claimPriceAdjustPerMille) / 1000;
+            // To stop the number of trailing decimals getting silly we round it a bit.
             if (rawNewClaimPrice < 10 finney) {
                 return rawNewClaimPrice;
             } else if (rawNewClaimPrice < 100 finney) {
