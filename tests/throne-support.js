@@ -1,4 +1,4 @@
-/* jslint node:true, mocha:true */
+/* jslint node:true */
 'use strict';
 
 function ThroneSupport() {
