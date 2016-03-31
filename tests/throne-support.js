@@ -14,7 +14,7 @@ ThroneSupport.prototype.decodeMonarchArray = function(monarchArray, web3) {
     coronationTimestamp:   monarchArray[4],
     compensationStatus:    monarchArray[5],
     compensationTimestamp: monarchArray[6],
-    compensationPaid:      monarchArray[7]
+    compensationPaid:      monarchArray[7] // TODO - rename to compensationAmount
   };
 };
 

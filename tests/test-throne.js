@@ -77,7 +77,7 @@ subTestModules.forEach(function (stm) {
 
 // Uncomment these to control which tests are run.
 
-runner.excludeCategory('safe');
+//runner.excludeCategory('safe');
 //runner.excludeCategory('broken');
 
 // Run the tests.
