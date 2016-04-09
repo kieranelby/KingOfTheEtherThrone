@@ -67,6 +67,10 @@ TestThroneInternals.prototype.addTests = function(runner, throneSupport) {
           'a', 'single-char ok',
           '-', 'dash ok',
           ' ', 'space ok',
+          '!', 'exclamation ok',
+          '\'', 'apostrophe ok',
+          '_', 'underscore ok',
+          '.', 'dot ok',
           '1', 'number ok',
           'Z', 'upper-case ok',
           ' abc ', 'padding ok',
@@ -83,10 +87,9 @@ TestThroneInternals.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         var expectBad = [
           '', 'empty',
-          'B@D', 'at symbol not strictly alphanumeric',
+          'B@D', 'at symbol not allowed in names',
           'B@@D', 'two wrongs do not make a right',
-          'BAD!', 'exclamation mark not strictly alphanumeric',
-          'BAD?', 'question mark not strictly alphanumeric',
+          'BAD?', 'question mark not allowed in names',
           'a\tb', 'tab not allowed',
           'a\nb', 'newline not allowed',
           '\u00C1', 'non-ASCII (iso8859-1) not allowed',

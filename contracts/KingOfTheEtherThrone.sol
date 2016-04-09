@@ -33,11 +33,53 @@ contract CarefulSender {
 
 
 // We don't actually create this contract - it just has some shared functions
-// for checking names are safe to use.
+// for rounding monetary amounts.
+contract MoneyRounder {
+
+    // Truncates amounts in range 10 finney - 10000 ether to have 3 sig figs.
+    // e.g. 12.345678 ETH -> 12.3 ETH
+    // Leaves negative amounts and amounts outside the range alone.
+    function roundMoneyDown3SF(uint256 rawWeiAmount) internal returns (uint256 nicerWeiAmount) {
+          if (rawWeiAmount < 10 finney) {
+              // leave tiny amounts alone
+              return rawWeiAmount;
+          } else if (rawWeiAmount < 100 finney) {
+              return 100 szabo * (rawWeiAmount / 100 szabo);
+          } else if (rawWeiAmount < 1 ether) {
+              return 1 finney * (rawWeiAmount / 1 finney);
+          } else if (rawWeiAmount < 10 ether) {
+              return 10 finney * (rawWeiAmount / 10 finney);
+          } else if (rawWeiAmount < 100 ether) {
+              return 100 finney * (rawWeiAmount / 100 finney);
+          } else if (rawWeiAmount < 1000 ether) {
+              return 1 ether * (rawWeiAmount / 1 ether);
+          } else if (rawWeiAmount < 10000 ether) {
+              return 10 ether * (rawWeiAmount / 10 ether);
+          } else {
+              // leave enormous amounts alone
+              return rawWeiAmount;
+          }
+    }
+
+}
+
+// We don't actually create this contract - it just has some shared functions
+// for checking names are "safe" to use (need to be a bit careful when data
+// supplied by end-users is visible to other end-users).
 contract NameValidator {
 
+    function isSafePunctuation(byte b) returns (bool safe) {
+        // ASCII codes for - _ . ' ! ( )
+        // (Yes, single-quote is a little dangerous but that's why we escape stuff)
+        if (b == 45 || b == 95 || b == 46 || b == 39 || b == 33 || b == 40 || b == 41) {
+            return true;
+        }
+        return false;
+    }
+
     // Return false if the given name is not considered "safe" to use, true if it's ok.
-    // Rules are: must be no more than 30 bytes, must be pure 7-bit ASCII, must be A-z,0-9,-,space only.
+    // Rules are: must be no more than 30 bytes, must be pure 7-bit ASCII, must use only
+    // characters A-Z, a-z, 0-9, space, or - _ . ' ! ( )
     function validateName(bytes name) constant internal returns (bool good) {
         uint256 len = name.length;
         // Not really much of a name if it is blank.
@@ -49,10 +91,10 @@ contract NameValidator {
         if (len > 30) {
             return false;
         }
-        // ASCII space, dash, 0-9, A-Z, a-z
+        // ASCII space, "safe" punctuation, 0-9, A-Z, a-z
         for (uint256 i = 0; i < len; i++) {
             byte b = name[i];
-            if (!(b == 32 || b == 45 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122))) {
+            if (!(b == 32 || isSafePunctuation(b) || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122))) {
                 return false;
             }
         }
@@ -77,8 +119,8 @@ contract NameHasher is NameValidator {
         }
         for (uint256 idx = 0; idx < len; idx++) {
             byte b = name[idx];
-            // space or dash
-            if (b == 32 || b == 45) {
+            // ignore spaces and punctuation
+            if (b == 32 || isSafePunctuation(b)) {
               continue;
             }
             // lower -> upper
@@ -96,7 +138,7 @@ contract NameHasher is NameValidator {
 
 // A throne. This is the main contract.
 // TODO - can we break some more bits out for easier testing (e.g. commission balances? rounding?)
-contract KingOfTheEtherThrone is CarefulSender, NameValidator {
+contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
 
     // Represents whether we managed to send a payment or not.
     enum PaymentStatus { NotApplicable, Good, Failed, Void }
@@ -272,23 +314,7 @@ contract KingOfTheEtherThrone is CarefulSender, NameValidator {
             // Work out the claim fee from the last one.
             uint256 rawNewClaimPrice = lastClaimPrice() * (1000 + config.claimPriceAdjustPerMille) / 1000;
             // To stop the number of trailing decimals getting silly we round it a bit.
-            if (rawNewClaimPrice < 10 finney) {
-                return rawNewClaimPrice;
-            } else if (rawNewClaimPrice < 100 finney) {
-                return 100 szabo * (rawNewClaimPrice / 100 szabo);
-            } else if (rawNewClaimPrice < 1 ether) {
-                return 1 finney * (rawNewClaimPrice / 1 finney);
-            } else if (rawNewClaimPrice < 10 ether) {
-                return 10 finney * (rawNewClaimPrice / 10 finney);
-            } else if (rawNewClaimPrice < 100 ether) {
-                return 100 finney * (rawNewClaimPrice / 100 finney);
-            } else if (rawNewClaimPrice < 1000 ether) {
-                return 1 ether * (rawNewClaimPrice / 1 ether);
-            } else if (rawNewClaimPrice < 10000 ether) {
-                return 10 ether * (rawNewClaimPrice / 10 ether);
-            } else {
-                return rawNewClaimPrice;
-            }
+            return roundMoneyDown3SF(rawNewClaimPrice);
         }
     }
 
@@ -593,6 +619,8 @@ contract ThroneMaker is CarefulSender, NameHasher {
     // outside the VM - use findThroneCalled(throneName) to get the throne you created.
     // NB2: Yes, i suppose someone else could create one with the same name just before
     // you - double-check the config of the throne contract created.
+    // TODO - zero address bit yucky
+    // TODO - extract validation to separate function
     function createThrone(
         bytes   throneName,
         address optionalWizardAddress,
@@ -750,7 +778,7 @@ contract ThroneMaker is CarefulSender, NameHasher {
 // (arguably a poor testing practice, but contracts are a bit unusual -
 //  e.g. we don't really want to have to purely black-box-test name hashing by
 //  creating loads of thrones with similar names 'cos they're expensive ...)
-contract ThroneInternalsForTesting is CarefulSender, NameValidator, NameHasher {
+contract ThroneInternalsForTesting is CarefulSender, MoneyRounder, NameValidator, NameHasher {
 
     function sendWithExtraGasExt(address destination, uint256 value, uint256 extraGasAmt) returns (bool) {
       return sendWithExtraGas(destination, value, extraGasAmt);
@@ -758,6 +786,10 @@ contract ThroneInternalsForTesting is CarefulSender, NameValidator, NameHasher {
 
     function sendWithAllOurGasExceptExt(address destination, uint256 value, uint256 reserveGasAmt) returns (bool) {
       return sendWithAllOurGasExcept(destination, value, reserveGasAmt);
+    }
+
+    function roundMoneyDown3SFExt(uint256 rawWeiAmount) constant returns (uint256 nicerWeiAmount) {
+      return roundMoneyDown3SF(rawWeiAmount);
     }
 
     function validateNameExt(bytes name) constant returns (bool good) {
