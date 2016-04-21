@@ -12,7 +12,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Create bespoke throne via ThroneMaker has expected properties, appears in gazetteer and can be claimed',
-    categories: ['safe'],
+    categories: ['maker','safe'],
     steps: [
       function(helper) {
         // given a new throne maker and a player
@@ -25,14 +25,12 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // when we create a throne
         this.throneName = 'myThrone';
-        this.optionalWizardAddress = 0;
         this.startingClaimPrice = helper.math.toWei('0.25','ether');
         this.claimPriceAdjustPerMille = 1000;
         this.commissionPerMille = 20;
         this.curseIncubationDuration = 86400;
         this.throneMaker.createThrone(
           this.throneName,
-          this.optionalWizardAddress,
           this.startingClaimPrice,
           this.claimPriceAdjustPerMille,
           this.commissionPerMille,
@@ -79,7 +77,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
         helper.assert.equal(this.throneMaker.address, config.throneMaker, 'throneMaker');
       },
       function(helper) {
-        // and when we claim the newly create throne
+        // and when we claim the newly created throne
         this.myThrone.claimThrone('playerOne', {
           from: this.playerOneAccount,
           value: this.myThrone.currentClaimPrice(),
@@ -97,7 +95,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Create second bespoke throne with exactly same name as first via ThroneMaker fails',
-    categories: ['safe'],
+    categories: ['maker','safe'],
     steps: [
       function(helper) {
         // given a new throne maker and two wizards
@@ -110,14 +108,12 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // when wizard one creates a throne
         this.throneName = 'myThrone';
-        this.optionalWizardAddress = 0;
         this.startingClaimPrice = helper.math.toWei('0.25','ether');
         this.claimPriceAdjustPerMille = 1000;
         this.commissionPerMille = 20;
         this.curseIncubationDuration = 86400;
         this.throneMaker.createThrone(
           this.throneName,
-          this.optionalWizardAddress,
           this.startingClaimPrice,
           this.claimPriceAdjustPerMille,
           this.commissionPerMille,
@@ -170,7 +166,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Create second bespoke throne with too-similar name to the first via ThroneMaker fails',
-    categories: ['safe'],
+    categories: ['maker','safe'],
     steps: [
       function(helper) {
         // given a new throne maker and two wizards
@@ -183,14 +179,12 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // when wizard one creates a throne
         this.throneName = 'myThrone';
-        this.optionalWizardAddress = 0;
         this.startingClaimPrice = helper.math.toWei('0.25','ether');
         this.claimPriceAdjustPerMille = 1000;
         this.commissionPerMille = 20;
         this.curseIncubationDuration = 86400;
         this.throneMaker.createThrone(
           this.throneName,
-          this.optionalWizardAddress,
           this.startingClaimPrice,
           this.claimPriceAdjustPerMille,
           this.commissionPerMille,
@@ -216,7 +210,6 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
         this.secondThroneName = '- My Throne -';
         this.throneMaker.createThrone(
           this.secondThroneName,
-          this.optionalWizardAddress,
           this.startingClaimPrice,
           this.claimPriceAdjustPerMille,
           this.commissionPerMille,
@@ -244,7 +237,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Create second bespoke throne via ThroneMaker with different name has expected properties, appears in gazetteer and can be claimed',
-    categories: ['safe'],
+    categories: ['maker','safe'],
     steps: [
       function(helper) {
         // given a new throne maker, two wizards, and a player
@@ -258,14 +251,12 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // when wizard one creates a throne
         this.throneOneName = 'Throne One';
-        this.optionalWizardAddress = 0;
         this.throneOneStartingClaimPrice = helper.math.toWei('0.25','ether');
         this.claimPriceAdjustPerMille = 1000;
         this.commissionPerMille = 20;
         this.curseIncubationDuration = 86400;
         this.throneMaker.createThrone(
           this.throneOneName,
-          this.optionalWizardAddress,
           this.throneOneStartingClaimPrice,
           this.claimPriceAdjustPerMille,
           this.commissionPerMille,
@@ -291,7 +282,6 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
         this.throneTwoStartingClaimPrice = helper.math.toWei('0.1','ether');
         this.throneMaker.createThrone(
           this.throneTwoName,
-          this.optionalWizardAddress,
           this.throneTwoStartingClaimPrice,
           this.claimPriceAdjustPerMille,
           this.commissionPerMille,
@@ -327,6 +317,144 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
         var newClaimPrice = this.throneTwo.currentClaimPrice();
         helper.assert.equal(helper.math.toWei('0.2','ether'), newClaimPrice,
           'expected claim price to double from 0.1 to 0.2 since we specified start at 0.1 for throne two');
+      }
+    ]
+  });
+
+  runner.addTest({
+    title: 'Deity can change throne creation price',
+    categories: ['maker','safe'],
+    steps: [
+      function(helper) {
+        // given a new throne maker and a wizard
+        this.originalCreationPrice = helper.math.toWei('0.1','ether');
+        this.throneMaker = helper.txn.createContractInstance('ThroneMaker', [this.creationPrice]);
+        // gonna need loadsa gas
+        this.wizardOneAccount = helper.account.createWith(helper.math.toWei('0.35', 'ether'));
+      },
+      function(helper) {
+        // when we (the creator of the throne maker) change the throne creation price
+        this.updatedCreationPrice = helper.math.toWei('0.2','ether');
+        this.throneMaker.setThroneCreationPrice(this.updatedCreationPrice);
+      },
+      function(helper) {
+        // then we can read back the updated price
+        helper.assert.equal(this.updatedCreationPrice, this.throneMaker.throneCreationPrice(),
+          'expected to read back new creation price');
+        // and we can create a throne using the updated price
+        this.throneName = 'myThrone';
+        this.startingClaimPrice = helper.math.toWei('0.25','ether');
+        this.claimPriceAdjustPerMille = 1000;
+        this.commissionPerMille = 20;
+        this.curseIncubationDuration = 86400;
+        this.throneMaker.createThrone(
+          this.throneName,
+          this.startingClaimPrice,
+          this.claimPriceAdjustPerMille,
+          this.commissionPerMille,
+          this.curseIncubationDuration,
+          {
+            from: this.wizardOneAccount,
+            value: this.updatedCreationPrice,
+            gas: 3100000
+          }
+        );
+      },
+      function(helper) {
+        helper.assert.equal(1, this.throneMaker.numberOfThrones(), 'a throne should have been created');
+      }
+    ]
+  });
+
+  runner.addTest({
+    title: 'Deity can sweep throne creation fees',
+    categories: ['maker','safe'],
+    steps: [
+      function(helper) {
+        // don't use the default account as the deity because we need to do balance checks
+        this.deityAccount = helper.account.createWith(helper.math.toWei('0.20', 'ether'));
+      },
+      function(helper) {
+        // given a new throne maker with our deity, and a wizard
+        this.creationPrice = helper.math.toWei('0.2','ether');
+        this.throneMaker = helper.txn.createContractInstance('ThroneMaker', [this.creationPrice], {from: this.deityAccount});
+        // gonna need plenty of gas money
+        this.wizardAccount = helper.account.createWith(helper.math.toWei('0.50', 'ether'));
+      },
+      function(helper) {
+        // when the wizard asks to create a throne
+        this.throneName = 'myThrone';
+        this.startingClaimPrice = helper.math.toWei('0.25','ether');
+        this.claimPriceAdjustPerMille = 1000;
+        this.commissionPerMille = 20;
+        this.curseIncubationDuration = 86400;
+        this.throneMaker.createThrone(
+          this.throneName,
+          this.startingClaimPrice,
+          this.claimPriceAdjustPerMille,
+          this.commissionPerMille,
+          this.curseIncubationDuration,
+          {
+            from: this.wizardAccount,
+            value: this.creationPrice,
+            gas: 3100000
+          }
+        );
+      },
+      function(helper) {
+        // then the throne is created
+        helper.assert.equal(1, this.throneMaker.numberOfThrones(), 'a throne should have been created');
+        // and the deity can ask to collect ("sweep") the fee
+        this.deityBalanceBeforeSweep = helper.account.getBalance(this.deityAccount);
+        this.throneMaker.sweepDeityCommission(this.creationPrice, {from: this.deityAccount});
+      },
+      function(helper) {
+        // and the deity should receive it
+        this.deityBalanceAfterSweep = helper.account.getBalance(this.deityAccount);
+        this.deityBalanceChange = helper.math.subtract(this.deityBalanceAfterSweep, this.deityBalanceBeforeSweep);
+        helper.math.assertRoughlyEqual(this.creationPrice, this.deityBalanceChange, helper.math.toWei('5', 'finney'), 'deity balance should go up by creation price (less gas used to sweep)');
+      }
+    ]
+  });
+
+  runner.addTest({
+    title: 'Can validate proposed throne before creating it',
+    categories: ['maker', 'safe'],
+    steps: [
+      function(helper) {
+        // given a new throne maker
+        this.creationPrice = helper.math.toWei('0.2','ether');
+        this.throneMaker = helper.txn.createContractInstance('ThroneMaker', [this.creationPrice]);
+      },
+      function(helper) {
+        helper.assert.equal(true, this.throneMaker.validateProposedThroneName('bob'), 'short but sweet');
+        helper.assert.equal(false, this.throneMaker.validateProposedThroneName(''), 'cannot have empty name');
+        helper.assert.equal(false, this.throneMaker.validateProposedThroneName('!"£$%^&*'), 'cannot have name with unusual chars');
+        // startingClaimPrice, claimPriceAdjustPerMille, commissionPerMille, curseIncubationDuration
+        helper.assert.equal(true, this.throneMaker.validateProposedThroneConfig(
+          helper.math.toWei('0.2','ether'),
+          500,
+          20,
+          7*24*60*60
+        ), 'reasonable config');
+        helper.assert.equal(false, this.throneMaker.validateProposedThroneConfig(
+          helper.math.toWei('100','wei'),
+          500,
+          20,
+          7*24*60*60
+        ), 'starting price unreasonably low');
+        helper.assert.equal(false, this.throneMaker.validateProposedThroneConfig(
+          helper.math.toWei('0.2','ether'),
+          500,
+          500,
+          7*24*60*60
+        ), 'comission unreasonably high');
+        helper.assert.equal(false, this.throneMaker.validateProposedThroneConfig(
+          helper.math.toWei('0.2','ether'),
+          500,
+          500,
+          60
+        ), 'incubation duration too short');
       }
     ]
   });

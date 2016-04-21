@@ -33,7 +33,7 @@ ThroneSupport.prototype.decodeThroneConfig = function(configArray, web3) {
 };
 
   // NB: why doesn't web3 do this for us? anyway, should probably move this to production code so are testing it.
-ThroneSupport.prototype.decodeGazetteerEntry = function decodeGazetteerEntry(gazetteerEntryArray, web3) {
+ThroneSupport.prototype.decodeGazetteerEntry = function(gazetteerEntryArray, web3) {
   return {
     throneName: web3.toAscii(gazetteerEntryArray[0]),
     throneContractAddress:   gazetteerEntryArray[1],
@@ -42,24 +42,41 @@ ThroneSupport.prototype.decodeGazetteerEntry = function decodeGazetteerEntry(gaz
   };
 };
 
-ThroneSupport.prototype.createStandardTestThrone = function createStandardTestThrone(helper) {
-  // wizardAddress,
-  // deityAddress,
-  // startingClaimPrice,
-  // claimPriceAdjustPerMille,
-  // commissionPerMille,
-  // incubationDuration,
-  // failedPaymentRingfenceDuration
+ThroneSupport.prototype._createThrone = function(helper, configObj) {
   return helper.txn.createContractInstance('KingOfTheEtherThrone', [
-    helper.account.master,
-    helper.account.master,
-    helper.math.toWei('1','ether'),
-    '500',
-    '20',
-    '180',
-    '240',
-    0
+    configObj.wizardAddress,
+    configObj.deityAddress,
+    configObj.startingClaimPrice,
+    configObj.claimPriceAdjustPerMille,
+    configObj.commissionPerMille,
+    configObj.incubationDuration,
+    configObj.failedPaymentRingfenceDuration,
+    configObj.throneMakerAddress
   ]);
+};
+
+ThroneSupport.prototype.createStandardTestThrone = function(helper) {
+  return this.createStandardTestThroneExcept(helper, {});
+};
+
+ThroneSupport.prototype.createStandardTestThroneExcept = function(helper, nonStandardConfig) {
+  var config = {
+    wizardAddress: helper.account.master,
+    deityAddress: helper.account.master,
+    startingClaimPrice: helper.math.toWei('1','ether'),
+    claimPriceAdjustPerMille: '500',
+    commissionPerMille: '20',
+    incubationDuration: '180',
+    failedPaymentRingfenceDuration: '240',
+    throneMakerAddress: 0
+  };
+  for (var name in nonStandardConfig) {
+    if (nonStandardConfig.hasOwnProperty(name)) {
+      var value = nonStandardConfig[name];
+      config[name] = value;
+    }
+  }
+  return this._createThrone(helper, config);
 };
 
 exports = module.exports = ThroneSupport;

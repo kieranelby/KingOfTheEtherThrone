@@ -106,6 +106,29 @@ TestThroneInternals.prototype.addTests = function(runner, throneSupport) {
     ]
   });
   
+  runner.addTest({
+    title: 'Money Rounding',
+    categories: ['safe'],
+    steps: [
+      function(helper) {
+        this.throneInternals = helper.txn.createContractInstance('ThroneInternalsForTesting', []);
+      },
+      function(helper) {
+        var expectedTriples = [
+          helper.math.toWei('12.3', 'ether'), helper.math.toWei('12.34', 'ether'), 'three sig figs in range',
+          helper.math.toWei('12.3', 'ether'), helper.math.toWei('12.39', 'ether'), 'rounded down not to nearest',
+          helper.math.toWei('1.234', 'mwei'), helper.math.toWei('1.234', 'mwei'), 'tiny amounts not rounded'
+        ];
+        for (var i = 0; i < expectedTriples.length; i += 3) {
+          var expected = expectedTriples[i+0];
+          var raw = expectedTriples[i+1];
+          var reason = expectedTriples[i+2];
+          helper.assert.equal(expected, this.throneInternals.roundMoneyDown3SFExt(raw), reason);
+        }
+      }
+    ]
+  });
+  
 };
 
 exports = module.exports = TestThroneInternals;

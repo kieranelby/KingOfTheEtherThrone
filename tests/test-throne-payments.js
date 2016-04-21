@@ -372,6 +372,7 @@ TestThronePayments.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Can void failed compensation payment after failedPaymentRingfenceDuration elapsed',
+    categories: ['safe'],
     steps: commonStepsToSetupFailedCompensationPaymentDueToExpensiveWallet.concat([
       function(helper) {
         // check pre-conditions
@@ -405,10 +406,130 @@ TestThronePayments.prototype.addTests = function(runner, throneSupport) {
     ])
   });
 
-  // TODO - can't resend/void a void payment
-  // TODO - dead monarch compensationStatus (and can't resend)
-  // TODO - more ways for payments to fail
+  runner.addTest({
+    title: 'Cannot void a failed compensation payment twice',
+    categories: ['safe'],
+    steps: commonStepsToSetupFailedCompensationPaymentDueToExpensiveWallet.concat([
+      function(helper) {
+        // check pre-conditions
+        var configArray = this.throne.config();
+        this.throneConfig = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        helper.assert.equal(helper.math.toWei('0.515','ether'), this.throne.wizardBalance(), 'wizardBalance pre-condition');
+        helper.assert.equal(helper.math.toWei('0.515','ether'), this.throne.deityBalance(), 'deityBalance pre-condition');
+        helper.assert.equal(helper.math.toWei('2.5','ether'), helper.account.getBalance(this.throne.address), 'throneBalance pre-condition');
+        // wait until the ring-fence duration has passed
+        helper.nextStep.needsBlockTime(helper.math.add(helper.math.add(helper.txn.getLatestBlockTime(), this.throneConfig.failedPaymentRingfenceDuration),1));
+      },
+      function(helper) {
+        // if the wizard now asks for the failed payment to be voided
+        this.firstMonarchBeforeVoidAttempt = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var monarchNumber = 0;
+        this.throne.voidFailedPayment(monarchNumber, {
+          from: this.throneConfig.wizardAddress,
+          gas: 500000
+        });
+      },
+      function(helper) {
+        // then this is recorded and the money is made available to the wizard and the deity
+        this.firstMonarchAfterVoidAttempt = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var voidedPaymentStatusCode = 3;
+        helper.assert.equal(voidedPaymentStatusCode, this.firstMonarchAfterVoidAttempt.compensationStatus, 'compensationStatus');
+        helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationTimestamp, this.firstMonarchAfterVoidAttempt.compensationTimestamp, 'compensationTimestamp remains as time of first attempt');
+        helper.assert.equal(helper.math.toWei('1.25','ether'), this.throne.wizardBalance(), 'wizardBalance increased');
+        helper.assert.equal(helper.math.toWei('1.25','ether'), this.throne.deityBalance(), 'deityBalance increased');
+        helper.assert.equal(helper.math.toWei('2.5','ether'), helper.account.getBalance(this.throne.address), 'throneBalance unchanged');
+      },
+      function(helper) {
+        // but if the wizard now asks for the failed payment to be voided again
+        this.firstMonarchBeforeVoidAttempt = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var monarchNumber = 0;
+        this.throne.voidFailedPayment(monarchNumber, {
+          from: this.throneConfig.wizardAddress,
+          gas: 500000
+        });
+      },
+      function(helper) {
+        // then that doesn't work, though it does stay voided
+        this.firstMonarchAfterSecondVoidAttempt = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var voidedPaymentStatusCode = 3;
+        helper.assert.equal(voidedPaymentStatusCode, this.firstMonarchAfterSecondVoidAttempt.compensationStatus, 'compensationStatus');
+        helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationTimestamp, this.firstMonarchAfterSecondVoidAttempt.compensationTimestamp, 'compensationTimestamp still unchanged');
+        helper.assert.equal(helper.math.toWei('1.25','ether'), this.throne.wizardBalance(), 'wizardBalance not changed by 2nd attempt');
+        helper.assert.equal(helper.math.toWei('1.25','ether'), this.throne.deityBalance(), 'deityBalance not changed by 2nd attempt');
+        helper.assert.equal(helper.math.toWei('2.5','ether'), helper.account.getBalance(this.throne.address), 'throneBalance not changed by 2nd attempt either');
+      }
+    ])
+  });
+
+  runner.addTest({
+    title: 'Dead monarchs not compensated and cannot resend',
+    categories: ['payments'],
+    steps: [
+      function(helper) {
+        // given a new throne and two players
+        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
+        this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
+      },
+      function(helper) {
+        // given that the first player claimed the throne at starting price according to the contract
+        this.throne.claimThrone('playerOne', {
+          from: this.playerOneAccount,
+          value: this.throne.currentClaimPrice(),
+          gas: 500000
+        });
+      },
+      function(helper) {
+        // make a note of when player one claimed the throne and how much money they had left
+        var claimedAt = helper.txn.getLatestBlockTime();
+        var config = throneSupport.decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
+        this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
+        this.contractBalanceAfterFirstClaim = helper.account.getBalance(this.throne.address);
+        this.playerOneBalanceAfterTheyClaimed = helper.account.getBalance(this.playerOneAccount);
+        // when we wait until the monarch should have died
+        helper.nextStep.needsBlockTime(this.expectDieBy);
+      },
+      function(helper) {
+        // and then let player 2 claim the throne
+        this.throne.claimThrone('playerTwo', {
+          from: this.playerTwoAccount,
+          value: this.throne.currentClaimPrice(),
+          gas: 500000
+        });
+      },
+      function(helper) {
+        // then player one's balance does not change
+        var playerOneBalanceNow = helper.account.getBalance(this.playerOneAccount);
+        helper.assert.equal(this.playerOneBalanceAfterTheyClaimed, playerOneBalanceNow, 'playerOne balance');
+        // but the balance of the contract itself goes up by the whole claim amount (1 eth)
+        var contractBalanceNow = helper.account.getBalance(this.throne.address);
+        var expectedContractBalance = helper.math.add(helper.math.toWei('1', 'ether'), this.contractBalanceAfterFirstClaim);
+        helper.assert.equal(expectedContractBalance, contractBalanceNow, 'contract balance');
+        this.contractBalanceAfterSecondClaim = contractBalanceNow;
+        // and the compensation status is "n/a"
+        var notApplicablePaymentStatusCode = 0;
+        this.deadMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        helper.assert.equal(notApplicablePaymentStatusCode, this.deadMonarch.compensationStatus, 'compensationStatus');
+      },
+      function (helper) {
+        // and resending the never sent payment
+        this.firstMonarchBeforeVoidAttempt = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var monarchNumber = 0;
+        this.throne.resendFailedPayment(monarchNumber, {
+          from: this.playerOneAccount,
+          gas: 500000
+        });
+      },
+      function (helper) {
+        // does nothing
+        var contractBalanceNow = helper.account.getBalance(this.throne.address);
+        helper.assert.equal(this.contractBalanceAfterSecondClaim, contractBalanceNow, 'contract balance not changed');
+      }
+    ]
+  });
   
+  // TODO - scenario where re-send is not monacrhNumber zero?
+    
 };
 
 exports = module.exports = TestThronePayments;

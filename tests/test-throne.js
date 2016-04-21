@@ -7,7 +7,6 @@
  * Intended to be run against the testnet via the web3 RPC API (it's a bit expensive on main net!).
  *
  * e.g. might start geth like:
- * cd Desktop
  * geth --testnet --port 31313 --datadir e:/ethereum -rpc -rpcport 8646 -rpcapi "eth,web3,personal" -unlock 0
  *
  * or using the test.ether.camp test met:
@@ -36,9 +35,22 @@ var throneSupport = new ThroneSupport();
 var TestThroneCore = require('./test-throne-core.js');
 var TestThronePayments = require('./test-throne-payments.js');
 var TestThroneMaker = require('./test-throne-maker.js');
+var TestThroneSecurity = require('./test-throne-security.js');
+var TestThronePerformance = require('./test-throne-performance.js');
+var TestThroneConcurrency = require('./test-throne-concurrency.js');
+var TestThroneFuzz = require('./test-throne-fuzz.js');
 var TestThroneInternals = require('./test-throne-internals.js');
 
-var subTestModules = [ new TestThroneCore(), new TestThronePayments(), new TestThroneMaker(), new TestThroneInternals() ];
+var subTestModules = [
+  new TestThroneCore(),
+  new TestThronePayments(),
+  new TestThroneMaker(),
+  new TestThroneSecurity(),
+  new TestThronePerformance(),
+  new TestThroneConcurrency(),
+  new TestThroneFuzz(),
+  new TestThroneInternals()
+];
 
 // uncomment to debug concurrency problems
 //runner.disableParallelism();
@@ -56,7 +68,6 @@ subTestModules.forEach(function (stm) {
 // more contract balance changes from comission
 // claim throne as wizard / deity / same player as current monarch
 // claim for different addr
-// rounding
 // wizard balance
 // deity funds avail
 // ring-fencing of failed payments
@@ -73,6 +84,7 @@ subTestModules.forEach(function (stm) {
 // - sweeping of comission
 // - deity and wizard ownership assigned correctly
 // multi-geth-node tests
+// performance (in terms of gas costs)
 
 
 // Uncomment these to control which tests are run.

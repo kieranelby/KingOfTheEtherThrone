@@ -104,7 +104,7 @@ contract NameValidator {
 
 
 // We don't actually create this contract - it just has some shared functions
-// for checking if names are the same.
+// for checking if names are essentialy the same.
 contract NameHasher is NameValidator {
 
     // Hash the name down to a number, case-folding and ignoring spaces and dashes.
@@ -137,7 +137,6 @@ contract NameHasher is NameValidator {
 
 
 // A throne. This is the main contract.
-// TODO - can we break some more bits out for easier testing (e.g. commission balances? rounding?)
 contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
 
     // Represents whether we managed to send a payment or not.
@@ -220,7 +219,8 @@ contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
         // How long do we keep failed payments ring-fenced before voiding them?
         uint256 failedPaymentRingfenceDuration;
 
-        // Where is the contract that we use to make more thrones like this one?
+        // At what address is the contract that we use to make more thrones like this one?
+        // Can be zero if this was not created by the ThroneMaker.
         ThroneMaker throneMaker;
     }
 
@@ -302,6 +302,7 @@ contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
     }
 
     // What was the most recent price paid to successfully claim the throne?
+    // Not well-defined if there has not yet been a monarch.
     function lastClaimPrice() constant returns (uint256 price) {
         return monarchs[monarchs.length - 1].claimPrice;
     }
@@ -608,34 +609,78 @@ contract ThroneMaker is CarefulSender, NameHasher {
     function () {
       throw;
     }
+    
+    // Creating a throne needs lots of gas, so call this to check name is OK first.
+    function validateProposedThroneName(
+        bytes   throneName
+    ) constant returns (bool good) {
+
+        if (!validateName(throneName)) {
+            return false;
+        }
+        uint256 nameHash = computeNameHash(throneName);
+        if (findThroneByNameHash(nameHash) != uint256(-1)) {
+            return false;
+        }
+
+        return true;        
+    }
+
+    // Creating a throne needs lots of gas, so call this to check config is OK first.
+    function validateProposedThroneConfig(
+        uint256 startingClaimPrice,
+        uint256 claimPriceAdjustPerMille,
+        uint256 commissionPerMille,
+        uint256 curseIncubationDuration
+    ) constant returns (bool good) {
+
+        if (startingClaimPrice < 1 szabo) {
+            return false;
+        }
+        if (startingClaimPrice > 1000000 ether) {
+            return false;
+        }
+        if (claimPriceAdjustPerMille < 10) {
+            return false;
+        }
+        if (claimPriceAdjustPerMille > 9000) {
+            return false;
+        }
+        if (commissionPerMille < 10) {
+            return false;
+        }
+        if (commissionPerMille > 100) {
+            return false;
+        }
+        if (curseIncubationDuration < 5 minutes) {
+            return false;
+        }
+        if (curseIncubationDuration > 999 years) {
+            return false;
+        }
+
+        return true;        
+    }
 
     // Create a new throne.
     // The caller will need to include payment equal to the current throneCreationPrice,
     // as well as a very large amount of gas - about 2,000,000.
-    // optionalWizardAddress can be zero to indicate the caller should be the wizard
-    // behind the throne, or non-zero for a different wiazrd address.
+    // The caller will become the wizard behind the throne.
     // The other parameters here are documented in KingOfTheEtherThrone.ThroneConfig.
     // NB: like all non-constant functions, the return value isn't actually returned
     // outside the VM - use findThroneCalled(throneName) to get the throne you created.
     // NB2: Yes, i suppose someone else could create one with the same name just before
     // you - double-check the config of the throne contract created.
-    // TODO - zero address bit yucky
-    // TODO - extract validation to separate function
     function createThrone(
         bytes   throneName,
-        address optionalWizardAddress,
         uint256 startingClaimPrice,
         uint256 claimPriceAdjustPerMille,
         uint256 commissionPerMille,
         uint256 curseIncubationDuration
     ) returns (uint256 throneIndex) {
 
-        // Technically zero is a valid address, but we use to indicate that the
-        // caller should be made the wizard. Careful if calling from a contract!
-        address wizardAddress = optionalWizardAddress;
-        if (wizardAddress == 0) {
-          wizardAddress = msg.sender;
-        }
+        // Caller becomes the wizard. Careful when calling from a contract.
+        address wizardAddress = msg.sender;
 
         uint256 valuePaid = msg.value;
         
@@ -650,39 +695,26 @@ contract ThroneMaker is CarefulSender, NameHasher {
         }
 
         // Check the name is "safe" and doesn't already exist.
+        // We don't use the validateProposedThroneName function because we
+        // don't want the expense of computing the nameHash twice.
+        // TODO - but how expensive is that anyway, maybe we're just complicating things?
         
         if (!validateName(throneName)) {
             throw;
         }
         uint256 nameHash = computeNameHash(throneName);
         if (findThroneByNameHash(nameHash) != uint256(-1)) {
-          throw;
+            throw;
         }
         
         // Check the configuration looks vaguely plausible.
 
-        if (startingClaimPrice < 1 szabo) {
-            throw;
-        }
-        if (startingClaimPrice > 1000000 ether) {
-            throw;
-        }
-        if (claimPriceAdjustPerMille < 10) {
-            throw;
-        }
-        if (claimPriceAdjustPerMille > 9000) {
-            throw;
-        }
-        if (commissionPerMille < 10) {
-            throw;
-        }
-        if (commissionPerMille > 100) {
-            throw;
-        }
-        if (curseIncubationDuration < 5 minutes) {
-            throw;
-        }
-        if (curseIncubationDuration > 999 years) {
+        if (!validateProposedThroneConfig(
+            startingClaimPrice,
+            claimPriceAdjustPerMille,
+            commissionPerMille,
+            curseIncubationDuration
+        )) {
             throw;
         }
 
