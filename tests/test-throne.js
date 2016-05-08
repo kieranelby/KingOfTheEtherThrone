@@ -7,9 +7,11 @@
  * Intended to be run against the testnet via the web3 RPC API (it's a bit expensive on main net!).
  *
  * e.g. might start geth like:
- * geth --testnet --port 31313 --datadir e:/ethereum -rpc -rpcport 8646 -rpcapi "eth,web3,personal" -unlock 0
+ * geth --testnet --port 31313 --datadir e:/ethnode1 -rpc -rpcport 8646 -rpcapi 'eth,web3,personal' --ipcpath '\\.\pipe\geth1.ipc' -unlock 0
+ * or if doing multi-node tests, also start another one:
+ * geth --testnet --port 31314 --datadir e:/ethnode2 -rpc -rpcport 8647 -rpcapi 'eth,web3,personal' --ipcpath '\\.\pipe\geth2.ipc' -unlock 0
  *
- * or using the test.ether.camp test met:
+ * or using the test.ether.camp test net:
  *
  * geth --datadir 'E:\Ethereum\camptest' --networkid 161  --nodiscover --port 32323 \
  *   --port 32323 -verbosity 3 -rpc -rpcport 8646 -rpcapi "eth,web3,personal" \
@@ -26,6 +28,18 @@ var fs = require('fs'); // needing for reading contracts and writing reports
 var DAppTestRunner = require('dapp-test-runner');
 var runner = new DAppTestRunner('King of the Ether Throne');
 
+runner.setMasterAccount({
+  address:  process.env.DTR_MASTER_ACCOUNT,
+  password: process.env.DTR_MASTER_PASSPHRASE
+});
+
+runner.addEtherNode({
+  web3RpcUrl: 'http://localhost:8646'
+});
+runner.addEtherNode({
+  web3RpcUrl: 'http://localhost:8647'
+});
+
 // Wrapper/helper functions for the throne contracts
 var ThroneSupport = require('./throne-support.js');
 var throneSupport = new ThroneSupport();
@@ -37,9 +51,10 @@ var TestThronePayments = require('./test-throne-payments.js');
 var TestThroneMaker = require('./test-throne-maker.js');
 var TestThroneSecurity = require('./test-throne-security.js');
 var TestThronePerformance = require('./test-throne-performance.js');
-var TestThroneConcurrency = require('./test-throne-concurrency.js');
 var TestThroneFuzz = require('./test-throne-fuzz.js');
 var TestThroneInternals = require('./test-throne-internals.js');
+var TestThroneMultiNode = require('./test-throne-multi-node.js');
+var TestThroneUX = require('./test-throne-ux.js');
 
 var subTestModules = [
   new TestThroneCore(),
@@ -47,9 +62,10 @@ var subTestModules = [
   new TestThroneMaker(),
   new TestThroneSecurity(),
   new TestThronePerformance(),
-  new TestThroneConcurrency(),
   new TestThroneFuzz(),
-  new TestThroneInternals()
+  new TestThroneInternals(),
+  new TestThroneMultiNode(),
+  new TestThroneUX()
 ];
 
 // uncomment to debug concurrency problems
@@ -91,6 +107,7 @@ subTestModules.forEach(function (stm) {
 
 //runner.excludeCategory('safe');
 //runner.excludeCategory('broken');
+
 
 // Run the tests.
 runner.run(function (results) {

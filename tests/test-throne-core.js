@@ -37,7 +37,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Claim Throne at Starting Price should Increase Claim Price',
-    categories: ['safe'],
+    categories: ['smoke'],
     steps: [
       function(helper) {
         // given a new throne and one player

@@ -463,7 +463,7 @@ TestThronePayments.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Dead monarchs not compensated and cannot resend',
-    categories: ['payments'],
+    categories: ['payments','safe'],
     steps: [
       function(helper) {
         // given a new throne and two players

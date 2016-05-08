@@ -152,7 +152,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
   
   runner.addTest({
     title: 'Non-wizard cannot transfer wizard-ship',
-    categories: ['security'],
+    categories: ['security', 'safe'],
     steps: [
       function(helper) {
         // given seperate deity, wizard (old and new), and player accounts
