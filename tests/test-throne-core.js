@@ -153,7 +153,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
 
   runner.addTest({
     title: 'Hall of Monarchs after First Claim',
-    categories: ['safe'],
+    categories: ['broken'],
     steps: [
       function(helper) {
         // given a new throne and one player
