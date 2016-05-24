@@ -41,8 +41,8 @@ runner.addEtherNode({
 });
 
 // Wrapper/helper functions for the throne contracts
-var ThroneSupport = require('./throne-support.js');
-var throneSupport = new ThroneSupport();
+var ThroneTestSupport = require('./throne-test-support.js');
+var throneTestSupport = new ThroneTestSupport();
 
 // For ease of maintenance we split out the tests into different files
 // Perhaps we ought to have concept of suites? Or just use multiple runners?
@@ -77,7 +77,7 @@ runner.registerSolidityContracts(throneContractSource);
 
 // Register the tests from our sub-modules.
 subTestModules.forEach(function (stm) {
-  stm.addTests(runner, throneSupport);
+  stm.addTests(runner, throneTestSupport);
 });
 
 // TODO - crikey, there's at least 100 more tests we could write ...

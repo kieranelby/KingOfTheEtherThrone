@@ -8,7 +8,7 @@
 function TestThroneCore() {
 };
 
-TestThroneCore.prototype.addTests = function(runner, throneSupport) {
+TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Can inspect throne config',
@@ -16,13 +16,13 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
       },
       function(helper) {
         // when we ask how the throne is configured
         var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
-        // then we get the properties we asked for in throneSupport.createStandardTestThrone
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
+        // then we get the properties we asked for in throneTestSupport.createStandardTestThrone
         helper.assert.equal(helper.account.master, config.wizardAddress, 'wizardAddress');
         helper.assert.equal(helper.account.master, config.deityAddress, 'deityAddress');
         helper.assert.equal(helper.math.toWei('1','ether'), config.startingClaimPrice, 'startingClaimPrice');
@@ -41,7 +41,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
@@ -68,7 +68,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
@@ -102,7 +102,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1020', 'finney'));
       },
       function(helper) {
@@ -136,7 +136,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
       },
       function(helper) {
         // when we ask how many monarchs there have been
@@ -157,7 +157,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
@@ -182,7 +182,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
         // and when we look in the monarchs array
         // then playerOne is there:
         // (let's not worry about the timestamps here, they're harder to test)
-        var newMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var newMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
         helper.assert.equal(this.playerOneAccount, newMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerOneAccount, newMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerOne', newMonarch.name, 'name');
@@ -199,7 +199,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and two players
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
       },
@@ -234,7 +234,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and two players
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
       },
@@ -273,7 +273,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and two players
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
       },
@@ -317,7 +317,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
       },
@@ -351,7 +351,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
         // and when we look in the monarchs array
         // then playerOne and playerTwo are there with expected properties:
         // (TODO - let's not worry about the timestamps here, they're harder to test)
-        var firstMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
         helper.assert.equal(this.playerOneAccount, firstMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerOne', firstMonarch.name, 'name');
@@ -361,7 +361,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
         // should have got 1500 - 2% commission => 1470
         var expectedCompensation = helper.math.toWei('1470', 'finney');
         helper.assert.equal(expectedCompensation, firstMonarch.compensationPaid, 'compensationPaid');
-        var secondMonarch = throneSupport.decodeMonarchArray(this.throne.monarchs(1), helper.txn.rawWeb3);
+        var secondMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(1), helper.txn.rawWeb3);
         helper.assert.equal(this.playerTwoAccount, secondMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerTwoAccount, secondMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerTwo', secondMonarch.name, 'name');
@@ -378,7 +378,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and one player
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
       },
       function(helper) {
@@ -392,7 +392,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // when we wait until the monarch should have died
         var claimedAt = helper.txn.getLatestBlockTime();
-        var config = throneSupport.decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
         helper.nextStep.needsBlockTime(this.expectDieBy);
       },
@@ -411,7 +411,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and two players (this time player two only needs 1 eth)
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
@@ -426,7 +426,7 @@ TestThroneCore.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // make a note of when player one claimed the throne and how much money they had left
         var claimedAt = helper.txn.getLatestBlockTime();
-        var config = throneSupport.decodeThroneConfig(this.throne.config(), helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
         this.contractBalanceAfterFirstClaim = helper.account.getBalance(this.throne.address);
         this.playerOneBalanceAfterTheyClaimed = helper.account.getBalance(this.playerOneAccount);

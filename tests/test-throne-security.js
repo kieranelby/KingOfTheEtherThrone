@@ -9,7 +9,7 @@ function TestThroneSecurity() {
 };
 
 // TODO - more re-use of steps across tests!
-TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
+TestThroneSecurity.prototype.addTests = function(runner, throneTestSupport) {
 
   // TODO - call functions from address not meant to be allowed to
   // TODO - ask to sweep more comission than allowed
@@ -30,7 +30,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
         this.strangerAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
-        this.throne = throneSupport.createStandardTestThroneExcept(helper, {
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
           deityAddress: this.deityAccount,
           wizardAddress: this.wizardAccount
         });
@@ -96,7 +96,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
         this.strangerAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
-        this.throne = throneSupport.createStandardTestThroneExcept(helper, {
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
           deityAddress: this.deityAccount,
           wizardAddress: this.wizardAccount
         });
@@ -164,15 +164,14 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
       },
       function(helper) {
         // and a throne
-        this.throne = throneSupport.createStandardTestThroneExcept(helper, {
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
           deityAddress: this.deityAccount,
           wizardAddress: this.originalWizardAccount
         });
       },
       function(helper) {
         // double-check pre-conditions first
-        var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         helper.assert.equal(this.originalWizardAccount, config.wizardAddress, 'wizardAddress is what we expect');
       },
       function(helper) {
@@ -181,8 +180,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
       },
       function(helper) {
         // then it doesn't work (or at least, config says it didn't)
-        var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         helper.assert.equal(this.originalWizardAccount, config.wizardAddress, 'wizardAddress unchanged by deity');
       },
       function(helper) {
@@ -191,8 +189,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
       },
       function(helper) {
         // then it doesn't work (or at least, config says it didn't)
-        var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         helper.assert.equal(this.originalWizardAccount, config.wizardAddress, 'wizardAddress unchanged by player');
       },
       function(helper) {
@@ -201,8 +198,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
       },
       function(helper) {
         // then it DOES work
-        var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         helper.assert.equal(this.newWizardAccount, config.wizardAddress, 'wizardAddress changed by wizard');
       },
       function(helper) {
@@ -211,8 +207,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
       },
       function(helper) {
         // according to config
-        var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         helper.assert.equal(this.newWizardAccount, config.wizardAddress, 'wizardAddress not changed by ex-wizard');
       },
       function(helper) {
@@ -221,8 +216,7 @@ TestThroneSecurity.prototype.addTests = function(runner, throneSupport) {
       },
       function(helper) {
         // according to config
-        var configArray = this.throne.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
         helper.assert.equal(this.thirdWizardAccount, config.wizardAddress, 'new wizrd can change wizardAddress');
       }
     ]

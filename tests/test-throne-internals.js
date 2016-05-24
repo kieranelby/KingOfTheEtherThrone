@@ -8,7 +8,7 @@
 function TestThroneInternals() {
 };
 
-TestThroneInternals.prototype.addTests = function(runner, throneSupport) {
+TestThroneInternals.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Name Hashing',

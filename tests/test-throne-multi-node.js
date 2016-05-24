@@ -8,7 +8,7 @@
 function TestThroneMultiNode() {
 };
 
-TestThroneMultiNode.prototype.addTests = function(runner, throneSupport) {
+TestThroneMultiNode.prototype.addTests = function(runner, throneTestSupport) {
 
   // TODO - test what happens if multiple eth nodes claim throne at same time
   runner.addTest({
@@ -18,7 +18,7 @@ TestThroneMultiNode.prototype.addTests = function(runner, throneSupport) {
     steps: [
       function(helper) {
         // given a new throne and two players (one per node)
-        this.throne = throneSupport.createStandardTestThrone(helper);
+        this.throne = throneTestSupport.createStandardTestThrone(helper);
         this.playerOneAccount = helper.account.node1.createWithJustOver(helper.math.toWei('1', 'ether'));
         this.playerTwoAccount = helper.account.node2.createWithJustOver(helper.math.toWei('1', 'ether'));
       },

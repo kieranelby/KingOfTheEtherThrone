@@ -8,7 +8,7 @@
 function TestThroneMaker() {
 };
 
-TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
+TestThroneMaker.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Create bespoke throne via ThroneMaker has expected properties, appears in gazetteer and can be claimed',
@@ -50,7 +50,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
   	    helper.debug.log('throneIndex is ' + this.throneIndex);
   	    this.rawGazetteerEntry = this.throneMaker.gazetteer(this.throneIndex);
   	    helper.debug.log('rawGazetteerEntry is ', this.rawGazetteerEntry);
-        this.gazetteerEntry = throneSupport.decodeGazetteerEntry(this.rawGazetteerEntry, helper.txn.rawWeb3);
+        this.gazetteerEntry = throneTestSupport.decodeGazetteerEntry(this.rawGazetteerEntry, helper.txn.rawWeb3);
   	    helper.debug.log('gazetteerEntry is ', this.gazetteerEntry);
         // and the entry matches what we expect
    	    helper.assert.equal(this.throneName, this.gazetteerEntry.throneName, 'throne name');
@@ -65,8 +65,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
         // and the throne we created has the expected properties
         helper.assert.equal(this.startingClaimPrice, this.myThrone.currentClaimPrice(),
           'expected claim price for newly created throne to match the starting claim price we specified');
-        var configArray = this.myThrone.config();
-        var config = throneSupport.decodeThroneConfig(configArray, helper.txn.rawWeb3);
+        var config = throneTestSupport.decodeThroneConfig(this.myThrone, helper.txn.rawWeb3);
         helper.assert.equal(this.wizardOneAccount, config.wizardAddress, 'wizardAddress');
         helper.assert.equal(helper.account.master, config.deityAddress, 'deityAddress');
         helper.assert.equal(this.claimPriceAdjustPerMille, config.claimPriceAdjustPerMille, 'claimPriceAdjustPerMille');
@@ -271,7 +270,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // then we can find its gazetteer entry
         this.throneOneIndex = this.throneMaker.findThroneCalled(this.throneOneName);
-        this.throneOneGazetteerEntry = throneSupport.decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneOneIndex), helper.txn.rawWeb3);
+        this.throneOneGazetteerEntry = throneTestSupport.decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneOneIndex), helper.txn.rawWeb3);
         // and we can find the throne contract from the gazetteer entry
         this.throneOneAddress = this.throneOneGazetteerEntry.throneContractAddress;
         this.throneOne = helper.txn.getRegisteredContractInstanceAt('KingOfTheEtherThrone', this.throneOneAddress);
@@ -296,7 +295,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneSupport) {
       function(helper) {
         // then we can find its gazetteer entry
         this.throneTwoIndex = this.throneMaker.findThroneCalled(this.throneTwoName);
-        this.throneTwoGazetteerEntry = throneSupport.decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneTwoIndex), helper.txn.rawWeb3);
+        this.throneTwoGazetteerEntry = throneTestSupport.decodeGazetteerEntry(this.throneMaker.gazetteer(this.throneTwoIndex), helper.txn.rawWeb3);
         helper.assert.notEqual(this.throneOneIndex, this.throneTwoIndex, 'not same as throne one');
         // and we can find the throne contract from the gazetteer entry
         this.throneTwoAddress = this.throneTwoGazetteerEntry.throneContractAddress;

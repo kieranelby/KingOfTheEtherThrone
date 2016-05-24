@@ -8,7 +8,7 @@
 function TestThroneUX() {
 };
 
-TestThroneUX.prototype.addTests = function(runner, throneSupport) {
+TestThroneUX.prototype.addTests = function(runner, throneTestSupport) {
 
   // TODO - test that include user experience (e.g. via Mist?)
   

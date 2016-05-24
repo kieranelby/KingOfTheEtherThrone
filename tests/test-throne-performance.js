@@ -8,7 +8,7 @@
 function TestThronePerformance() {
 };
 
-TestThronePerformance.prototype.addTests = function(runner, throneSupport) {
+TestThronePerformance.prototype.addTests = function(runner, throneTestSupport) {
 
   // TODO - test gas usage acceptable
   
