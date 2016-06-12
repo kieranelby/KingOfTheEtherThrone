@@ -36,9 +36,9 @@ runner.setMasterAccount({
 runner.addEtherNode({
   web3RpcUrl: 'http://localhost:8646'
 });
-runner.addEtherNode({
-  web3RpcUrl: 'http://localhost:8647'
-});
+//runner.addEtherNode({
+//  web3RpcUrl: 'http://localhost:8647'
+//});
 
 // Wrapper/helper functions for the throne contracts
 var ThroneTestSupport = require('./throne-test-support.js');
@@ -106,7 +106,7 @@ subTestModules.forEach(function (stm) {
 // Uncomment these to control which tests are run.
 
 //runner.excludeCategory('safe');
-//runner.excludeCategory('multinode');
+runner.excludeCategory('multinode');
 //runner.excludeCategory('broken');
 
 

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>King of the Ether Throne</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <!--
+  variables are:
+  ThroneName - King of the Ether Throne
+  ExampleCurrentClaimPrice - 10 ETHER
+  ExampleNextClaimPrice - 15 ETHER
+  StartingClaimPrice - 500 FINNEY
+  ClaimPriceAdjustPercent - 50%
+  CurseIncubationDuration - 28 days
+  IsLivingMonarch - true/false
+  LastUpdated
+  CurrentMonarch.Name
+  ThroneContractAddress
+  ThroneContractJsonInterface
+  CommissionPercent
+  ThroneCreationPrice
+  -->
+  <style>
+  body {
+    background-color: #FFF7F0;
+  }
+  .content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 3px;
+  }
+  h2 {
+    background-image: url("../kotelogotiny.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding: 0 30px;
+    height: 60px;
+    line-height: 60px;
+  }
+  h3.for-ethereum-wallet {
+    background-image: url("../ethereum-wallet.png");
+    background-size: 24px 24px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+  h3.for-geth {
+    background-image: url("../geth.png");
+    background-size: 24px 24px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+  input.read-only-for-copy {
+    background-color: #e0e0e0;
+  }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="content">
+      
+      <h1>King of the Ether Throne</h1>
+      <p>An Ethereum contract, living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
+
+      <a name="Contents" /><h2>Contents</h2>
+      <ul>
+        <li><a href="#WhatItDo">What's this about?</a></li>
+        <li><a href="#WhoMonarch">Who is the Monarch?</a></li>
+        <li><a href="#GreatHall">Hall of Monarchs</a></li>
+        <li><a href="#HowIRule">I Want to Rule!</a></li>
+        <li><a href="#Neighbours">Neighbouring Kingdoms</a></li>
+        <li><a href="#FAQ">FAQ</a></li>
+        <li><a href="#Disclaimer">Disclaimer</a></li>
+      </ul>
+
+      <a name="WhatItDo" /><h2>What's this about?</h2>
+      <p>The King of the Ether Throne awaits you. It can be yours for a price - here are the contract rules:</p>
+      <ul>
+        <li>Suppose the current throne claim price is 10 ETHER.</li>
+        <li>You like the sound of being the Monarch, so you send 10 ETHER to the contract.</li>
+        <li>This makes you the illustrious new King of the Ether Throne. Your name will be added to the <a href="#GreatHall">Hall of Monarchs</a> in the blockchain.</li>
+        <li>The contract will then send your 10 ETHER (less a small commission) to the previous Monarch you have usurped, as compensation.</li>
+        <li>The claim price for the throne will then go up by 50%, to 15 ETHER.</li>
+        <li>If an usurper comes along who is willing to pay 15 ETHER, she will depose you and become Queen, and you will receive her payment of 15 ETHER as compensation - a tidy profit for you.</li>
+        <li>However, an ancient curse applies to the throne: every Monarch dies once their reign reaches 28 days.
+            No compensation is paid if this happens, and the claim price for the next monarch is reset back to 500 FINNEY.
+            But surely a successor will appear within 28 days, and even if they don&#39;t at least you&#39;ll be immortalised in the blockchain ...</li>
+      </ul>
+
+      <a name="WhoMonarch"/><h2>Who is the Monarch?</h2>
+      
+      <p>The illustrious current King of the Ether Throne is <strong>Fred</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
+      <p>Think you can take their place? Read on for <a href="#HowIRule">How to Rule!</a></p>
+      
+      <h5>(This information was last updated at 2016-09-06 22:08 UTC).</h5>
+     
+      <a name="GreatHall"/><h2>Hall of Monarchs</h2>
+      <p>These are the hallowed former rulers of the King of the Ether Throne, immortalized in the block-chain:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th style="width:20em">Name</th>
+            <th>Claim Price Paid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>kingoftheether.com</td>
+            <td>0.1 ether</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <a name="HowIRule"/><h2>How Can I Rule?</h2>
+      <p>The power of the King of the Ether Throne can be yours for the <strong>current claim price</strong> of just <strong></strong> (as of <span class="timestamp">2016-09-06 22:08 UTC</span>). Here's how:</p>
+      <a name="ClaimBySendWallet"/>
+      <h3 class="for-ethereum-wallet">Claim by Sending Ether using the Ethereum Wallet</h3>
+      <p>Ethereum Wallet users can claim the throne by sending ether to the contract. <button class="js-show-collapsed" data-section-id="claim-by-send-wallet">Show me how ...</button></p>
+      <div id="claim-by-send-wallet" class="js-collapse">
+        <p>Go to the "Send Funds" page of your Ethereum Wallet app and enter the following details:</p>
+        <form>
+        <table>
+          <tr>
+            <th>From</th>
+            <td>
+              We recommend using your 'Etherbase' account to pay the contract.<br>
+              Wallet-contract accounts should work, but you'll need to make sure you have some funds in your 'Etherbase' account to pay for the 'gas' fee.
+            </td>
+          </tr>
+          <tr>
+            <th>To</th>
+            <td>
+              Send funds to the King of the Ether Throne contract at address:<br>
+              <input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="TODO" />
+            </td>
+          </tr>
+          <tr>
+            <th>Amount</th>
+            <td>
+              As of 2016-09-06 22:08 UTC, to claim the throne you will need to send:<br>
+              <input readonly="readonly" class="read-only-for-copy" type="number" name="amount" value="2.25" size="5" /> FINNEY<br>
+              (Don't worry though, if the amount turns out to be too little or too much, the transaction will be cancelled and your funds returned, minus the gas fee).
+            </td>
+          </tr>
+          <tr>
+            <th>Data</th>
+            <td>
+              To make sure everyone knows who is the Monarch, you'll need to include your name using the 'ADD DATA' button.<br>
+              For technical reasons, you'll need to <i>encode</i> your name as data using this converter:<br>
+              Choose Your Royal Name: <input type="text" name="name_text" value="AAAAA" size="32" /> converts to:<br>
+              &rArr; <input readonly="readonly" class="read-only-for-copy" type="text" name="name_data" size="66" value="0x41414141" />
+            </td>
+          </tr>
+          <tr>
+            <th>Fee</th>
+            <td>
+              The Ethereum Wallet should estimate the gas fee for you - you don't need to change anything.<br>
+              You can expect to be charged up to around 200,000 gas, which is worth about 5 FINNEY as of June 2016.
+            </td>
+          </tr>
+        </table>
+        </form>
+        <p>After clicking SEND, a confirmation popup will appear where you will need to enter your password. Check the amount, then click CONFIRM.</p>
+        <p>After you've sent your funds, wait for the transaction to confirm, then reload this page. It may take a few minutes to appear.</p>
+      </div>
+
+      <a name="ClaimByUsingGeth"/>
+      <h3 class="for-geth">Claim using the geth console</h3>
+      <p><b>geth</b> users can claim the throne by sending funds to the contract via the geth console. <button class="js-show-collapsed" data-section-id="claim-by-send-geth">Show me how ...</button></p>
+      <div id="claim-by-send-geth" class="js-collapse">
+        <p>TODO - explain</p>
+      </div>
+
+      <a name="ClaimByInteractWallet"/>
+      <h3 class="for-ethereum-wallet">Claim by Interacting with the King of the Ether Throne Contract in the Ethereum Wallet</h3>
+      <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet, you can watch and interact with the King of the Ether Throne contract to become ruler - this shows off the power of Ethereum best! <button class="js-show-collapsed" data-section-id="claim-by-interact-wallet">Show me how ...</button></p>
+      <div id="claim-by-interact-wallet" class="js-collapse">
+        <p>TODO - explain</p>
+      </div>
+
+      <a name="ClaimByOther"/>
+      <h3>Other ways to claim</h3>
+      <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps. However, be careful - <b>DO NOT</b> send funds from exchange wallets since the compensation payment is likely to go to the exchange, not to you!</p>
+      <p>We hope in future to bring back our �App user inteface - we're wating for the Ethereum Mist browser to mature a little more.</p>
+      <p>Whichever way you claim, make sure your read our <a href="#Disclaimer">Disclaimer</a> first.</p>
+      
+      <a name="Neighbours"/><h2>Neighbouring Kingdoms</h2>
+      <p>Price of the King of the Ether Throne too high? Want a Kingdom with fewer uppity peasants?</p>
+      <p>For just 1 ETHER (plus a little gas money) you can start your own alternative Kingdom where you make the rules, you get a 50&#37; share of the commission, and you get your own web page just like this one.</p>
+      <p>Interested? See <a href="../throne-maker.html">How to start your own Kingdom</a>.</p>
+
+      <a name="FAQ"><h2>FAQ</h2>
+      <h3>Where does the source code for the contract live?</h3>
+      <p><a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/master/contracts/KingOfTheEtherThrone.sol">github.com - KingOfTheEtherThrone.sol</a></p>
+      <h3>What's the address of the contract?</h3>
+      <p>The contract for King of the Ether Throne is located at TODO.</p>
+      <p>Its Contract JSON Interface is: <pre>TODO</pre></p>
+      <p>You can watch it on <a href="">a chain explorer</a> if you like.</p>
+      <h3>How much is the commission charge?</h3>
+      <p>2%. This is shared equally between the deity (the original creator of the first contract) and the wizard (the creator of the individual throne).</p>
+      <h3>Haven&#39;t I seen something like this before?</h3>
+      <p>Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemed to involve owning a magnificent gem or a special coin).</p>
+      <p>The difference with Ethereum is that you don&#39;t have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.</p>
+      <p>This contract was somewhat inspired by <a href="http://ethereumpyramid.com/">ethereumpyramid.com</a> (to which this contract is in no way affiliated or connected).</p>
+      <p>You might also be thinking of one of our <a href="#Neighbours">Neighbouring Kingdoms</a>.</p>
+      <h3>Is this the first version of this contract? Or have there been other throne contracts?</h3>
+      <p>This is the third version of the contract. <a href="/history.html">Learn more about the past ages</a> (including celebrity rulers!).</p>
+      <h3>I think something went wrong. Can I have my money back?</h3>
+      <p>Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So refunds are - regrettably - both impossible and unethical.</p>
+
+      <a name="Disclaimer"/><h2>Disclaimer</h2>
+      <p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun.</p>
+      <p>If you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
+      <p>Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract or list your name.</p>
+      <p>Under no circumstances will refunds or compensation be paid even if the contract steals all your money and/or shoots your dog. The author disclaims all liability for the operation of the contract which should be considered its own autonomous legal entity as far as permitted by law - it is your responsiblity to study its likely behaviour before interacting with it, including taking into account that the actual behaviour of the compiled EVM bytecode in a real eth/geth note may differ from the assumed behaviour based on the solidity source code.</p>
+      <p>By interacting with the contract you agree to accept the conditions in this section as well as those listed at <a href="https://www.ethereum.org/agreement">ethereum.org/agreement</a>.</p>
+
+    </div>
+  </div>
+  <script type="text/javascript">
+  <!--
+  // -->
+  </script>
+</body>
+</html>

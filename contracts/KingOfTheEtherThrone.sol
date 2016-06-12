@@ -3,6 +3,7 @@
 // (c) Kieran Elby 2016. All rights reserved.
 // v0.9.0.
 // Inspired by ethereumpyramid.com and the (now-gone?) "magnificent bitcoin gem".
+// TODO - doc comments, nicer return names, clarity on units
 
 
 // We don't actually create this contract - it just has some shared functions
@@ -68,7 +69,7 @@ contract MoneyRounder {
 // supplied by end-users is visible to other end-users).
 contract NameValidator {
 
-    function isSafePunctuation(byte b) returns (bool safe) {
+    function isSafePunctuation(byte b) constant internal returns (bool safe) {
         // ASCII codes for - _ . ' ! ( )
         // (Yes, single-quote is a little dangerous but that's why we escape stuff)
         if (b == 45 || b == 95 || b == 46 || b == 39 || b == 33 || b == 40 || b == 41) {
@@ -493,7 +494,7 @@ contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
         FailedCompensationPaymentVoided(monarchNumber, compensation);
     }
 
-    // Used only by the wizard to collect his commission.
+    // Used only by the wizard to collect their commission.
     function sweepWizardCommission(uint256 amount) onlywizard {
         if (amount > wizardBalance) {
             throw;
@@ -544,6 +545,18 @@ contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
     function switchDeity(address newDeity) onlydeity {
         config.deityAddress = newDeity;
         DeitySwitched(newDeity);
+    }
+
+    // Avoid wasting gas on invalid names.
+    function validateProposedMonarchName(
+        bytes   monarchName
+    ) constant returns (bool good) {
+
+        if (!validateName(monarchName)) {
+            return false;
+        }
+
+        return true;        
     }
 
 }

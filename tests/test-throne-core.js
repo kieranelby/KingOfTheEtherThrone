@@ -182,13 +182,13 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // and when we look in the monarchs array
         // then playerOne is there:
         // (let's not worry about the timestamps here, they're harder to test)
-        var newMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var newMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         helper.assert.equal(this.playerOneAccount, newMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerOneAccount, newMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerOne', newMonarch.name, 'name');
         helper.assert.equal(this.originalClaimPrice, newMonarch.claimPrice, 'claimPrice');
         helper.assert.equal(0, newMonarch.compensationStatus, 'compensationStatus');
-        helper.assert.equal(0, newMonarch.compensationPaid, 'compensationPaid');
+        helper.assert.equal(0, newMonarch.compensationAmount, 'compensationAmount');
       }
     ]
   });
@@ -351,7 +351,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // and when we look in the monarchs array
         // then playerOne and playerTwo are there with expected properties:
         // (TODO - let's not worry about the timestamps here, they're harder to test)
-        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         helper.assert.equal(this.playerOneAccount, firstMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerOne', firstMonarch.name, 'name');
@@ -360,14 +360,14 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         helper.assert.equal(goodPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
         // should have got 1500 - 2% commission => 1470
         var expectedCompensation = helper.math.toWei('1470', 'finney');
-        helper.assert.equal(expectedCompensation, firstMonarch.compensationPaid, 'compensationPaid');
-        var secondMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(1), helper.txn.rawWeb3);
+        helper.assert.equal(expectedCompensation, firstMonarch.compensationAmount, 'compensationAmount');
+        var secondMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 1);
         helper.assert.equal(this.playerTwoAccount, secondMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerTwoAccount, secondMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerTwo', secondMonarch.name, 'name');
         helper.assert.equal(this.secondClaimPrice, secondMonarch.claimPrice, 'claimPrice');
         helper.assert.equal(0, secondMonarch.compensationStatus, 'compensationStatus');
-        helper.assert.equal(0, secondMonarch.compensationPaid, 'compensationPaid');
+        helper.assert.equal(0, secondMonarch.compensationAmount, 'compensationAmount');
       }
     ]
   });

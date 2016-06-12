@@ -5,6 +5,7 @@
   "license": "proprietary",
   "scripts": {
     "build-public": "node ./bin/build-public.js",
+    "experimental": "node ./bin/experimental.js",
     "test": "node tests/test-throne.js",
     "lint": "jshint tests"
   },

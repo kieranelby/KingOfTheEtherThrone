@@ -11,9 +11,9 @@ function ThroneTestSupport() {
 }
 
 // TODO - too low level, should just be getMonarch(throne, web3, monarchNumber) or similar
-ThroneTestSupport.prototype.decodeMonarchArray = function(monarchArray, web3) {
-  var thronePropertiesFacade = new ThronePropertiesFacade(null, web3);
-  return thronePropertiesFacade.decodeMonarchArray(monarchArray);
+ThroneTestSupport.prototype.getMonarch = function(throne, web3, monarchIndex) {
+  var thronePropertiesFacade = new ThronePropertiesFacade(throne, web3);
+  return thronePropertiesFacade.getMonarch(monarchIndex);
 };
 
 // TODO - rename to getThroneConfig

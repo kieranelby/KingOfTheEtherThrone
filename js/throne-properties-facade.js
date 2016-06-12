@@ -25,23 +25,40 @@ ThronePropertiesFacade.prototype.getConfig = function() {
 };
 
 ThronePropertiesFacade.prototype.getCurrentClaimPrice = function() {
-  // TODO
+  return this.throne.currentClaimPrice();
 };
 
 ThronePropertiesFacade.prototype.isLivingMonarch = function() {
-  // TODO
+  return this.throne.isLivingMonarch();
 };
 
 ThronePropertiesFacade.prototype.getMostRecentMonarch = function() {
-  // TODO
+  var numMonarchs = this.getNumberOfMonarchs();
+  if (numMonarchs == 0) {
+    return null;
+  } else {
+    return this.getMonarch(numMonarchs - 1);
+  }
+};
+
+ThronePropertiesFacade.prototype.getNumberOfMonarchs = function() {
+  return this.throne.numberOfMonarchs();
 };
 
 ThronePropertiesFacade.prototype.getMonarchs = function() {
-  // TODO
+  var monarchs = [];
+  for (var i = 0; i < this.getNumberOfMonarchs(); i++) {
+    monarchs.push(this.getMonarch(i));
+  }
+  return monarchs;
+};
+
+ThronePropertiesFacade.prototype.getMonarch = function(monarchIndex) {
+  return this._decodeMonarchArray(this.throne.monarchs(monarchIndex));
 };
 
 // TODO - this is too low-level
-ThronePropertiesFacade.prototype.decodeMonarchArray = function(monarchArray) {
+ThronePropertiesFacade.prototype._decodeMonarchArray = function(monarchArray) {
   return {
     compensationAddress:        monarchArray[0],
     originAddress:              monarchArray[1],
@@ -50,7 +67,7 @@ ThronePropertiesFacade.prototype.decodeMonarchArray = function(monarchArray) {
     coronationTimestamp:        monarchArray[4],
     compensationStatus:         monarchArray[5],
     compensationTimestamp:      monarchArray[6],
-    compensationPaid:           monarchArray[7] // TODO - rename to compensationAmount
+    compensationAmount:         monarchArray[7]
   };
 };
 

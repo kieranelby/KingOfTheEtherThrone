@@ -146,12 +146,12 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
           'only wallet balance should change');
         // and when we look in the hall of thrones then they are marked as compensated
         // note the origin vs the compensation address
-        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         helper.assert.equal(this.playerOneWallet.address, firstMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
         var goodPaymentStatusCode = 1;
         helper.assert.equal(goodPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
-        helper.assert.equal(helper.math.toWei('1.47','ether'), firstMonarch.compensationPaid, 'compensationPaid');
+        helper.assert.equal(helper.math.toWei('1.47','ether'), firstMonarch.compensationAmount, 'compensationAmount');
       }
     ]
   });
@@ -221,13 +221,13 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
           'non-wallet balance should not change either');
         // and when we look in the hall of thrones then they are marked as not compensated
         // note the origin vs the compensation address
-        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         helper.assert.equal(this.playerOneWallet.address, firstMonarch.compensationAddress, 'compensationAddress');
         helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
         var failedPaymentStatusCode = 2;
         helper.assert.equal(failedPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
         // this is rather misleading, it's really compensation that should have been paid:
-        helper.assert.equal(helper.math.toWei('1.47','ether'), firstMonarch.compensationPaid, 'compensationPaid');
+        helper.assert.equal(helper.math.toWei('1.47','ether'), firstMonarch.compensationAmount, 'compensationAmount');
         // and the wizard/deity can't touch the money
         helper.assert.equal(helper.math.toWei('0.515','ether'), this.throne.wizardBalance(), 'wizardBalance');
         helper.assert.equal(helper.math.toWei('0.515','ether'), this.throne.deityBalance(), 'deityBalance');
@@ -263,7 +263,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
         helper.assert.equal(helper.math.toWei('1.47','ether'), helper.account.getBalance(this.playerOneWallet.address),
           'expected player one wallet to receive the compensation payment');
         // and when we look in the hall of thrones then they are marked as compensated
-        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var goodPaymentStatusCode = 1;
         helper.assert.equal(goodPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
       }
@@ -287,7 +287,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
         helper.assert.equal(helper.math.toWei('0.0','ether'), helper.account.getBalance(this.playerOneWallet.address),
           'expected player one wallet to receive the compensation payment');
         // and when we look in the hall of thrones then they are still marked as not compensated
-        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var failedPaymentStatusCode = 2;
         helper.assert.equal(failedPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
         // and the failed-payment is still ring-fenced
@@ -319,7 +319,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
           'expected player one wallet to receive the compensation payment');
         // and when we look in the hall of thrones then they are marked as compensated
         // note the origin vs the compensation address
-        var firstMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var goodPaymentStatusCode = 1;
         helper.assert.equal(goodPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
       },
@@ -350,7 +350,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
         helper.assert.equal(helper.math.toWei('2.5','ether'), helper.account.getBalance(this.throne.address), 'throneBalance pre-condition');
         // if the wizard asks for the failed payment to be voided immediately
         this.throneConfig = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        this.firstMonarchBeforeVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchBeforeVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var monarchNumber = 0;
         this.throne.voidFailedPayment(monarchNumber, {
           from: this.throneConfig.wizardAddress,
@@ -359,7 +359,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then nothing happens
-        this.firstMonarchAfterVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchAfterVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationStatus, this.firstMonarchAfterVoidAttempt.compensationStatus, 'compensationStatus');
         helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationTimestamp, this.firstMonarchAfterVoidAttempt.compensationTimestamp, 'compensationTimestamp');
         helper.assert.equal(helper.math.toWei('0.515','ether'), this.throne.wizardBalance(), 'wizardBalance unchanged');
@@ -384,7 +384,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // if the wizard now asks for the failed payment to be voided
-        this.firstMonarchBeforeVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchBeforeVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var monarchNumber = 0;
         this.throne.voidFailedPayment(monarchNumber, {
           from: this.throneConfig.wizardAddress,
@@ -393,7 +393,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then this is recorded and the money is made available to the wizard and the deity
-        this.firstMonarchAfterVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchAfterVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);;
         var voidedPaymentStatusCode = 3;
         helper.assert.equal(voidedPaymentStatusCode, this.firstMonarchAfterVoidAttempt.compensationStatus, 'compensationStatus');
         helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationTimestamp, this.firstMonarchAfterVoidAttempt.compensationTimestamp, 'compensationTimestamp remains as time of first attempt');
@@ -419,7 +419,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // if the wizard now asks for the failed payment to be voided
-        this.firstMonarchBeforeVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchBeforeVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var monarchNumber = 0;
         this.throne.voidFailedPayment(monarchNumber, {
           from: this.throneConfig.wizardAddress,
@@ -428,7 +428,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then this is recorded and the money is made available to the wizard and the deity
-        this.firstMonarchAfterVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchAfterVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var voidedPaymentStatusCode = 3;
         helper.assert.equal(voidedPaymentStatusCode, this.firstMonarchAfterVoidAttempt.compensationStatus, 'compensationStatus');
         helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationTimestamp, this.firstMonarchAfterVoidAttempt.compensationTimestamp, 'compensationTimestamp remains as time of first attempt');
@@ -438,7 +438,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // but if the wizard now asks for the failed payment to be voided again
-        this.firstMonarchBeforeVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchBeforeVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var monarchNumber = 0;
         this.throne.voidFailedPayment(monarchNumber, {
           from: this.throneConfig.wizardAddress,
@@ -447,7 +447,7 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then that doesn't work, though it does stay voided
-        this.firstMonarchAfterSecondVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchAfterSecondVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var voidedPaymentStatusCode = 3;
         helper.assert.equal(voidedPaymentStatusCode, this.firstMonarchAfterSecondVoidAttempt.compensationStatus, 'compensationStatus');
         helper.assert.equal(this.firstMonarchBeforeVoidAttempt.compensationTimestamp, this.firstMonarchAfterSecondVoidAttempt.compensationTimestamp, 'compensationTimestamp still unchanged');
@@ -505,12 +505,12 @@ TestThronePayments.prototype.addTests = function(runner, throneTestSupport) {
         this.contractBalanceAfterSecondClaim = contractBalanceNow;
         // and the compensation status is "n/a"
         var notApplicablePaymentStatusCode = 0;
-        this.deadMonarch = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.deadMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         helper.assert.equal(notApplicablePaymentStatusCode, this.deadMonarch.compensationStatus, 'compensationStatus');
       },
       function (helper) {
         // and resending the never sent payment
-        this.firstMonarchBeforeVoidAttempt = throneTestSupport.decodeMonarchArray(this.throne.monarchs(0), helper.txn.rawWeb3);
+        this.firstMonarchBeforeVoidAttempt = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
         var monarchNumber = 0;
         this.throne.resendFailedPayment(monarchNumber, {
           from: this.playerOneAccount,
