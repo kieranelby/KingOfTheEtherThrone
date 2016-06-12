@@ -1,0 +1,42 @@
+---
+# This role ...
+
+- name: ensure geth binary release downloaded
+  get_url:   dest=/root/geth-release.tar.bz2
+             url=https://github.com/ethereum/go-ethereum/releases/download/v1.4.6/geth-Linux64-20160606174600-1.4.6-0f036f6.tar.bz2
+
+- name: ensure geth binary release directory exists
+  file:      path=/root/geth-release-files
+             state=directory
+             owner=root group=root
+
+- name: ensure geth binary release unpacked
+  unarchive: dest=/root/geth-release-files
+             src=/root/geth-release.tar.bz2
+             owner=root group=root
+             copy=no
+
+- name: ensure geth binary from the unpacked release copied to /usr/bin
+  copy:      remote_src=True
+             dest=/usr/bin/geth
+             src=/root/geth-release-files/geth
+             mode=755 owner=root group=root
+
+- name: ensure geth user exists
+  user:      name=geth
+
+- name: ensure geth service definition exists
+  copy:      dest=/etc/systemd/system/geth.service
+             src=roles/ethserver/files/geth.service
+             mode=644 owner=root group=root
+  register:  gethservicedefinition
+
+- name: ensure systemd is reloaded if geth.service has changed
+  command:   systemctl daemon-reload
+  when:      gethservicedefinition.changed
+
+  # TODO - how about chaindata?
+  
+- name: ensure geth is restarted
+  # TODO - perhaps we should restart if we downloaded a new version or changed the service definition?
+  service:   name=geth state=restarted

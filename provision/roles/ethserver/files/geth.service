@@ -1,0 +1,11 @@
+[Unit]
+Description=Geth Ethereum Node
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/geth --maxpeers 25 --cache 128
+User=geth
+
+[Install]
+WantedBy=multi-user.target
