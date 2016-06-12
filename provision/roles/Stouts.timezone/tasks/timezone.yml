@@ -1,0 +1,35 @@
+---
+
+- name: Make sure tzdata is installed (Debian)
+  apt: name=tzdata
+  when: ansible_os_family == 'Debian'
+
+- name: Make sure tzdata is installed (RedHat)
+  yum: name=tzdata
+  when: ansible_os_family == 'RedHat'
+
+- name: Check for a zoneinfo file
+  stat: path=/usr/share/zoneinfo/{{timezone_timezone}}
+  register: zoneinfo
+
+- name: Alert if zoneinfo is not there.
+  fail: msg="{{timezone_timezone}} is not valid (/usr/share/zoneinfo/{{timezone_timezone}} does not exist)"
+  when: not (zoneinfo.stat.exists is defined and zoneinfo.stat.exists)
+
+- name: Symlink the correct localtime (/etc/localtime)
+  file:
+    src: /usr/share/zoneinfo/{{timezone_timezone}}
+    dest: /etc/localtime
+    force: yes
+    state: link
+    owner: root
+    group: root
+    mode: 0644
+  when: zoneinfo.stat.exists is defined and zoneinfo.stat.exists
+  register: timezone_linked
+
+- name: Set timezone
+  template: dest=/etc/timezone src=timezone.j2
+  notify: timezone deb_update
+  notify: restart dependent services
+  when: ansible_os_family == 'Debian' and zoneinfo.stat.exists is defined and zoneinfo.stat.exists

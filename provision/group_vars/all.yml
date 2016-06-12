@@ -1,0 +1,5 @@
+---
+# Variables listed here are applicable to all host groups
+
+timezone_enabled: yes
+timezone_timezone: UTC

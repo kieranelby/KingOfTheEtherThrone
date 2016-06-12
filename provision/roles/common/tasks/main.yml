@@ -1,0 +1,10 @@
+---
+# This role ensures the basics are in place on all our servers.
+
+# Seem to run into some problems with apt otherwise?
+- name: ensure python-pycurl installed
+  apt: pkg=python-pycurl state=present
+
+# Useful.
+- name: ensure unzip installed
+  apt: pkg=unzip state=present

@@ -1,0 +1,21 @@
+---
+# This role ...
+
+- name: ensure geth binary release downloaded
+  get_url:   dest=/root/geth-release.tar.bz2
+             url=https://github.com/ethereum/go-ethereum/releases/download/v1.4.6/geth-Linux64-20160606174600-1.4.6-0f036f6.tar.bz2
+
+- name: ensure geth binary release directory exists
+  file:      path=/root/geth-release-files
+             state=directory
+             owner=root group=root
+
+- name: ensure geth binary release unpacked
+  unarchive: dest=/root/geth-release-files
+             src=/root/geth-release.tar.bz2
+             copy=no
+
+- name: ensure geth binary release unpacked copied to /usr/bin
+  copy:      remote_src=True
+             dest=/usr/bin/geth
+             src=/root/geth-release-files/geth

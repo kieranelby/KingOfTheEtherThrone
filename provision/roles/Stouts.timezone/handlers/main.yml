@@ -1,0 +1,8 @@
+---
+
+- name: timezone deb_update
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: restart dependent services
+  service: name={{ item }} state=restarted
+  with_items: timezone_dependent_services

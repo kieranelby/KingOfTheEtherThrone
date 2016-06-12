@@ -1,0 +1,34 @@
+---
+# This playbook deploys the entire kingoftheether.com stack.
+# Run with e.g. ansible-playbook -i hosts -vvv site.yml
+# It assumes that:
+#   - the hosts are dedicated to kingoftheether.com
+#   - the hosts are running Ubuntu 16.04 (with python installed)
+#     (e.g. apt-get install python)
+#   - ansible can connect as root
+#     (e.g. ssh-copy-id root@<hosts> run first)
+#   - ansible 2.1 installed locally
+
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+  roles:
+    - common
+
+- name: configure and deploy the ethereum node servers
+  hosts: ethservers
+  remote_user: root
+  roles:
+    - ethserver
+
+- name: configure and deploy the site-generator servers
+  hosts: genservers
+  remote_user: root
+  roles:
+    - genserver
+
+- name: configure and deploy the static webservers
+  hosts: webservers
+  remote_user: root
+  roles:
+    - webserver
