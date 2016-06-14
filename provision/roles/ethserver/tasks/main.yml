@@ -1,5 +1,5 @@
 ---
-# This role ...
+# This carries out tasks needed to get an Ethereum node running.
 
 - name: ensure geth binary release downloaded
   get_url:   dest=/root/geth-release.tar.bz2
@@ -38,5 +38,5 @@
   # TODO - how about chaindata?
   
 - name: ensure geth is restarted
-  # TODO - perhaps we should restart if we downloaded a new version or changed the service definition?
+  # TODO - perhaps we should only restart if we downloaded a new version or changed the service definition?
   service:   name=geth state=restarted

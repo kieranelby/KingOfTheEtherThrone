@@ -1,0 +1,34 @@
+---
+# This carries out tasks needed to get a webserver running.
+
+- name: Make sure nginx is installed
+  apt:        name=nginx
+
+- name: Make sure nginx is configured with a sensible server_names_hash_bucket_size
+  # TODO - this is a bit yucky, perhaps we should just avoid using the debian one?
+  lineinfile: dest=/etc/nginx/nginx.conf
+              line="        server_names_hash_bucket_size 64;"
+              regexp=server_names_hash_bucket_size
+              state=present
+
+- name: Make sure nginx site config for kingoftheether is available
+  copy:       dest=/etc/nginx/sites-available/kingoftheether
+              src=roles/webserver/files/kingoftheether
+              mode=644 owner=root group=root
+
+- name: Make sure nginx site config for kingoftheether is enabled
+  file:       dest=/etc/nginx/sites-enabled/kingoftheether
+              src=/etc/nginx/sites-available/kingoftheether
+              state=link owner=root group=root
+
+- name: Make sure nginx site config for debian default is disabled
+  file:       path=/etc/nginx/sites-enabled/default
+              state=absent
+
+- name: Make sure site content directory for kingoftheether is present
+  file:       path=/var/www/kingoftheether
+              state=directory owner=www-data group=www-data
+
+- name: ensure nginx is restarted
+  # TODO - perhaps we should only restart if something changed? and if we've tested the config?
+  service:    name=nginx state=restarted

@@ -30,6 +30,7 @@
 
 - name: Set timezone
   template: dest=/etc/timezone src=timezone.j2
-  notify: timezone deb_update
-  notify: restart dependent services
+  notify:
+    - timezone deb_update
+    - restart dependent services
   when: ansible_os_family == 'Debian' and zoneinfo.stat.exists is defined and zoneinfo.stat.exists

@@ -1,0 +1,45 @@
+
+server {
+    # drop requests without a host header
+    listen 80 default_server;
+    server_name "";
+    return 444;
+}
+
+server {
+    # want www.kingoftheether.com as canonical name
+    listen 80;
+    server_name kingoftheether.com;
+    return 301 $scheme://www.kingoftheether.com$request_uri;
+}
+
+server {
+    # want www.preprod.internal.kingoftheether.com as canonical name
+    listen 80;
+    server_name preprod.internal.kingoftheether.com;
+    return 301 $scheme://www.preprod.internal.kingoftheether.com$request_uri;
+}
+
+server {
+    listen 80;
+    # preprod name quite long - need 'server_names_hash_bucket_size 64' in http section of main config
+    server_name www.kingoftheether.com www.preprod.internal.kingoftheether.com;
+
+    root /var/www/kingoftheether;
+    index index.html index.htm;
+
+    # index of the root is special - take user to the default throne
+    location = / {
+        index /thrones/kingoftheether/index.html;
+    }
+
+    location / {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to displaying a 404.
+        try_files $uri $uri/ =404;
+    }
+
+    # TODO - what about 403?
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+}

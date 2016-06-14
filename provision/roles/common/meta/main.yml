@@ -2,4 +2,5 @@
 # This specifies the other roles needed before the common role.
 
 dependencies:
+  - { role: basics }
   - { role: Stouts.timezone }
