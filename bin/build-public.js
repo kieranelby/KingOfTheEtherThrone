@@ -1,4 +1,5 @@
 // Script to rebuild the public static content on github/website.
+// TODO - replace with chain-to-data and data-to-website
 
 var fs = require('fs');
 var nunjucks = require('nunjucks');

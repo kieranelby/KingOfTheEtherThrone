@@ -2,13 +2,13 @@
 'use strict';
 
 /*
- * TODO - document
+ * TODO - document, bring up-to-date
 */
 
-function TestThroneMaker() {
-};
+function TestWorld() {
+}
 
-TestThroneMaker.prototype.addTests = function(runner, throneTestSupport) {
+TestWorld.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Create bespoke throne via ThroneMaker has expected properties, appears in gazetteer and can be claimed',
@@ -428,7 +428,7 @@ TestThroneMaker.prototype.addTests = function(runner, throneTestSupport) {
       function(helper) {
         helper.assert.equal(true, this.throneMaker.validateProposedThroneName('bob'), 'short but sweet');
         helper.assert.equal(false, this.throneMaker.validateProposedThroneName(''), 'cannot have empty name');
-        helper.assert.equal(false, this.throneMaker.validateProposedThroneName('!"£$%^&*'), 'cannot have name with unusual chars');
+        helper.assert.equal(false, this.throneMaker.validateProposedThroneName('!"$%^&*'), 'cannot have name with unusual chars');
         // startingClaimPrice, claimPriceAdjustPerMille, commissionPerMille, curseIncubationDuration
         helper.assert.equal(true, this.throneMaker.validateProposedThroneConfig(
           helper.math.toWei('0.2','ether'),
@@ -460,4 +460,4 @@ TestThroneMaker.prototype.addTests = function(runner, throneTestSupport) {
   
 };
 
-exports = module.exports = TestThroneMaker;
+exports = module.exports = TestWorld;

@@ -6,7 +6,7 @@
 */
 
 function TestThronePerformance() {
-};
+}
 
 TestThronePerformance.prototype.addTests = function(runner, throneTestSupport) {
 

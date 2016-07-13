@@ -2,34 +2,32 @@
 'use strict';
 
 /*
- * TODO - document
+ * Simple tests for the core throne functionality.
 */
 
 function TestThroneCore() {
-};
+}
 
 TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
-    title: 'Can inspect throne config',
-    categories: ['safe'],
+    title: 'Can inspect throne rules',
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
         this.throne = throneTestSupport.createStandardTestThrone(helper);
       },
       function(helper) {
-        // when we ask how the throne is configured
-        var configArray = this.throne.config();
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
+        // when we ask for the throne rules
+        var rules = throneTestSupport.decodeThroneRules(this.throne, helper.txn.rawWeb3);
         // then we get the properties we asked for in throneTestSupport.createStandardTestThrone
-        helper.assert.equal(helper.account.master, config.wizardAddress, 'wizardAddress');
-        helper.assert.equal(helper.account.master, config.deityAddress, 'deityAddress');
-        helper.assert.equal(helper.math.toWei('1','ether'), config.startingClaimPrice, 'startingClaimPrice');
-        helper.assert.equal(500, config.claimPriceAdjustPerMille, 'claimPriceAdjustPerMille');
-        helper.assert.equal(20, config.commissionPerMille, 'commissionPerMille');
-        helper.assert.equal(180, config.curseIncubationDuration, 'curseIncubationDuration');
-        helper.assert.equal(240, config.failedPaymentRingfenceDuration,'failedPaymentRingfenceDuration');
+        // TODO helper.assert.equal(helper.account.master, config.wizardAddress, 'wizardAddress');
+        // TODO helper.assert.equal(helper.account.master, config.deityAddress, 'deityAddress');
+        helper.assert.equal(helper.math.toWei('1','ether'), rules.startingClaimPrice, 'startingClaimPrice');
+        helper.assert.equal(50, rules.claimPriceAdjustPercent, 'claimPriceAdjustPercent');
+        helper.assert.equal(20, rules.commissionPerThousand, 'commissionPerThousand');
+        helper.assert.equal(180, rules.curseIncubationDurationSeconds, 'curseIncubationDurationSeconds');
       }
     ]
   });
@@ -37,7 +35,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Claim Throne at Starting Price should Increase Claim Price',
-    categories: ['smoke'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
@@ -46,7 +44,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // when the player pays the exact claim price (which should be 1 ether)
-        var originalClaimPrice = this.throne.currentClaimPrice();
+        var originalClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('1','ether'), originalClaimPrice, 'starting claim price');
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
@@ -56,7 +54,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then the claim price increases
-        var newClaimPrice = this.throne.currentClaimPrice();
+        var newClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('1.5','ether'), newClaimPrice, 'expected new claim price to increase by 50%');
       }
     ]
@@ -64,7 +62,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Claim Throne below Starting Price should not Increase Claim Price but should refund',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
@@ -73,7 +71,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // when the player tries to claim the throne but with slightly too little ether
-        this.originalClaimPrice = this.throne.currentClaimPrice();
+        this.originalClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('1','ether'), this.originalClaimPrice, 'starting claim price');
         this.originalPlayerOneBalance = helper.account.getBalance(this.playerOneAccount);
         this.throne.claimThrone('playerOne', {
@@ -84,7 +82,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then the claim price does not increase and the player gets their money back (less gas)
-        var newClaimPrice = this.throne.currentClaimPrice();
+        var newClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(this.originalClaimPrice, newClaimPrice, 'expected claim price to stay the same');
         var newPlayerOneBalance = helper.account.getBalance(this.playerOneAccount);
         helper.math.assertLessThan(newPlayerOneBalance, this.originalPlayerOneBalance,
@@ -98,7 +96,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Claim Throne above Starting Price should not Increase Claim Price but should refund',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
@@ -107,7 +105,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // when the player tries to claim the throne but with slightly too much ether
-        this.originalClaimPrice = this.throne.currentClaimPrice();
+        this.originalClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('1','ether'), this.originalClaimPrice, 'starting claim price');
         this.originalPlayerOneBalance = helper.account.getBalance(this.playerOneAccount);
         this.throne.claimThrone('playerOne', {
@@ -118,7 +116,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // then the claim price does not increase and the player gets their money back (less gas)
-        var newClaimPrice = this.throne.currentClaimPrice();
+        var newClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(this.originalClaimPrice, newClaimPrice, 'expected claim price to stay the same');
         var newPlayerOneBalance = helper.account.getBalance(this.playerOneAccount);
         helper.math.assertLessThan(newPlayerOneBalance, this.originalPlayerOneBalance,
@@ -132,7 +130,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Hall of Monarchs before Throne Ever Claimed',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne
@@ -153,7 +151,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Hall of Monarchs after First Claim',
-    categories: ['broken'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
@@ -162,7 +160,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // when the player correctly claims the throne
-        this.originalClaimPrice = this.throne.currentClaimPrice();
+        this.originalClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('1','ether'), this.originalClaimPrice, 'starting claim price');
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
@@ -182,20 +180,18 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // and when we look in the monarchs array
         // then playerOne is there:
         // (let's not worry about the timestamps here, they're harder to test)
-        var newMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
+        var newMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 1);
         helper.assert.equal(this.playerOneAccount, newMonarch.compensationAddress, 'compensationAddress');
-        helper.assert.equal(this.playerOneAccount, newMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerOne', newMonarch.name, 'name');
-        helper.assert.equal(this.originalClaimPrice, newMonarch.claimPrice, 'claimPrice');
-        helper.assert.equal(0, newMonarch.compensationStatus, 'compensationStatus');
-        helper.assert.equal(0, newMonarch.compensationAmount, 'compensationAmount');
+        helper.assert.equal(this.originalClaimPrice, newMonarch.claimPriceWei, 'claimPriceWei');
+        helper.assert.equal(0, newMonarch.compensationWei, 'compensationWei');
       }
     ]
   });
 
   runner.addTest({
     title: 'Claim Throne for Second Time should Increase Claim Price Again',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and two players
@@ -207,7 +203,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // given that the first player claimed the throne at the claim price the contract says
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
-          value: this.throne.currentClaimPrice(),
+          value: this.throne.currentClaimPriceWei(),
           gas: 500000
         });
       },
@@ -215,13 +211,13 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // and given that the second player claimed the throne at the claim price the contract says
         this.throne.claimThrone('playerTwo', {
           from: this.playerTwoAccount,
-          value: this.throne.currentClaimPrice(),
+          value: this.throne.currentClaimPriceWei(),
           gas: 500000
         });
       },
       function(helper) {
         // then the claim price increases
-        var newClaimPrice = this.throne.currentClaimPrice();
+        var newClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('2250','finney'), newClaimPrice,
           'expected new claim price to increase again by 50%');
       }
@@ -230,7 +226,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Claim Throne for Second Time should pay Compensation to First Player',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and two players
@@ -242,7 +238,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // given that the first player claimed the throne at starting price according to the contract
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
-          value: this.throne.currentClaimPrice(),
+          value: this.throne.currentClaimPriceWei(),
           gas: 500000
         });
       },
@@ -251,7 +247,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // when the second player claims the throne at the new claim price according to the contract
         this.throne.claimThrone('playerTwo', {
           from: this.playerTwoAccount,
-          value: this.throne.currentClaimPrice(),
+          value: this.throne.currentClaimPriceWei(),
           gas: 500000
         });
       },
@@ -268,20 +264,23 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
   });
 
   runner.addTest({
-    title: 'Claim Throne should pay Commission to the contract shared between wizard and deity',
-    categories: ['safe'],
+    title: 'Claim Throne should pay Commission to the contract shared between the wizards',
+    categories: ['core'],
     steps: [
       function(helper) {
-        // given a new throne and two players
-        this.throne = throneTestSupport.createStandardTestThrone(helper);
+        // given a new throne (with a separate subWizard) and two players
         this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1000', 'finney'));
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1500', 'finney'));
+        this.subWizardAccount = helper.account.create();
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
+          subWizardAddress: this.subWizardAccount
+        });
       },
       function(helper) {
         // given that the first player claimed the throne at starting price according to the contract
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
-          value: this.throne.currentClaimPrice(),
+          value: this.throne.currentClaimPriceWei(),
           gas: 500000
         });
       },
@@ -290,13 +289,13 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // then all the payment goes to the contract the first time (no-one to compensate)
         helper.assert.equal(helper.math.toWei('1', 'ether'), this.contractBalanceAfterClaimOne,
           'first payment is held by contract');
-        // split 50:50 between wizard and deity (we don't actually check ring-fencing here tho)
-        helper.assert.equal(helper.math.toWei('500', 'finney'), this.throne.wizardBalance(), 'wizard gets half of first payment');
-        helper.assert.equal(helper.math.toWei('500', 'finney'), this.throne.deityBalance(), 'deity gets half of first payment');
+        // split 50:50 between the two wizards (we don't actually check ring-fencing here tho)
+        helper.assert.equal(helper.math.toWei('500', 'finney'), throneTestSupport.getTopWizardBalance(this.throne), 'top wizard gets half of first payment');
+        helper.assert.equal(helper.math.toWei('500', 'finney'), throneTestSupport.getSubWizardBalance(this.throne), 'sub wizard gets half of first payment');
         // when the second player claims the throne at the new claim price according to the contract
         this.throne.claimThrone('playerTwo', {
           from: this.playerTwoAccount,
-          value: this.throne.currentClaimPrice(),
+          value: this.throne.currentClaimPriceWei(),
           gas: 500000
         });
       },
@@ -305,15 +304,15 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         this.contractBalanceAfterClaimTwo = helper.account.getBalance(this.throne.address);
         helper.assert.equal(helper.math.toWei('1030', 'finney'), this.contractBalanceAfterClaimTwo, 'contract holds commission');
         // again split 50:50, giving an increase of 15 since last time (500)
-        helper.assert.equal(helper.math.toWei('515', 'finney'), this.throne.wizardBalance(), 'wizard gets half of commission');
-        helper.assert.equal(helper.math.toWei('515', 'finney'), this.throne.deityBalance(), 'deity gets half of commission');
+        helper.assert.equal(helper.math.toWei('515', 'finney'), throneTestSupport.getTopWizardBalance(this.throne), 'top wizard gets half of commission');
+        helper.assert.equal(helper.math.toWei('515', 'finney'), throneTestSupport.getSubWizardBalance(this.throne), 'sub wizard gets half of commission');
       }
     ]
   });
 
   runner.addTest({
     title: 'Hall of Monarchs after Second Claim',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
@@ -323,20 +322,20 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // given that the first player claimed the throne at starting price accordign to the contract
-        this.firstClaimPrice = this.throne.currentClaimPrice();
+        this.firstClaimPrice = this.throne.currentClaimPriceWei();
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
           value: this.firstClaimPrice,
-          gas: 500000
+          gas: 400000
         });
       },
       function(helper) {
         // given that the second player claimed the throne at the new claim price according to the contract
-        this.secondClaimPrice = this.throne.currentClaimPrice();
+        this.secondClaimPrice = this.throne.currentClaimPriceWei();
         this.throne.claimThrone('playerTwo', {
           from: this.playerTwoAccount,
           value: this.secondClaimPrice,
-          gas: 500000
+          gas: 400000
         });
       },
       function(helper) {
@@ -351,30 +350,25 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // and when we look in the monarchs array
         // then playerOne and playerTwo are there with expected properties:
         // (TODO - let's not worry about the timestamps here, they're harder to test)
-        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 0);
+        var firstMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 1);
         helper.assert.equal(this.playerOneAccount, firstMonarch.compensationAddress, 'compensationAddress');
-        helper.assert.equal(this.playerOneAccount, firstMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerOne', firstMonarch.name, 'name');
-        helper.assert.equal(this.firstClaimPrice, firstMonarch.claimPrice, 'claimPrice');
-        var goodPaymentStatusCode = 1;
-        helper.assert.equal(goodPaymentStatusCode, firstMonarch.compensationStatus, 'compensationStatus');
+        helper.assert.equal(this.firstClaimPrice, firstMonarch.claimPriceWei, 'claimPrice');
         // should have got 1500 - 2% commission => 1470
         var expectedCompensation = helper.math.toWei('1470', 'finney');
-        helper.assert.equal(expectedCompensation, firstMonarch.compensationAmount, 'compensationAmount');
-        var secondMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 1);
+        helper.assert.equal(expectedCompensation, firstMonarch.compensationWei, 'compensationWei');
+        var secondMonarch = throneTestSupport.getMonarch(this.throne, helper.txn.rawWeb3, 2);
         helper.assert.equal(this.playerTwoAccount, secondMonarch.compensationAddress, 'compensationAddress');
-        helper.assert.equal(this.playerTwoAccount, secondMonarch.originAddress, 'originAddress');
         helper.assert.equal('playerTwo', secondMonarch.name, 'name');
-        helper.assert.equal(this.secondClaimPrice, secondMonarch.claimPrice, 'claimPrice');
-        helper.assert.equal(0, secondMonarch.compensationStatus, 'compensationStatus');
-        helper.assert.equal(0, secondMonarch.compensationAmount, 'compensationAmount');
+        helper.assert.equal(this.secondClaimPrice, secondMonarch.claimPriceWei, 'claimPrice');
+        helper.assert.equal(0, secondMonarch.compensationWei, 'compensationWei');
       }
     ]
   });
 
   runner.addTest({
     title: 'First monarch appears to die after standard test curse incubation period',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and one player
@@ -385,21 +379,21 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         // given that the first player claimed the throne at starting price according to the contract
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
-          value: this.throne.currentClaimPrice(),
-          gas: 500000
+          value: this.throne.currentClaimPriceWei(),
+          gas: 400000
         });
       },
       function(helper) {
         // when we wait until the monarch should have died
         var claimedAt = helper.txn.getLatestBlockTime();
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
+        var rules = throneTestSupport.decodeThroneRules(this.throne, helper.txn.rawWeb3);
+        this.expectDieBy = helper.math.add(claimedAt, rules.curseIncubationDurationSeconds);
         helper.nextStep.needsBlockTime(this.expectDieBy);
       },
       function(helper) {
         // then he seems to be dead and the claim price is reset
         helper.assert.equal(false, this.throne.isLivingMonarch(), 'isLivingMonarch');
-        helper.assert.equal(helper.math.toWei('1','ether'), this.throne.currentClaimPrice(), 'currentClaimPrice');
+        helper.assert.equal(helper.math.toWei('1','ether'), this.throne.currentClaimPriceWei(), 'currentClaimPrice');
       }
     ]
   });
@@ -407,7 +401,7 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Claim throne from dead first monarch does not pay compensation',
-    categories: ['safe'],
+    categories: ['core'],
     steps: [
       function(helper) {
         // given a new throne and two players (this time player two only needs 1 eth)
@@ -416,18 +410,20 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
         this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
+        this.originalClaimPriceWei = this.throne.currentClaimPriceWei();
         // given that the first player claimed the throne at starting price according to the contract
         this.throne.claimThrone('playerOne', {
           from: this.playerOneAccount,
-          value: this.throne.currentClaimPrice(),
-          gas: 500000
+          value: this.throne.currentClaimPriceWei(),
+          gas: 400000
         });
       },
       function(helper) {
         // make a note of when player one claimed the throne and how much money they had left
         var claimedAt = helper.txn.getLatestBlockTime();
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        this.expectDieBy = helper.math.add(claimedAt, config.curseIncubationDuration);
+        var rules = throneTestSupport.decodeThroneRules(this.throne, helper.txn.rawWeb3);
+        this.expectDieBy = helper.math.add(claimedAt, rules.curseIncubationDurationSeconds);
+        helper.debug.log('expect curse to kick in by', this.expectDieBy, 'based on', claimedAt, rules.curseIncubationDurationSeconds);
         this.contractBalanceAfterFirstClaim = helper.account.getBalance(this.throne.address);
         this.playerOneBalanceAfterTheyClaimed = helper.account.getBalance(this.playerOneAccount);
         // when we wait until the monarch should have died
@@ -435,10 +431,11 @@ TestThroneCore.prototype.addTests = function(runner, throneTestSupport) {
       },
       function(helper) {
         // and then let player 2 claim the throne
+        helper.assert.equal(this.originalClaimPriceWei, this.throne.currentClaimPriceWei(), 'claim price should have been reset after death');
         this.throne.claimThrone('playerTwo', {
           from: this.playerTwoAccount,
-          value: this.throne.currentClaimPrice(),
-          gas: 500000
+          value: this.throne.currentClaimPriceWei(),
+          gas: 400000
         });
       },
       function(helper) {

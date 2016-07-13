@@ -6,7 +6,7 @@
 */
 
 function TestThroneFuzz() {
-};
+}
 
 TestThroneFuzz.prototype.addTests = function(runner, throneTestSupport) {
 

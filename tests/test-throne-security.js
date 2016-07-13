@@ -2,17 +2,18 @@
 'use strict';
 
 /*
- * TODO - document
+ * TODO - document, port to new contract
 */
 
 function TestThroneSecurity() {
-};
+}
 
 // TODO - more re-use of steps across tests!
 TestThroneSecurity.prototype.addTests = function(runner, throneTestSupport) {
 
   // TODO - call functions from address not meant to be allowed to
   // TODO - ask to sweep more comission than allowed
+  // TODO - RECURSIVE CALL ATTACK
 // voidFailedPayment
 // switchDeity
 // maker sweepDeityCommission

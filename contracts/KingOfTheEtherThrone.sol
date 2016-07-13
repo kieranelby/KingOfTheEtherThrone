@@ -1,135 +1,412 @@
-// A chain-game contract that maintains a 'throne' which agents may pay to rule.
-// See www.kingoftheether.com & https://github.com/kieranelby/KingOfTheEtherThrone .
-// (c) Kieran Elby 2016. All rights reserved.
-// v0.9.0.
-// Inspired by ethereumpyramid.com and the (now-gone?) "magnificent bitcoin gem".
-// TODO - doc comments, nicer return names, clarity on units
+// King of the Ether Throne Contracts.
+// Copyright (c) 2016 Kieran Elby. Released under the MIT License.
+// Version 0.9.9.0, July 2016.
+//
+// See also http://www.kingoftheether.com and
+// https://github.com/kieranelby/KingOfTheEtherThrone .
+// 
+// This file contains a number of contracts, of which only
+// these three are normally created:
+//
+// - Kingdom        = maintains the throne for a kingdom
+// - World          = runs the world, which is a collection of kingdoms
+// - KingdomFactory = used internally by the World contract
+//
+// The "Mixin" contracts (ThroneRulesMixin, ReentryProtectorMixin,
+// CarefulSenderMixin, FundsHolderMixin, MoneyRounderMixin,
+// NameableMixin) contain functions / data / structures used
+// by the three main contracts.
+// The ExposedInternalsForTesting contract is used by automated tests.
 
 
-// We don't actually create this contract - it just has some shared functions
-// for carefully sending ether to addresses.
-contract CarefulSender {
+/// @title Mixin to help avoid recursive-call attacks.
+contract ReentryProtectorMixin {
 
-    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
-    // isn't enough to send ether to some wallet contracts - use this to add more.
-    // Caller MUST check the return value - true on success, false on failure.
-    function sendWithExtraGas(address destination, uint256 value, uint256 extraGasAmt) internal returns (bool) {
-      return destination.call.value(value).gas(extraGasAmt)();
+    // true if we are inside an external function
+    bool reentryProtector;
+
+    // Mark contract as having entered an external function.
+    // Throws an exception if called twice with no externalLeave().
+    // For this to work, Contracts MUST:
+    //  - call externalEnter() at the start of each external function
+    //  - call externalLeave() at the end of each external function
+    //  - never use return statements in between enter and leave
+    //  - never call an external function from another function
+    // WARN: serious risk of contract getting stuck if used wrongly.
+    function externalEnter() internal {
+        if (reentryProtector) {
+            throw;
+        }
+        reentryProtector = true;
     }
 
-    // Unfortunately destination.send() only includes a stipend of 2300 gas, which
-    // isn't enough to send ether to some wallet contracts - use this to add all the
-    // gas we have available, minus a reserve amount we keep back for ourselves.
-    // Caller MUST check the return value - true on success, false on failure.
-    function sendWithAllOurGasExcept(address destination, uint256 value, uint256 reserveGasAmt) internal returns (bool) {
-        uint gasAvail = msg.gas;
-        if (gasAvail < reserveGasAmt) {
-            return false;
-        }
-        uint extraGas = gasAvail - reserveGasAmt;
-        return sendWithExtraGas(destination, value, extraGas);
+    // Mark contract as having left an external function.
+    // Do this after each call to externalEnter().
+    function externalLeave() internal {
+        reentryProtector = false;
+    }
+
+}
+
+
+/// @title Mixin to help send ether to untrusted addresses.
+contract CarefulSenderMixin {
+
+    // Seems a reasonable amount for a well-written fallback function.
+    uint constant suggestedExtraGasToIncludeWithSends = 23000;
+
+    // Send `_valueWei` of our ether to `_toAddress`, including
+    // `_extraGasIncluded` gas above the usual 2300 gas stipend
+    // with the send call.
+    //
+    // This needs care because there is no way to tell if _toAddress
+    // is externally owned or is another contract - and sending ether
+    // to a contract address will invoke its fallback function; this
+    // has three implications:
+    //
+    // 1) Danger of recursive attack.
+    //  The destination contract's fallback function (or another
+    //  contract it calls) may call back into this contract (including
+    //  our fallback function and external functions inherited, or into
+    //  other contracts in our stack), leading to unexpected behaviour.
+    //  Mitigations:
+    //   - protect all external functions against re-entry into
+    //     any of them (see ReentryProtectorMixin);
+    //   - program very defensively (e.g. debit balance before send).
+    //
+    // 2) Destination fallback function can fail.
+    //  If the destination contract's fallback function fails, ether
+    //  will not be sent and may be locked into the sending contract.
+    //  Unlike most errors, it will NOT cause this contract to throw.
+    //  Mitigations:
+    //   - check the return value from this function (see below).
+    //
+    // 3) Gas usage.
+    //  The destination fallback function will consume the gas supplied
+    //  in this transaction (which is fixed and set by the transaction
+    //  starter, though some clients do a good job of estimating it.
+    //  This is a problem for lottery-type contracts where one very
+    //  expensive-to-call receiving contract could 'poison' the lottery
+    //  contract by preventing it being invoked by another person who
+    //  cannot supply enough gas.
+    //  Mitigations:
+    //    - choose sensible value for _extraGasIncluded (by default
+    //      only 2300 gas is supplied to the destination function);
+    //    - if call fails consider whether to throw or to ring-fence
+    //      funds for later withdrawal.
+    //
+    // Returns:
+    //
+    //  True if-and-only-if the send call was made and did not throw
+    //  an error. In this case, we will no longer own the _valueWei
+    //  ether. Note that we cannot get the return value of the fallback
+    //  function called (if any).
+    //
+    //  False if the send was made but the destination fallback function
+    //  threw an error (or ran out of gas). If this hapens, we still own
+    //  _valueWei ether and the destination's actions were undone.
+    //
+    //  This function should not normally throw an error unless:
+    //    - not enough gas to make the send/call
+    //    - max call stack depth reached
+    //    - insufficient ether
+    //
+    function carefulSendWithFixedGas(
+        address _toAddress,
+        uint _valueWei,
+        uint _extraGasIncluded
+    ) internal returns (bool success) {
+        return _toAddress.call.value(_valueWei).gas(_extraGasIncluded)();
     }
 
 }
 
 
-// We don't actually create this contract - it just has some shared functions
-// for rounding monetary amounts.
-contract MoneyRounder {
+/// @title Mixin to help track who owns our ether and allow withdrawals.
+contract FundsHolderMixin is ReentryProtectorMixin, CarefulSenderMixin {
 
-    // Truncates amounts in range 10 finney - 10000 ether to have 3 sig figs.
-    // e.g. 12.345678 ETH -> 12.3 ETH
-    // Leaves negative amounts and amounts outside the range alone.
-    function roundMoneyDown3SF(uint256 rawWeiAmount) internal returns (uint256 nicerWeiAmount) {
-          if (rawWeiAmount < 10 finney) {
-              // leave tiny amounts alone
-              return rawWeiAmount;
-          } else if (rawWeiAmount < 100 finney) {
-              return 100 szabo * (rawWeiAmount / 100 szabo);
-          } else if (rawWeiAmount < 1 ether) {
-              return 1 finney * (rawWeiAmount / 1 finney);
-          } else if (rawWeiAmount < 10 ether) {
-              return 10 finney * (rawWeiAmount / 10 finney);
-          } else if (rawWeiAmount < 100 ether) {
-              return 100 finney * (rawWeiAmount / 100 finney);
-          } else if (rawWeiAmount < 1000 ether) {
-              return 1 ether * (rawWeiAmount / 1 ether);
-          } else if (rawWeiAmount < 10000 ether) {
-              return 10 ether * (rawWeiAmount / 10 ether);
-          } else {
-              // leave enormous amounts alone
-              return rawWeiAmount;
-          }
+    // Record here how much wei is owned by an address.
+    // Obviously, the entries here MUST be backed by actual ether
+    // owned by the contract - we cannot enforce that in this mixin.
+    mapping (address => uint) funds;
+
+    event FundsWithdrawnEvent(
+        address fromAddress,
+        address toAddress,
+        uint valueWei
+    );
+
+    /// @notice Amount of ether held for `_address`.
+    function fundsOf(address _address) constant returns (uint valueWei) {
+        return funds[_address];
+    }
+
+    /// @notice Send the caller (`msg.sender`) all ether they own.
+    function withdrawFunds() {
+        externalEnter();
+        withdrawFundsRP();
+        externalLeave();
+    }
+
+    /// @notice Send `_valueWei` of the ether owned by the caller
+    /// (`msg.sender`) to `_toAddress`, including `_extraGas` gas
+    /// beyond the normal stipend.
+    function withdrawFundsAdvanced(
+        address _toAddress,
+        uint _valueWei,
+        uint _extraGas
+    ) {
+        externalEnter();
+        withdrawFundsAdvancedRP(_toAddress, _valueWei, _extraGas);
+        externalLeave();
+    }
+
+    /// @dev internal version of withdrawFunds()
+    function withdrawFundsRP() internal {
+        address fromAddress = msg.sender;
+        address toAddress = fromAddress;
+        uint allAvailableWei = funds[fromAddress];
+        withdrawFundsAdvancedRP(
+            toAddress,
+            allAvailableWei,
+            suggestedExtraGasToIncludeWithSends
+        );
+    }
+
+    /// @dev internal version of withdrawFundsAdvanced(), also used
+    /// by withdrawFundsRP().
+    function withdrawFundsAdvancedRP(
+        address _toAddress,
+        uint _valueWei,
+        uint _extraGasIncluded
+    ) internal {
+        if (msg.value != 0) {
+            throw;
+        }
+        address fromAddress = msg.sender;
+        if (_valueWei > funds[fromAddress]) {
+            throw;
+        }
+        funds[fromAddress] -= _valueWei;
+        bool sentOk = carefulSendWithFixedGas(
+            _toAddress,
+            _valueWei,
+            _extraGasIncluded
+        );
+        if (!sentOk) {
+            throw;
+        }
+        FundsWithdrawnEvent(fromAddress, _toAddress, _valueWei);
     }
 
 }
 
-// We don't actually create this contract - it just has some shared functions
-// for checking names are "safe" to use (need to be a bit careful when data
-// supplied by end-users is visible to other end-users).
-contract NameValidator {
 
-    function isSafePunctuation(byte b) constant internal returns (bool safe) {
-        // ASCII codes for - _ . ' ! ( )
-        // (Yes, single-quote is a little dangerous but that's why we escape stuff)
-        if (b == 45 || b == 95 || b == 46 || b == 39 || b == 33 || b == 40 || b == 41) {
-            return true;
+/// @title Mixin to help make nicer looking ether amounts.
+contract MoneyRounderMixin {
+
+    /// @notice Make `_rawValueWei` into a nicer, rounder number.
+    /// @return A value that:
+    ///   - is no larger than `_rawValueWei`
+    ///   - is no smaller than `_rawValueWei` * 0.999
+    ///   - has no more than three significant figures UNLESS the
+    ///     number is very small or very large in monetary terms
+    ///     (which we define as < 1 finney or > 10000 ether), in
+    ///     which case no precision will be lost.
+    function roundMoneyDownNicely(uint _rawValueWei) constant internal
+    returns (uint nicerValueWei) {
+        if (_rawValueWei < 1 finney) {
+            return _rawValueWei;
+        } else if (_rawValueWei < 10 finney) {
+            return 10 szabo * (_rawValueWei / 10 szabo);
+        } else if (_rawValueWei < 100 finney) {
+            return 100 szabo * (_rawValueWei / 100 szabo);
+        } else if (_rawValueWei < 1 ether) {
+            return 1 finney * (_rawValueWei / 1 finney);
+        } else if (_rawValueWei < 10 ether) {
+            return 10 finney * (_rawValueWei / 10 finney);
+        } else if (_rawValueWei < 100 ether) {
+            return 100 finney * (_rawValueWei / 100 finney);
+        } else if (_rawValueWei < 1000 ether) {
+            return 1 ether * (_rawValueWei / 1 ether);
+        } else if (_rawValueWei < 10000 ether) {
+            return 10 ether * (_rawValueWei / 10 ether);
+        } else {
+            return _rawValueWei;
         }
-        return false;
+    }
+    
+    /// @notice Convert `_valueWei` into a whole number of finney.
+    /// @return The smallest whole number of finney which is equal
+    /// to or greater than `_valueWei` when converted to wei.
+    /// WARN: May be incorrect if `_valueWei` is above 2**254.
+    function roundMoneyUpToWholeFinney(uint _valueWei) constant internal
+    returns (uint valueFinney) {
+        return (1 finney + _valueWei - 1 wei) / 1 finney;
     }
 
-    // Return false if the given name is not considered "safe" to use, true if it's ok.
-    // Rules are: must be no more than 30 bytes, must be pure 7-bit ASCII, must use only
-    // characters A-Z, a-z, 0-9, space, or - _ . ' ! ( )
-    function validateName(bytes name) constant internal returns (bool good) {
-        uint256 len = name.length;
-        // Not really much of a name if it is blank.
-        if (len == 0) {
-            return false;
-        }
-        // Either web3 or the solidity ABI has problems with bytes/strings above ~32 bytes.
-        // See https://github.com/ethereum/web3.js/issues/357.
-        if (len > 30) {
-            return false;
-        }
-        // ASCII space, "safe" punctuation, 0-9, A-Z, a-z
-        for (uint256 i = 0; i < len; i++) {
-            byte b = name[i];
-            if (!(b == 32 || isSafePunctuation(b) || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122))) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
 
 
-// We don't actually create this contract - it just has some shared functions
-// for checking if names are essentialy the same.
-contract NameHasher is NameValidator {
+/// @title Mixin to help allow users to name things.
+contract NameableMixin {
 
-    // Hash the name down to a number, case-folding and ignoring spaces and dashes.
-    // This isn't a good hash - but it doesn't matter since the input is always smaller
-    // than the hash! Assumes pure 7-bit ASCII.
-    // Important: assumes that the name has passed the NameValidator.validateName check!
-    function computeNameHash(bytes name) constant internal returns (uint256 nameHash) {
-        uint256 h = 0;
-        uint256 len = name.length;
-        if (len > 30) {
-          throw;
+    // String manipulation is expensive in the EVM; keep things short.
+
+    uint constant minimumNameLength = 1;
+    uint constant maximumNameLength = 25;
+    string constant nameDataPrefix = "NAME:";
+
+    /// @notice Check if `_name` is a reasonable choice of name.
+    /// @return True if-and-only-if `_name_` meets the criteria
+    /// below, or false otherwise:
+    ///   - no fewer than 1 character
+    ///   - no more than 25 characters
+    ///   - no characters other than:
+    ///     - "roman" alphabet letters (A-Z and a-z)
+    ///     - western digits (0-9)
+    ///     - "safe" punctuation: ! ( ) - . _ SPACE
+    ///   - at least one non-punctuation character
+    /// Note that we deliberately exclude characters which may cause
+    /// security problems for websites and databases if escaping is
+    /// not performed correctly, such as < > " and '.
+    /// Apologies for the lack of non-English language support.
+    function validateNameInternal(string _name) constant internal
+    returns (bool allowed) {
+        bytes memory nameBytes = bytes(_name);
+        uint lengthBytes = nameBytes.length;
+        if (lengthBytes < minimumNameLength ||
+            lengthBytes > maximumNameLength) {
+            return false;
         }
-        for (uint256 idx = 0; idx < len; idx++) {
-            byte b = name[idx];
-            // ignore spaces and punctuation
-            if (b == 32 || isSafePunctuation(b)) {
-              continue;
+        bool foundNonPunctuation = false;
+        for (uint i = 0; i < lengthBytes; i++) {
+            byte b = nameBytes[i];
+            if (
+                (b >= 48 && b <= 57) || // 0 - 9
+                (b >= 65 && b <= 90) || // A - Z
+                (b >= 97 && b <= 122)   // a - z
+            ) {
+                foundNonPunctuation = true;
+                continue;
             }
-            // lower -> upper
-            if (b >= 97 && b <= 122) {
-              b = byte(uint256(b) - 32);
+            if (
+                b == 32 || // space
+                b == 33 || // !
+                b == 40 || // (
+                b == 41 || // )
+                b == 45 || // -
+                b == 46 || // .
+                b == 95    // _
+            ) {
+                continue;
             }
-            h += uint256(b);
-            h *= 256;
+            return false;
+        }
+        return foundNonPunctuation;
+    }
+
+    // Extract a name from bytes `_data` (presumably from `msg.data`),
+    // or throw an exception if the data is not in the expected format.
+    // 
+    // We want to make it easy for people to name things, even if
+    // they're not comfortable calling functions on contracts.
+    //
+    // So we allow names to be sent to the fallback function encoded
+    // as message data.
+    //
+    // Unfortunately, the way the Ethereum Function ABI works means we
+    // must be careful to avoid clashes between message data that
+    // represents our names and message data that represents a call
+    // to an external function - otherwise:
+    //   a) some names won't be usable;
+    //   b) small possibility of a phishing attack where users are
+    //     tricked into using certain names which cause an external
+    //     function call - e.g. if the data sent to the contract is
+    //     keccak256("withdrawFunds()") then a withdrawal will occur.
+    //
+    // So we require a prefix "NAME:" at the start of the name (encoded
+    // in ASCII) when sent via the fallback function - this prefix
+    // doesn't clash with any external function signature hashes.
+    //
+    // e.g. web3.fromAscii('NAME:' + 'Joe Bloggs')
+    //
+    // WARN: this does not check the name for "reasonableness";
+    // use validateNameInternal() for that.
+    //
+    function extractNameFromData(bytes _data) constant internal
+    returns (string extractedName) {
+        // check prefix present
+        uint expectedPrefixLength = (bytes(nameDataPrefix)).length;
+        if (_data.length < expectedPrefixLength) {
+            throw;
+        }
+        uint i;
+        for (i = 0; i < expectedPrefixLength; i++) {
+            if ((bytes(nameDataPrefix))[i] != _data[i]) {
+                throw;
+            }
+        }
+        // copy data after prefix
+        uint payloadLength = _data.length - expectedPrefixLength;
+        if (payloadLength < minimumNameLength ||
+            payloadLength > maximumNameLength) {
+            throw;
+        }
+        string memory name = new string(payloadLength);
+        for (i = 0; i < payloadLength; i++) {
+            (bytes(name))[i] = _data[expectedPrefixLength + i];
+        }
+        return name;
+    }
+
+    // Turn a short name into a "fuzzy hash" with the property
+    // that extremely similar names will have the same fuzzy hash.
+    //
+    // This is useful to:
+    //  - stop people choosing names which differ only in case or
+    //    punctuation and would lead to confusion.
+    //  - faciliate searching by name without needing exact match
+    //
+    // For example, these names all have the same fuzzy hash:
+    //
+    //  "Banana"
+    //  "BANANA"
+    //  "Ba-na-na"
+    //  "  banana  "
+    //  "Banana                        .. so long the end is ignored"
+    //
+    // On the other hand, "Banana1" and "A Banana" are different to
+    // the above.
+    //
+    // WARN: this is likely to work poorly on names that do not meet
+    // the validateNameInternal() test.
+    //
+    function computeNameFuzzyHash(string _name) constant internal
+    returns (uint fuzzyHash) {
+        bytes memory nameBytes = bytes(_name);
+        uint h = 0;
+        uint len = nameBytes.length;
+        if (len > maximumNameLength) {
+            len = maximumNameLength;
+        }
+        for (uint i = 0; i < len; i++) {
+            uint mul = 128;
+            byte b = nameBytes[i];
+            uint ub = uint(b);
+            if (b >= 48 && b <= 57) {
+                // 0-9
+                h = h * mul + ub;
+            } else if (b >= 65 && b <= 90) {
+                // A-Z
+                h = h * mul + ub;
+            } else if (b >= 97 && b <= 122) {
+                // fold a-z to A-Z
+                uint upper = ub - 32;
+                h = h * mul + upper;
+            } else {
+                // ignore others
+            }
         }
         return h;
     }
@@ -137,712 +414,986 @@ contract NameHasher is NameValidator {
 }
 
 
-// A throne. This is the main contract.
-contract KingOfTheEtherThrone is CarefulSender, MoneyRounder, NameValidator {
+/// @title Mixin to help define the rules of a throne.
+contract ThroneRulesMixin {
 
-    // Represents whether we managed to send a payment or not.
-    enum PaymentStatus { NotApplicable, Good, Failed, Void }
+    // See World.createKingdomAdvanced(..) for documentation.
+    struct ThroneRules {
+        uint startingClaimPriceWei;
+        uint maximumClaimPriceWei;
+        uint claimPriceAdjustPercent;
+        uint curseIncubationDurationSeconds;
+        uint commissionPerThousand;
+    }
 
-    // Represents a one-time ruler of the throne.
+}
+
+
+/// @title Maintains the throne of a kingdom.
+contract Kingdom is
+  ReentryProtectorMixin,
+  CarefulSenderMixin,
+  FundsHolderMixin,
+  MoneyRounderMixin,
+  NameableMixin,
+  ThroneRulesMixin {
+
+    // e.g. "King of the Ether"
+    string public kingdomName;
+
+    // The World contract used to create this kingdom, or 0x0 if none.
+    address public world;
+
+    // The rules that govern this kingdom - see ThroneRulesMixin.
+    ThroneRules public rules;
+
+    // Someone who has ruled (or is ruling) our kingdom.
     struct Monarch {
-
-        // Address to which their compensation payment will be sent.
+        // where to send their compensation
         address compensationAddress;
-
-        // Keep a record of the tx.origin from which they claimed the
-        // throne - makes finding transactions easier. We don't use
-        // this for anything important though since tx.origin may be
-        // deprecated.
-        address originAddress;
-
-        // A name by which they wish to be known.
-        // NB: Unfortunately "string" seems to expose some bugs in web3 (and also
-        // opens us up poisoning with very long strings), so use bytes for now.
-        // We limit the length of the name to 30 bytes when setting it.
-        bytes name;
-
-        // How much did they pay to become monarch?
-        uint256 claimPrice;
-
-        // When did their rule start?
-        uint256 coronationTimestamp;
-
-        // Did they receive their compensation payment?
-        PaymentStatus compensationStatus;
-
-        // When did we first try to pay their compensation (0 if n/a)?
-        uint256 compensationTimestamp;
-
-        // How much compensation were they paid (0 if n/a)?
-        // (Or should have been paid in the case of a failed payment).
-        uint256 compensationPaid;
-
+        // their name
+        string name;
+        // when they became our ruler
+        uint coronationTimestamp;
+        // the claim price paid (excluding any over-payment)
+        uint claimPriceWei;
+        // the compensation sent to or held for them so far
+        uint compensationWei;
     }
 
-    // Represents how this throne is configured to operate.
-    struct ThroneConfig {
+    // The first ruler is number 1; the zero-th entry is a dummy entry.
+    Monarch[] public monarchsByNumber;
 
-        // The wizard is the hidden power behind the throne; they are considered
-        // to occupy the throne during gaps in succession and collect fees thru:
-        // - receiving claim payments that end a gap in succession;
-        // - receiving a small commission fee from each claim fee payment;
-        // - receiving failed payments if not claimed after a reasonable time period.
-        // However, these fees are shared with the deity - see below.
-        address wizardAddress;
+    // The topWizard earns half the commission.
+    // They are normally the owner of the World contract.
+    address public topWizard;
 
-        // However, even the wizard is sub-ordinate to the deity; as the
-        // creator of the original contract the deity is the source of all
-        // earthly power and receives a 50% share of the wizard's fees.
-        // They also have the (hopefully never needed) power to withdraw any
-        // unexpected balance that appears.
-        address deityAddress;
+    // The subWizard earns half the commission.
+    // They are normally the creator of this Kingdom.
+    // The topWizard and subWizard can be the same address.
+    address public subWizard;
 
-        // How much must the first monarch pay as a claim price?
-        // This also applies following the death of a monarch.
-        uint256 startingClaimPrice;
+    // NB: we also have a `funds` mapping from FundsHolderMixin,
+    // and a rentryProtector from ReentryProtectorMixin.
 
-        // The next claimPrice is calculated from the previous claimPrice
-        // by multiplying by (1000 + claimPriceAdjustPerMille) then dividing by 1000.
-        // For example, claimPriceAdjustPerMille=500 would cause a 50% increase.
-        // And claimPriceAdjustPerMille=2000 would cause the new claim price to be
-        // three times the previous claim price (i.e. a 200% increase).
-        uint256 claimPriceAdjustPerMille;
+    event ThroneClaimedEvent(uint monarchNumber);
+    event CompensationSentEvent(address toAddress, uint valueWei);
+    event CompensationFailEvent(address toAddress, uint valueWei);
+    event CommissionEarnedEvent(address byAddress, uint valueWei);
+    event WizardReplacedEvent(address oldWizard, address newWizard);
+    // NB: we also have a `FundsWithdrawnEvent` from FundsHolderMixin
 
-        // How much of each claimPrice goes to the wizard and deity.
-        // Expressed in 'parts per thousand' - e.g. commissionPerMille of 20 would
-        // deduct 2% for the wizard + deity, leaving 98% for the previous monarch.
-        uint256 commissionPerMille;
-
-        // After what length of reign will the curse strike down the monarch?
-        // Expressed in seconds.
-        uint256 curseIncubationDuration;
-
-        // How long do we keep failed payments ring-fenced before voiding them?
-        uint256 failedPaymentRingfenceDuration;
-
-        // At what address is the contract that we use to make more thrones like this one?
-        // Can be zero if this was not created by the ThroneMaker.
-        ThroneMaker throneMaker;
-    }
-
-    // How the throne is set-up (owners, percentages, durations).
-    ThroneConfig public config;
-
-    // Used to ensure only the wizard can do some things.
-    modifier onlywizard { if (msg.sender == config.wizardAddress) _ }
-
-    // Used to ensure only the deity can do some things.
-    modifier onlydeity { if (msg.sender == config.deityAddress) _ }
-
-    // Generated when the throne is claimed successfully.
-    event ThroneClaimed(uint256 newMonarchIndex, uint256 valuePaid);
-
-    // Generated when a compensation payment is successfully sent first time.
-    event CompensationPaymentSent(uint256 compensatedMonarchIndex, uint256 paymentValue);
-    
-    // Generated if a compensation payment could not be sent.
-    event CompensationPaymentFailed(uint256 notCompensatedMonarchIndex, uint256 paymentValue);
-
-    // Generated if a failed payment is re-sent successfully.
-    event FailedCompensationPaymentResent(uint256 compensatedMonarchIndex, uint256 paymentValue);
-
-    // Generated if a failed payment is voided.
-    event FailedCompensationPaymentVoided(uint256 notCompensatedMonarchIndex, uint256 paymentValue);
-
-    // Generated when the wizard collects fees.
-    event WizardCommissionSwept(address toWizardAddress, uint256 amount);
-
-    // Generated when the wizard transfers ownership rights to another.
-    event WizardSwitched(address newWizardAddress);
-
-    // Generated when the deity collects fees.
-    event DeityCommissionSwept(address toDeityAddress, uint256 amount);
-
-    // Generated when the deity transfers ownership rights to another.
-    event DeitySwitched(address newDeityAddress);
-
-    // Earliest-first list of throne holders.
-    Monarch[] public monarchs;
-
-    // Keep track of the value of any failed payments - this will allow
-    // us to ring-fence them in case the wizard or deity turn evil.
-    uint256 public ringfencedFailedPaymentsBalance;
-
-    // Keep track of the value of fees that the wizard has accumulated
-    // but not withdrawn (to save gas, they're not sent until 'swept').
-    uint256 public wizardBalance;
-
-    // Create a new empty throne according to the caller's wishes.
-    function KingOfTheEtherThrone(
-        address wizardAddress,
-        address deityAddress,
-        uint256 startingClaimPrice,
-        uint256 claimPriceAdjustPerMille,
-        uint256 commissionPerMille,
-        uint256 curseIncubationDuration,
-        uint256 failedPaymentRingfenceDuration,
-        ThroneMaker throneMaker
+    // WARN - does NOT validate arguments; you MUST either call
+    // KingdomFactory.validateProposedThroneRules() or create
+    // the Kingdom via KingdomFactory/World's createKingdom().
+    // See World.createKingdomAdvanced(..) for parameter documentation.
+    function Kingdom(
+        string _kingdomName,
+        address _world,
+        address _topWizard,
+        address _subWizard,
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
     ) {
-        // We don't bother with validation since we assume the
-        // majority of thrones will be created via the ThroneMaker.
-        config = ThroneConfig(
-            wizardAddress,
-            deityAddress,
-            startingClaimPrice,
-            claimPriceAdjustPerMille,
-            commissionPerMille,
-            curseIncubationDuration,
-            failedPaymentRingfenceDuration,
-            throneMaker
+        kingdomName = _kingdomName;
+        world = _world;
+        topWizard = _topWizard;
+        subWizard = _subWizard;
+        rules = ThroneRules(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        );
+        // We number the monarchs starting from 1; it's sometimes useful
+        // to use zero = invalid, so put in a dummy entry for number 0.
+        monarchsByNumber.push(
+            Monarch(
+                0,
+                "",
+                0,
+                0,
+                0
+            )
         );
     }
 
-    // How many monarchs have there been (including the current one, live or dead)?
-    function numberOfMonarchs() constant returns (uint numberOfMonarchs) {
-        return monarchs.length;
+    function numberOfMonarchs() constant returns (uint totalCount) {
+        // zero-th entry is invalid
+        return monarchsByNumber.length - 1;
     }
 
-    // What was the most recent price paid to successfully claim the throne?
-    // Not well-defined if there has not yet been a monarch.
-    function lastClaimPrice() constant returns (uint256 price) {
-        return monarchs[monarchs.length - 1].claimPrice;
-    }
-
-    // How much do you need to pay right now to become the King or Queen of the Ether?
-    function currentClaimPrice() constant returns (uint256 price) {
-        if (!isLivingMonarch()) {
-            return config.startingClaimPrice;
-        } else {
-            // Work out the claim fee from the last one.
-            uint256 rawNewClaimPrice = lastClaimPrice() * (1000 + config.claimPriceAdjustPerMille) / 1000;
-            // To stop the number of trailing decimals getting silly we round it a bit.
-            return roundMoneyDown3SF(rawNewClaimPrice);
-        }
-    }
-
-    // Is the throne currently ruled by a living monarch?
+    // False if either there are no monarchs, or if the latest monarch
+    // has reigned too long and been struck down by the curse.
     function isLivingMonarch() constant returns (bool alive) {
         if (numberOfMonarchs() == 0) {
             return false;
         }
-        // TODO - how safe is it to put considerable trust in these block timestamps?
-        uint256 reignStarted = monarchs[monarchs.length - 1].coronationTimestamp;
-        uint256 reignDuration = now - reignStarted;
-        if (reignDuration > config.curseIncubationDuration) {
-            // The monarch has been struck down by the curse.
+        uint reignStartedTimestamp =
+          monarchsByNumber[monarchsByNumber.length - 1].coronationTimestamp;
+        uint elapsedReignDurationSeconds = now - reignStartedTimestamp;
+        if (elapsedReignDurationSeconds > rules.curseIncubationDurationSeconds) {
             return false;
         } else {
             return true;
         }
     }
 
-    // Fallback function to claim the throne - simple transactions trigger this.
-    // Assumes the message data is their desired name in ASCII (nameless if none).
-    // The caller will need to include payment of currentClaimPrice with the transaction.
-    // They will also need to include plenty of gas - 400,000 recommended.
-    function() {
-        claimThrone(msg.data);
-    }
-
-    // Claim the throne in the given name.
-    // The caller will need to include payment of currentClaimPrice with the transaction.
-    // This function assumes that any compensation payment later due should be sent
-    // to the account that called this contract (which might itself be a contract).
-    // They will also need to include plenty of gas - 400,000 recommended.
-    function claimThrone(bytes name) {
-        claimThroneFor(name, msg.sender);
-    }
-
-    // Claim the throne in the given name, specifying an address to which any
-    // compensation payment should later be sent. Don't get it wrong - can't change it!
-    // The caller will need to include payment of currentClaimPrice with the transaction.
-    // They will also need to include plenty of gas - 400,000 recommended.
-    function claimThroneFor(bytes name, address compensationAddress) {
-
-        if (name.length == 0) {
-            name = "Anonymous";
+    /// @notice How much you must pay to claim the throne now, in wei.
+    function currentClaimPriceWei() constant returns (uint priceInWei) {
+        if (!isLivingMonarch()) {
+            return rules.startingClaimPriceWei;
+        } else {
+            uint lastClaimPriceWei = latestMonarchInternal().claimPriceWei;
+            uint newClaimPrice =
+              (lastClaimPriceWei * (100 + rules.claimPriceAdjustPercent)) / 100;
+            newClaimPrice = roundMoneyDownNicely(newClaimPrice);
+            if (newClaimPrice < rules.startingClaimPriceWei) {
+                newClaimPrice = rules.startingClaimPriceWei;
+            }
+            if (newClaimPrice > rules.maximumClaimPriceWei) {
+                newClaimPrice = rules.maximumClaimPriceWei;
+            }
+            return newClaimPrice;
         }
-        if (!validateName(name)) {
+    }
+
+    /// @notice How much you must pay to claim the throne now, in finney.
+    function currentClaimPriceInFinney() constant
+    returns (uint priceInFinney) {
+        uint valueWei = currentClaimPriceWei();
+        return roundMoneyUpToWholeFinney(valueWei);
+    }
+
+    /// @notice Check if a name can be used as a monarch name.
+    /// @return True if the name satisfies the criteria of:
+    ///   - no fewer than 1 character
+    ///   - no more than 25 characters
+    ///   - no characters other than:
+    ///     - "roman" alphabet letters (A-Z and a-z)
+    ///     - western digits (0-9)
+    ///     - "safe" punctuation: ! ( ) - . _ SPACE
+    function validateProposedMonarchName(string _monarchName) constant
+    returns (bool allowed) {
+        return validateNameInternal(_monarchName);
+    }
+
+    // Get details of the latest monarch (even if they are dead).
+    //
+    // We don't expose externally because returning structs is not well
+    // supported in the ABI (strange that monarchsByNumber array works
+    // fine though). Note that the reference returned is writable - it
+    // can be used to update details of the latest monarch.
+    // WARN: you should check numberOfMonarchs() > 0 first.
+    function latestMonarchInternal() constant internal
+    returns (Monarch storage monarch) {
+        return monarchsByNumber[monarchsByNumber.length - 1];
+    }
+
+    /// @notice Claim throne by sending funds to the contract.
+    /// Any future compensation earned will be sent to the sender's
+    /// address (`msg.sender`).
+    /// Sending from a contract is not recommended unless you know
+    /// what you're doing (and you've tested it).
+    /// If no message data is supplied, the throne will be claimed in
+    /// the name of "Anonymous". To supply a name, send data encoded
+    /// using web3.fromAscii('NAME:' + 'your_chosen_valid_name').
+    /// Sender must include payment equal to currentClaimPriceWei().
+    /// Will consume up to ~300,000 gas.
+    /// Will throw an error if:
+    ///   - name is invalid (see `validateProposedMonarchName(string)`)
+    ///   - payment is too low or too high
+    /// Produces events:
+    ///   - `ThroneClaimedEvent`
+    ///   - `CompensationSentEvent` / `CompensationFailEvent`
+    ///   - `CommissionEarnedEvent`
+    function () {
+        externalEnter();
+        fallbackRP();
+        externalLeave();
+    }
+
+    /// @notice Claim throne in the given `_monarchName`.
+    /// Any future compensation earned will be sent to the caller's
+    /// address (`msg.sender`).
+    /// Caller must include payment equal to currentClaimPriceWei().
+    /// Calling from a contract is not recommended unless you know
+    /// what you're doing (and you've tested it).
+    /// Will consume up to ~300,000 gas.
+    /// Will throw an error if:
+    ///   - name is invalid (see `validateProposedMonarchName(string)`)
+    ///   - payment is too low or too high
+    /// Produces events:
+    ///   - `ThroneClaimedEvent
+    ///   - `CompensationSentEvent` / `CompensationFailEvent`
+    ///   - `CommissionEarnedEvent`
+    function claimThrone(string _monarchName) {
+        externalEnter();
+        claimThroneRP(_monarchName);
+        externalLeave();
+    }
+
+    /// @notice Claim throne in the given `_monarchName`, on behalf of
+    /// `_compensationAddress` to whom any compensation will be sent.
+    /// Caller must include payment equal to currentClaimPriceWei().
+    /// Using a contract `_compensationAddress` is not recommended
+    /// unless you know what you're doing (and you've tested it).
+    /// Will consume up to ~300,000 gas.
+    /// Will throw an error if:
+    ///   - name is invalid (see `validateProposedMonarchName(string)`)
+    ///   - payment is too low or too high
+    ///   - _compensationAddress is "obviously" wrong (e.g. 0x0).
+    /// Produces events:
+    ///   - `ThroneClaimedEvent
+    ///   - `CompensationSentEvent` / `CompensationFailEvent`
+    ///   - `CommissionEarnedEvent`
+    function claimThroneAdvanced(
+        string _monarchName,
+        address _compensationAddress
+    ) {
+        externalEnter();
+        claimThroneAdvancedRP(_monarchName, _compensationAddress);
+        externalLeave();
+    }
+
+    /// @notice Used by either the topWizard or subWizard to transfer
+    /// all rights to future commissions to the `_replacement` wizard.
+    /// WARN: The original wizard retains ownership of any past
+    /// commission held for them in the `funds` mapping, which they
+    /// can still withdraw.
+    /// Produces event WizardReplacedEvent.
+    function replaceWizard(address _replacement) {
+        externalEnter();
+        replaceWizardRP(_replacement);
+        externalLeave();
+    }
+
+    function fallbackRP() internal {
+        if (msg.data.length == 0) {
+            claimThroneRP("Anonymous");
+        } else {
+            string memory _monarchName = extractNameFromData(msg.data);
+            claimThroneRP(_monarchName);
+        }
+    }
+    
+    function claimThroneRP(string _monarchName) internal {
+        address _compensationAddress = msg.sender;
+        claimThroneAdvancedRP(_monarchName, msg.sender);
+    }
+
+    function claimThroneAdvancedRP(
+        string _monarchName,
+        address _compensationAddress
+    ) internal {
+
+        if (!validateNameInternal(_monarchName)) {
             throw;
         }
 
-        uint256 valuePaid = msg.value;
-
-        uint256 correctPrice = currentClaimPrice();
-
-        // If they paid too little, blow up - this should refund them (tho they lose all gas).
-        if (valuePaid < correctPrice) {
+        if (_compensationAddress == 0 ||
+            _compensationAddress == address(this)) {
             throw;
         }
 
-        // If they paid too much, blow up - this should refund them (tho they lose all gas).
-        // (Earlier contract versions tried to send the excess back, but
-        //  that got too fiddly with the possibility of failure).
-        if (valuePaid > correctPrice) {
+        uint paidWei = msg.value;
+        uint priceWei = currentClaimPriceWei();
+        if (paidWei < priceWei) {
+            throw;
+        }
+        // Make it easy for people to pay using a whole number of finney,
+        // which could be a teeny bit higher than the raw wei value.
+        uint excessWei = paidWei - priceWei;
+        if (excessWei > 1 finney) {
             throw;
         }
         
+        uint compensationWei;
+        uint commissionWei;
         if (!isLivingMonarch()) {
-
-            // When the throne is vacant, the claim price payment accumulates
-            // for the wizard and deity as extra commission.
-            recordCommission(correctPrice);
-
+            // dead men get no compensation
+            commissionWei = paidWei;
+            compensationWei = 0;
         } else {
-
-            // The claim price payment goes to the current monarch as compensation,
-            // with a commission held back for the wizard and deity.
-
-            uint256 commission = (correctPrice * config.commissionPerMille) / 1000;
-            uint256 compensation = correctPrice - commission;
-            recordCommission(commission);
-
-            // Sending ether to a contract address can fail if the destination
-            // contract runs out of gas receiving it (or otherwise mis-behaves).
-            // We include some extra gas (paid for by the current caller) to help
-            // avoid failure. It might be that the current caller hasn't included
-            // enough gas to even start the call - but that's OK, the next line
-            // will just blow up and they will be refunded and everything undone.
-            // However, if sending the payment fails, we don't throw an exception
-            // since we don't want the throne to get stuck because of one badly
-            // behaved contract. Instead, we record the failure and move on -
-            // they can get their money back later using resendFailedPayment().
-            // Experiments suggest 20000 + 2300 gas should be enough for wallets.
-
-            uint256 compensationExtraGas = 20000;
-            bool ok = sendWithExtraGas(monarchs[monarchs.length-1].compensationAddress,
-                                       compensation, compensationExtraGas);
-            if (ok) {
-                monarchs[monarchs.length-1].compensationStatus = PaymentStatus.Good;
-                CompensationPaymentSent(monarchs.length-1, compensation);
-            } else {
-                monarchs[monarchs.length-1].compensationStatus = PaymentStatus.Failed;
-                ringfencedFailedPaymentsBalance += compensation;
-                CompensationPaymentFailed(monarchs.length-1, compensation);
-            }
-            monarchs[monarchs.length-1].compensationTimestamp = block.timestamp;
-            monarchs[monarchs.length-1].compensationPaid = compensation;
+            commissionWei = (paidWei * rules.commissionPerThousand) / 1000;
+            compensationWei = paidWei - commissionWei;
         }
 
-        monarchs.push(Monarch(
-            compensationAddress,
-            tx.origin,
-            name,
-            valuePaid,
-            block.timestamp,
-            PaymentStatus.NotApplicable,
-            0,
+        if (commissionWei != 0) {
+            recordCommissionEarned(commissionWei);
+        }
+
+        if (compensationWei != 0) {
+            compensateLatestMonarch(compensationWei);
+        }
+
+        // In case of any teeny excess, we use the official price here
+        // since that should determine the new claim price, not paidWei.
+        monarchsByNumber.push(Monarch(
+            _compensationAddress,
+            _monarchName,
+            now,
+            priceWei,
             0
         ));
 
-        uint256 newMonarchIndex = monarchs.length - 1;
-        ThroneClaimed(newMonarchIndex, valuePaid);
+        ThroneClaimedEvent(monarchsByNumber.length - 1);
     }
 
-    // The wizard and deity split comission 50:50. To keep them honest,
-    // we must track how much the wizard has received less amount swept.
-    // (We could do the same for the deity, but it would be redundant).
-    function recordCommission(uint256 commission) internal {
-      wizardBalance += commission / 2;
+    function replaceWizardRP(address replacement) internal {
+        if (msg.value != 0) {
+            throw;
+        }
+        bool replacedOk = false;
+        address oldWizard;
+        if (msg.sender == topWizard) {
+            oldWizard = topWizard;
+            topWizard = replacement;
+            WizardReplacedEvent(oldWizard, replacement);
+            replacedOk = true;
+        }
+        // Careful - topWizard and subWizard can be the same address,
+        // in which case we must replace both.
+        if (msg.sender == subWizard) {
+            oldWizard = subWizard;
+            subWizard = replacement;
+            WizardReplacedEvent(oldWizard, replacement);
+            replacedOk = true;
+        }
+        if (!replacedOk) {
+            throw;
+        }
     }
 
-    // Re-send a compensation payment that previously failed, in the hope that
-    // adding more gas will make it work. Anyone can call it - but payments can
-    // only ever go to the original compensation address.
-    function resendFailedPayment(uint monarchNumber) {
-        // Only failed payments can be re-sent.
-        if (monarchs[monarchNumber].compensationStatus != PaymentStatus.Failed) {
-            throw;
-        }
-        address destination = monarchs[monarchNumber].compensationAddress;
-        uint256 compensation = monarchs[monarchNumber].compensationPaid;
-        // Include plenty of gas with the send (but leave some for us).
-        uint reserveGas = 25000;
-        bool ok = sendWithAllOurGasExcept(destination, compensation, reserveGas);
-        if (!ok) {
-            throw;
-        }
-        // No longer need to ring-fence it.
-        monarchs[monarchNumber].compensationStatus = PaymentStatus.Good;
-        ringfencedFailedPaymentsBalance -= compensation;
-        FailedCompensationPaymentResent(monarchNumber, compensation);
+    // Allow commission funds to build up in contract for the wizards
+    // to withdraw (carefully ring-fenced).
+    function recordCommissionEarned(uint _commissionWei) internal {
+        // give the subWizard any "odd" single wei
+        uint topWizardWei = _commissionWei / 2;
+        uint subWizardWei = _commissionWei - topWizardWei;
+        funds[topWizard] += topWizardWei;
+        CommissionEarnedEvent(topWizard, topWizardWei);
+        funds[subWizard] += subWizardWei;
+        CommissionEarnedEvent(subWizard, subWizardWei);
     }
 
-    // Void a failed compensation payment and award the ether to the wizard and the deity.
-    // Only the wizard or the deity can call it - and even they can only call it after
-    // the failedPaymentRingfenceDuration has elapsed.
-    function voidFailedPayment(uint monarchNumber) {
-        // Wizard or deity only please.
-        if (msg.sender != config.wizardAddress && msg.sender != config.deityAddress) {
-            throw;
+    // Send compensation to latest monarch (or hold funds for them
+    // if cannot through no fault of current caller).
+    function compensateLatestMonarch(uint _compensationWei) internal {
+        address compensationAddress =
+          latestMonarchInternal().compensationAddress;
+        // record that we compensated them
+        latestMonarchInternal().compensationWei = _compensationWei;
+        // WARN: if the latest monarch is a contract whose fallback
+        // function needs more 25300 gas than then they will NOT
+        // receive compensation automatically.
+        bool sentOk = carefulSendWithFixedGas(
+            compensationAddress,
+            _compensationWei,
+            suggestedExtraGasToIncludeWithSends
+        );
+        if (sentOk) {
+            CompensationSentEvent(compensationAddress, _compensationWei);
+        } else {
+            // This should only happen if the latest monarch is a contract
+            // whose fallback-function failed or ran out of gas (despite
+            // us including a fair amount of gas).
+            // We do not throw since we do not want the throne to get
+            // 'stuck' (it's not the new usurpers fault) - instead save
+            // the funds we could not send so can be claimed later.
+            // Their monarch contract would need to have been designed
+            // to/ call our withdrawFundsAdvanced(..) function mind you.
+            funds[compensationAddress] += _compensationWei;
+            CompensationFailEvent(compensationAddress, _compensationWei);
         }
-        // Only failed payments can be voided.
-        if (monarchs[monarchNumber].compensationStatus != PaymentStatus.Failed) {
-            throw;
-        }
-        // Only old payments can be voided (gives people a chance to resend).
-        uint256 failedPaymentAge = now - monarchs[monarchNumber].compensationTimestamp;
-        if (failedPaymentAge < config.failedPaymentRingfenceDuration) {
-            throw;
-        }
-        // Treat as compensation and un-ringfence.
-        uint256 compensation = monarchs[monarchNumber].compensationPaid;
-        ringfencedFailedPaymentsBalance -= compensation;
-        recordCommission(compensation);
-        // Don't let it be resent/voided again!
-        monarchs[monarchNumber].compensationStatus = PaymentStatus.Void;
-        FailedCompensationPaymentVoided(monarchNumber, compensation);
-    }
-
-    // Used only by the wizard to collect their commission.
-    function sweepWizardCommission(uint256 amount) onlywizard {
-        if (amount > wizardBalance) {
-            throw;
-        }
-        // Include plenty of gas with the send (but leave some for us).
-        uint reserveGas = 25000;
-        bool ok = sendWithAllOurGasExcept(config.wizardAddress, amount, reserveGas);
-        if (!ok) {
-            throw;
-        }
-        wizardBalance -= amount;
-        WizardCommissionSwept(config.wizardAddress, amount);
-    }
-
-    // How much can the deity withdraw from the contract?
-    function deityBalance() constant returns (uint256 balance) {
-        return this.balance - (wizardBalance + ringfencedFailedPaymentsBalance);
-    }
-
-    // Used only by the deity to collect their commission.
-    function sweepDeityCommission(uint256 amount) onlydeity {
-        // Even the deity cannot take the wizard's funds, nor the ring-fenced failed payments.
-        if (amount > deityBalance()) {
-            throw;
-        }
-        // Include plenty of gas with the send (but leave some for us).
-        uint reserveGas = 25000;
-        bool ok = sendWithAllOurGasExcept(config.deityAddress, amount, reserveGas);
-        if (!ok) {
-            throw;
-        }
-        DeityCommissionSwept(config.deityAddress, amount);
-    }
-
-    // Used only by the wizard to transfer all rights to a successor.
-    // It is probably unwise for the newWizard to be a contract unless
-    // it is able to call sweepWizardComission, switchWizard, voidFailedPayment
-    // and it has a suitably cheap fallback function.
-    function switchWizard(address newWizard) onlywizard {
-        config.wizardAddress = newWizard;
-        WizardSwitched(newWizard);
-    }
-
-    // Used only by the deity to transfer all rights to a successor.
-    // It is probably unwise for the newDeity to be a contract unless
-    // it is able to call sweepDeityComission, switchDeity, voidFailedPayment
-    // and it has a suitably cheap fallback function.
-    function switchDeity(address newDeity) onlydeity {
-        config.deityAddress = newDeity;
-        DeitySwitched(newDeity);
-    }
-
-    // Avoid wasting gas on invalid names.
-    function validateProposedMonarchName(
-        bytes   monarchName
-    ) constant returns (bool good) {
-
-        if (!validateName(monarchName)) {
-            return false;
-        }
-
-        return true;        
     }
 
 }
 
-// Work around the "contracts can't clone themselves" problem with this helper contract -
-// which also records all the official thrones so we can generate web-pages for them.
-// TODO - can we break more bits out to separate contracts for testing (e.g. validation)?
-contract ThroneMaker is CarefulSender, NameHasher {
 
-    // Each official throne has one of these entries.
-    struct GazetteerEntry {
-        // The name of the throne is the title of the holder.
-        // e.g. 'King of the Ether', 'Queen of Goats'.
-        bytes throneName;
-        // The address of the KingOfTheEther contract for this throne.
-        address throneContractAddress;
-        // How much was paid to create this throne (in wei)?
-        uint256 creationPricePaid;
-        // When was this throne created (block timestamp)?
-        uint256 creationTimestamp;
+/// @title Used by the World contract to create Kingdom instances.
+/// @dev Mostly exists so topWizard can potentially replace this
+/// contract to modify the Kingdom contract and/or rule validation
+/// logic to be used for *future* Kingdoms created by the World.
+/// We do not implement rentry protection because we don't send/call.
+contract KingdomFactory {
+
+    function KingdomFactory() {
     }
 
-    // The deity is the source of power; he delegates some to the wizard who in turn delegates some to the king.
-    address deityAddress;
-
-    // Used to ensure only the deity can do some things.
-    modifier onlydeity { if (msg.sender == deityAddress) _ }
-
-    // How much must someone currently pay to create their own throne?
-    uint256 public throneCreationPrice;
-
-    // Directory of all officially-recognised thrones.
-    GazetteerEntry[] public gazetteer;
-
-    // Mapping from nameHash to (throneIndex+1)
-    // (we add the one so that we can recognise the default storage value of zero as bogus)
-    mapping (uint256 => uint256) throneNumberByNameHash;
-
-    // Generated when a throne is created.
-    event ThroneCreated(uint256 throneIndex);
-
-    // Generated when the throne creation price is set.
-    event ThroneCreationPriceSet(uint256 newThroneCreationPrice);
-
-    // Generated when the deity collects fees.
-    event DeityCommissionSwept(address toDeityAddress, uint256 amount);
-
-    // Generated when the deity transfers ownership rights to another.
-    event DeitySwitched(address newDeityAddress);
-
-    // And so it begins.
-    function ThroneMaker(uint256 throneCreationPrice_) {
-        deityAddress = msg.sender;
-        setThroneCreationPrice(throneCreationPrice_);
-    }
-    
-    // How many monarchs have there been (including the current one, live or dead)?
-    function numberOfThrones() constant returns (uint256 numberOfThrones) {
-        return gazetteer.length;
-    }
-
-    // Don't think a fallback makes sense really for this contract.
     function () {
-      throw;
-    }
-    
-    // Creating a throne needs lots of gas, so call this to check name is OK first.
-    function validateProposedThroneName(
-        bytes   throneName
-    ) constant returns (bool good) {
-
-        if (!validateName(throneName)) {
-            return false;
-        }
-        uint256 nameHash = computeNameHash(throneName);
-        if (findThroneByNameHash(nameHash) != uint256(-1)) {
-            return false;
-        }
-
-        return true;        
+        // this contract should never have a balance
+        throw;
     }
 
-    // Creating a throne needs lots of gas, so call this to check config is OK first.
-    function validateProposedThroneConfig(
-        uint256 startingClaimPrice,
-        uint256 claimPriceAdjustPerMille,
-        uint256 commissionPerMille,
-        uint256 curseIncubationDuration
-    ) constant returns (bool good) {
-
-        if (startingClaimPrice < 1 szabo) {
+    // See World.createKingdomAdvanced(..) for parameter documentation.
+    function validateProposedThroneRules(
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) constant returns (bool allowed) {
+        if (_startingClaimPriceWei < 1 finney ||
+            _startingClaimPriceWei > 100 ether) {
             return false;
         }
-        if (startingClaimPrice > 1000000 ether) {
+        if (_maximumClaimPriceWei < 1 finney ||
+            _maximumClaimPriceWei > 100000 ether) {
             return false;
         }
-        if (claimPriceAdjustPerMille < 10) {
+        if (_startingClaimPriceWei * 10 > _maximumClaimPriceWei) {
             return false;
         }
-        if (claimPriceAdjustPerMille > 9000) {
+        if (_claimPriceAdjustPercent < 1 ||
+            _claimPriceAdjustPercent > 900) {
             return false;
         }
-        if (commissionPerMille < 10) {
+        if (_curseIncubationDurationSeconds < 15 minutes ||
+            _curseIncubationDurationSeconds > 10000 days) {
             return false;
         }
-        if (commissionPerMille > 100) {
+        if (_commissionPerThousand < 10 ||
+            _commissionPerThousand > 100) {
             return false;
         }
-        if (curseIncubationDuration < 5 minutes) {
-            return false;
-        }
-        if (curseIncubationDuration > 999 years) {
-            return false;
-        }
-
-        return true;        
+        return true;
     }
 
-    // Create a new throne.
-    // The caller will need to include payment equal to the current throneCreationPrice,
-    // as well as a very large amount of gas - about 2,000,000.
-    // The caller will become the wizard behind the throne.
-    // The other parameters here are documented in KingOfTheEtherThrone.ThroneConfig.
-    // NB: like all non-constant functions, the return value isn't actually returned
-    // outside the VM - use findThroneCalled(throneName) to get the throne you created.
-    // NB2: Yes, i suppose someone else could create one with the same name just before
-    // you - double-check the config of the throne contract created.
-    function createThrone(
-        bytes   throneName,
-        uint256 startingClaimPrice,
-        uint256 claimPriceAdjustPerMille,
-        uint256 commissionPerMille,
-        uint256 curseIncubationDuration
-    ) returns (uint256 throneIndex) {
-
-        // Caller becomes the wizard. Careful when calling from a contract.
-        address wizardAddress = msg.sender;
-
-        uint256 valuePaid = msg.value;
-        
-        // If they paid too little, blow up - this should refund them (tho they lose all gas).
-        if (valuePaid < throneCreationPrice) {
+    /// @notice Create a new Kingdom. Normally called by World contract.
+    /// WARN: Does NOT validate the _kingdomName or _world arguments.
+    /// Will consume up to 1,800,000 gas (!)
+    /// Will throw an error if:
+    ///   - rules invalid (see validateProposedThroneRules)
+    ///   - wizard addresses "obviously" wrong
+    ///   - out of gas quite likely (perhaps in future should consider
+    ///     using solidity libraries to reduce Kingdom size?)
+    // See World.createKingdomAdvanced(..) for parameter documentation.
+    function createKingdom(
+        string _kingdomName,
+        address _world,
+        address _topWizard,
+        address _subWizard,
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) returns (Kingdom newKingdom) {
+        if (msg.value > 0) {
+            // this contract should never have a balance
             throw;
         }
-
-        // If they paid too much, blow up - this should refund them (tho they lose all gas).
-        if (valuePaid > throneCreationPrice) {
+        // NB: topWizard and subWizard CAN be the same as each other.
+        if (_topWizard == 0 || _subWizard == 0) {
             throw;
         }
-
-        // Check the name is "safe" and doesn't already exist.
-        // We don't use the validateProposedThroneName function because we
-        // don't want the expense of computing the nameHash twice.
-        // TODO - but how expensive is that anyway, maybe we're just complicating things?
-        
-        if (!validateName(throneName)) {
+        if (_topWizard == _world || _subWizard == _world) {
             throw;
         }
-        uint256 nameHash = computeNameHash(throneName);
-        if (findThroneByNameHash(nameHash) != uint256(-1)) {
-            throw;
-        }
-        
-        // Check the configuration looks vaguely plausible.
-
-        if (!validateProposedThroneConfig(
-            startingClaimPrice,
-            claimPriceAdjustPerMille,
-            commissionPerMille,
-            curseIncubationDuration
+        if (!validateProposedThroneRules(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
         )) {
             throw;
         }
-
-        uint256 failedPaymentRingfenceDuration = 30 days;
-
-        KingOfTheEtherThrone throneContract = new KingOfTheEtherThrone(
-            wizardAddress,
-            deityAddress,
-            startingClaimPrice,
-            claimPriceAdjustPerMille,
-            commissionPerMille,
-            curseIncubationDuration,
-            failedPaymentRingfenceDuration,
-            this
+        return new Kingdom(
+            _kingdomName,
+            _world,
+            _topWizard,
+            _subWizard,
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
         );
-
-        return registerThrone(throneName, nameHash, throneContract, valuePaid, block.timestamp);
-    }
-
-    // Return the index in the gazetteer of the throne with the given name.
-    // Maxint (that is, uint(-1)) means not found
-    // NB: validates name as a side-effect
-    function findThroneCalled(bytes throneName) constant returns (uint256 throneIndex) {
-        if (!validateName(throneName)) {
-            throw;
-        }
-        return findThroneByNameHash(computeNameHash(throneName));
-    }
-
-    // Return the index in the gazetteer of the throne with the given name hash according to computeNameHash.
-    // Maxint (that is, uint(-1)) means not found
-    function findThroneByNameHash(uint256 nameHash) constant internal returns (uint256 throneIndex) {
-        uint256 throneNumber = throneNumberByNameHash[nameHash];
-        return throneNumber - 1;
-    }
-
-    // Used only by the deity to register thrones created by some other means.
-    function registerExistingThrone(bytes throneName, address throneContractAddress, uint256 creationPricePaid, uint256 creationTimestamp) onlydeity returns (uint256 throneIndex) {
-        if (!validateName(throneName)) {
-            throw;
-        }
-        uint256 nameHash = computeNameHash(throneName);
-        if (findThroneByNameHash(nameHash) != uint256(-1)) {
-          throw;
-        }
-        return registerThrone(throneName, nameHash, throneContractAddress, creationPricePaid, creationTimestamp);
-    }
-
-    // This is our "value-add" above just creating the contract; we add it to the offical list of thrones.
-    function registerThrone(bytes throneName, uint256 nameHash, address throneContractAddress, uint256 creationPricePaid, uint256 creationTimestamp) internal returns (uint256 throneIndex) {
-        gazetteer.push(GazetteerEntry(
-            throneName,
-            throneContractAddress,
-            creationPricePaid,
-            creationTimestamp
-        ));
-        uint256 newThroneIndex = gazetteer.length - 1;
-        uint256 throneNumber = newThroneIndex + 1;
-        throneNumberByNameHash[nameHash] = throneNumber;
-        ThroneCreated(newThroneIndex);
-        return newThroneIndex;
-    }
-
-    // Used only by the deity to change the throne creation price.
-    function setThroneCreationPrice(uint256 newThroneCreationPrice) onlydeity {
-        throneCreationPrice = newThroneCreationPrice;
-        ThroneCreationPriceSet(throneCreationPrice);
-    }
-   
-    // Used only by the deity to collect their throne creation fees.
-    function sweepDeityCommission(uint256 amount) onlydeity {
-        // Include plenty of gas with the send (but leave some for us).
-        uint reserveGas = 10000;
-        bool ok = sendWithAllOurGasExcept(deityAddress, amount, reserveGas);
-        if (!ok) {
-            throw;
-        }
-        DeityCommissionSwept(deityAddress, amount);
-    }
-
-    // Used only by the deity to transfer the throne making rights to a successor.
-    // It is probably unwise for the newDeity to be a contract unless it is able to
-    // call sweepDeityComission and switchDeity and it has a suitably cheap fallback function.
-    function switchDeity(address newDeity) onlydeity {
-        deityAddress = newDeity;
-        DeitySwitched(newDeity);
     }
 
 }
 
 
-// Expose normally internal functions for testing in isolation.
-// (arguably a poor testing practice, but contracts are a bit unusual -
-//  e.g. we don't really want to have to purely black-box-test name hashing by
-//  creating loads of thrones with similar names 'cos they're expensive ...)
-contract ThroneInternalsForTesting is CarefulSender, MoneyRounder, NameValidator, NameHasher {
+/// @title Runs the world, which is a collection of Kingdoms.
+contract World is
+  ReentryProtectorMixin,
+  NameableMixin,
+  MoneyRounderMixin,
+  FundsHolderMixin,
+  ThroneRulesMixin {
 
-    function sendWithExtraGasExt(address destination, uint256 value, uint256 extraGasAmt) returns (bool) {
-      return sendWithExtraGas(destination, value, extraGasAmt);
+    // The topWizard runs the world. They charge for the creation of
+    // kingdoms and become the topWizard in each kingdom created.
+    address public topWizard;
+
+    // How much one must pay to create a new kingdom (in wei).
+    // Can be changed by the topWizard.
+    uint public kingdomCreationFeeWei;
+
+    struct KingdomListing {
+        uint kingdomNumber;
+        string kingdomName;
+        address kingdomContract;
+        address kingdomCreator;
+        uint creationTimestamp;
+        address kingdomFactoryUsed;
+    }
+    
+    // The first kingdom is number 1; the zero-th entry is a dummy.
+    KingdomListing[] public kingdomsByNumber;
+
+    // These rules are used if plain createKingdom() is used.
+    ThroneRules public standardRules;
+
+    // Helper contract for creating Kingdom instances. Can be
+    // upgraded by the topWizard (won't affect existing ones).
+    KingdomFactory public kingdomFactory;
+
+    // Avoids duplicate kingdom names and allows searching by name.
+    mapping (uint => uint) kingdomNumbersByfuzzyHash;
+
+    // NB: we also have a `funds` mapping from FundsHolderMixin,
+    // and a rentryProtector from ReentryProtectorMixin.
+
+    event KingdomCreatedEvent(uint kingdomNumber);
+    event CreationFeeChangedEvent(uint newFeeWei);
+    event StandardRulesChangedEvent();
+    event FactoryChangedEvent(address newFactory);
+    event WizardReplacedEvent(address oldWizard, address newWizard);
+    // NB: we also have a `FundsWithdrawnEvent` from FundsHolderMixin
+
+    // Create the world with no kingdoms yet.
+    // The rule parameters will set the standard rules - see
+    // createKingdomAdvanced(..) for documentation.
+    // Costs about 1.9M gas to deploy.   
+    function World(
+        address _topWizard,
+        uint _kingdomCreationFeeWei,
+        KingdomFactory _kingdomFactory,
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) {
+        if (_topWizard == 0) {
+            throw;
+        }
+        if (!kingdomFactory.validateProposedThroneRules(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        )) {
+            throw;
+        }
+        topWizard = _topWizard;
+        kingdomCreationFeeWei = _kingdomCreationFeeWei;
+        kingdomFactory = _kingdomFactory;
+        standardRules = ThroneRules(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        );
+        // We number the kingdoms starting from 1 since it's sometimes
+        // useful to use zero = invalid. Create dummy zero-th entry.
+        kingdomsByNumber.push(KingdomListing(0, "", 0, 0, 0, 0));
     }
 
-    function sendWithAllOurGasExceptExt(address destination, uint256 value, uint256 reserveGasAmt) returns (bool) {
-      return sendWithAllOurGasExcept(destination, value, reserveGasAmt);
+    function numberOfKingdoms() constant returns (uint totalCount) {
+        return kingdomsByNumber.length - 1;
     }
 
-    function roundMoneyDown3SFExt(uint256 rawWeiAmount) constant returns (uint256 nicerWeiAmount) {
-      return roundMoneyDown3SF(rawWeiAmount);
+    /// @return index into kingdomsByNumber if found, or zero if not. 
+    function findKingdomCalled(string _kingdomName) constant
+    returns (uint kingdomNumber) {
+        uint fuzzyHash = computeNameFuzzyHash(_kingdomName);
+        return kingdomNumbersByfuzzyHash[fuzzyHash];
     }
 
-    function validateNameExt(bytes name) constant returns (bool good) {
-      return validateName(name);
+    /// @notice Check if a name can be used as a kingdom name.
+    /// @return True if the name satisfies the criteria of:
+    ///   - no fewer than 1 character
+    ///   - no more than 25 characters
+    ///   - no characters other than:
+    ///     - "roman" alphabet letters (A-Z and a-z)
+    ///     - western digits (0-9)
+    ///     - "safe" punctuation: ! ( ) - . _ SPACE
+    ///
+    /// WARN: does not check if the name is already in use;
+    /// use `findKingdomCalled(string)` for that afterwards.
+    function validateProposedKingdomName(string _kingdomName) constant
+    returns (bool allowed) {
+        return validateNameInternal(_kingdomName);
     }
 
-    function computeNameHashExt(bytes name) constant returns (uint256 nameHash) {
-      return computeNameHash(name);
+    // Check if rules would be allowed for a new custom Kingdom.
+    // Typically used before calling `createKingdomAdvanced(...)`.
+    function validateProposedThroneRules(
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) constant returns (bool allowed) {
+        return kingdomFactory.validateProposedThroneRules(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        );
+    }
+
+    // How much one must pay to create a new kingdom (in finney).
+    // Can be changed by the topWizard.
+    function kingdomCreationFeeInFinney() constant
+    returns (uint feeInFinney) {
+        return roundMoneyUpToWholeFinney(kingdomCreationFeeWei);
+    }
+
+    /// @notice Create a new kingdom by sending funds to the contract.
+    ///
+    /// To supply the name of the kingdom, send data encoded using
+    /// web3.fromAscii('NAME:' + 'your_chosen_valid_name').
+    /// Kingdom created will use a copy of the curent standard rules.
+    /// The sender (`msg.sender`) will become the subWizard within the
+    /// created kingdom and earn half any commission earned (they will
+    /// need to call withdrawFunds() on the Kingdom contract to get it).
+    /// Sender must include payment equal to kingdomCreationFeeWei.
+    /// Will consume up to 1,900,000 gas (!)
+    /// Will throw an error if:
+    ///   - no name data supplied
+    ///   - name is invalid (see `validateProposedKingdomName(string)`)
+    ///   - name is already in use (see `findKingdomCalled(string)`)
+    ///   - payment is too low or too high
+    ///   - insufficient gas (quite likely!)
+    /// Produces event KingdomCreatedEvent.
+    function () {
+        externalEnter();
+        fallbackRP();
+        externalLeave();
+    }
+
+    /// @notice Create a new kingdom using the standard rules.
+    /// @param _kingdomName e.g. "King of the Ether Throne"
+    ///
+    /// The sender (`msg.sender`) will become the subWizard within the
+    /// created kingdom and earn half any commission earned (they will
+    /// need to call withdrawFunds() on the Kingdom contract to get it).
+    /// Caller must include payment equal to kingdomCreationFeeWei.
+    /// Will consume up to 1,900,000 gas (!)
+    /// Will throw an error if:
+    ///   - name is invalid (see `validateProposedKingdomName(string)`)
+    ///   - name is already in use (see `findKingdomCalled(string)`)
+    ///   - payment is too low or too high
+    ///   - insufficient gas (quite likely!)
+    /// Produces event KingdomCreatedEvent.
+    function createKingdom(string _kingdomName) {
+        externalEnter();
+        createKingdomRP(_kingdomName);
+        externalLeave();
+    }
+
+    /// @notice Create a new kingdom using custom rules.
+    /// @param _kingdomName \
+    ///   e.g. "King of the Ether Throne"
+    /// @param _subWizard \
+    ///   Will earn half any commission charged by the Kingdom.
+    ///   Note they will need to call withdrawFunds() on the Kingdom
+    ///   contract to get their commission.
+    /// @param _startingClaimPriceWei \
+    ///   How much it will cost the first monarch to claim the throne
+    ///   (and also the price after the death of a monarch).
+    /// @param _maximumClaimPriceWei \
+    ///   The maximum price the throne can ever reach (it stops going
+    ///   up after this. Useful to avoid The DAO $150MM fiascos.
+    /// @param _claimPriceAdjustPercent \
+    ///   Percentage increase after each claim - e.g. if claim price
+    ///   was 200 ETH, and `_claimPriceAdjustPercent` is 50, the next
+    ///   claim price will be 200 ETH + (50% of 200 ETH) => 300 ETH.
+    /// @param _curseIncubationDurationSeconds \
+    ///   The maximum length of a time a monarch can rule before the
+    ///   curse strikes and they are removed without compensation.
+    /// @param _commissionPerThousand \
+    ///   How much of each payment is given to the wizards to share,
+    ///   expressed in parts per thousand - e.g. 25 means 25/1000,
+    ///   or 2.5%.
+    /// 
+    /// Caller must include payment equal to kingdomCreationFeeWei.
+    /// Will consume up to 1,900,000 gas (!)
+    /// Will throw an error if:
+    ///   - name is invalid (see `validateProposedKingdomName(string)`)
+    ///   - name is already in use (see `findKingdomCalled(string)`)
+    ///   - rules are invalid (see `validateProposedKingdomRules(...)`)
+    ///   - payment is too low or too high
+    ///   - insufficient gas (quite likely!)
+    /// Produces event KingdomCreatedEvent.
+    function createKingdomAdvanced(
+        string _kingdomName,
+        address _subWizard,
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) {
+        externalEnter();
+        createKingdomAdvancedRP(
+            _kingdomName,
+            _subWizard,
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        );
+        externalLeave();
+    }
+
+    /// @notice Used by topWizard to transfer all rights to future
+    /// fees and future kingdom wizardships to `_replacement` wizard.
+    /// WARN: The original wizard retains ownership of any past fees
+    /// held for them in the `funds` mapping, which they can still
+    /// withdraw. They also remain topWizard in any existing Kingdoms.
+    /// Produces event WizardReplacedEvent.
+    function replaceWizard(address _replacement) {
+        externalEnter();
+        replaceWizardRP(_replacement);
+        externalLeave();
+    }
+
+    /// @notice Used by topWizard to vary the fee for creating kingdoms.
+    function setCreationFee(uint _kingdomCreationFeeWei) {
+        externalEnter();
+        setCreationFeeRP(_kingdomCreationFeeWei);
+        externalLeave();
+    }
+
+    /// @notice Used by topWizard to vary the factory contract which
+    /// will be used to create future Kingdoms.
+    function setKingdomFactory(KingdomFactory _kingdomFactory) {
+        externalEnter();
+        setKingdomFactoryRP(_kingdomFactory);
+        externalLeave();
+    }
+
+    /// @notice Used by topWizard to vary the standard rules which
+    /// will be used to create future standard Kingdoms.
+    function setStandardRules(
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) {
+        externalEnter();
+        setStandardRulesRP(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        );
+        externalLeave();
+    }
+
+    function fallbackRP() internal {
+        if (msg.data.length == 0) {
+            throw;
+        } else {
+            string memory _kingdomName = extractNameFromData(msg.data);
+            createKingdomRP(_kingdomName);
+        }
+    }
+    
+    function createKingdomRP(string _kingdomName) internal {
+        address subWizard = msg.sender;
+        createKingdomAdvancedRP(
+            _kingdomName,
+            subWizard,
+            standardRules.startingClaimPriceWei,
+            standardRules.maximumClaimPriceWei,
+            standardRules.claimPriceAdjustPercent,
+            standardRules.curseIncubationDurationSeconds,
+            standardRules.commissionPerThousand
+        );
+    }
+
+    function createKingdomAdvancedRP(
+        string _kingdomName,
+        address _subWizard,
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) internal {
+
+        if (!validateNameInternal(_kingdomName)) {
+            throw;
+        }
+
+        uint newKingdomNumber = kingdomsByNumber.length;
+        checkUniqueAndRegisterNewKingdomName(
+            _kingdomName,
+            newKingdomNumber
+        );
+
+        uint paidWei = msg.value;
+        if (paidWei < kingdomCreationFeeWei) {
+            throw;
+        }
+        // Make it easy for people to pay using a whole number of finney,
+        // which could be a teeny bit higher than the raw wei value.
+        uint excessWei = paidWei - kingdomCreationFeeWei;
+        if (excessWei > 1 finney) {
+            throw;
+        }
+        funds[topWizard] += paidWei;
+        
+        // This will perform rule validation.
+        Kingdom kingdomContract = kingdomFactory.createKingdom(
+            _kingdomName,
+            address(this),
+            topWizard,
+            _subWizard,
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        );
+
+        kingdomsByNumber.push(KingdomListing(
+            newKingdomNumber,
+            _kingdomName,
+            kingdomContract,
+            msg.sender,
+            now,
+            kingdomFactory
+        ));
+    }
+
+    function replaceWizardRP(address replacement) internal { 
+        if (msg.sender != topWizard) {
+            throw;
+        }
+        if (msg.value != 0) {
+            throw;
+        }
+        address oldWizard = topWizard;
+        topWizard = replacement;
+        WizardReplacedEvent(oldWizard, replacement);
+    }
+
+    function setCreationFeeRP(uint _kingdomCreationFeeWei) internal {
+        if (msg.sender != topWizard) {
+            throw;
+        }
+        if (msg.value != 0) {
+            throw;
+        }
+        kingdomCreationFeeWei = _kingdomCreationFeeWei;
+        CreationFeeChangedEvent(kingdomCreationFeeWei);
+    }
+
+    function setKingdomFactoryRP(KingdomFactory _kingdomFactory) internal {
+        if (msg.sender != topWizard) {
+            throw;
+        }
+        if (msg.value != 0) {
+            throw;
+        }
+        kingdomFactory = _kingdomFactory;
+        FactoryChangedEvent(kingdomFactory);
+    }
+
+    function setStandardRulesRP(
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) internal {
+        if (msg.sender != topWizard) {
+            throw;
+        }
+        if (msg.value != 0) {
+            throw;
+        }
+        if (!validateProposedThroneRules(
+            _startingClaimPriceWei,
+            _maximumClaimPriceWei,
+            _claimPriceAdjustPercent,
+            _curseIncubationDurationSeconds,
+            _commissionPerThousand
+        )) {
+            throw;
+        }
+        standardRules.startingClaimPriceWei = _startingClaimPriceWei;
+        standardRules.maximumClaimPriceWei = _maximumClaimPriceWei;
+        standardRules.claimPriceAdjustPercent = _claimPriceAdjustPercent;
+        standardRules.curseIncubationDurationSeconds =
+          _curseIncubationDurationSeconds;
+        standardRules.commissionPerThousand = _commissionPerThousand;
+        StandardRulesChangedEvent();        
+    }
+
+    // If there is no existing kingdom called `_kingdomName`, create
+    // a record mapping that name to kingdom no. `_newKingdomNumber`.
+    // Throws an error if an existing kingdom with the same (or
+    // fuzzily similar - see computeNameFuzzyHash) name exists.
+    function checkUniqueAndRegisterNewKingdomName(
+        string _kingdomName,
+        uint _newKingdomNumber
+    ) internal {
+        uint fuzzyHash = computeNameFuzzyHash(_kingdomName);
+        if (kingdomNumbersByfuzzyHash[fuzzyHash] != 0) {
+            throw;
+        }
+        kingdomNumbersByfuzzyHash[fuzzyHash] = _newKingdomNumber;
+    }
+
+}
+
+
+/// @title Used on the testnet to allow automated testing of internals.
+contract ExposedInternalsForTesting is
+  MoneyRounderMixin, NameableMixin {
+
+    function roundMoneyDownNicelyET(uint _rawValueWei) constant
+    returns (uint nicerValueWei) {
+        return roundMoneyDownNicely(_rawValueWei);
+    }
+
+    function roundMoneyUpToWholeFinneyET(uint _valueWei) constant
+    returns (uint valueFinney) {
+        return roundMoneyUpToWholeFinney(_valueWei);
+    }
+
+    function validateNameInternalET(string _name) constant
+    returns (bool allowed) {
+        return validateNameInternal(_name);
+    }
+
+    function extractNameFromDataET(bytes _data) constant
+    returns (string extractedName) {
+        return extractNameFromData(_data);
+    }
+    
+    function computeNameFuzzyHashET(string _name) constant
+    returns (uint fuzzyHash) {
+        return computeNameFuzzyHash(_name);
     }
 
 }

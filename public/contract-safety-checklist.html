@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Contract Safety Checklist</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <style>
+  body {
+    background-color: #FFF7F0;
+  }
+  .content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13pt;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 3px;
+  }
+  h2 {
+    background-image: url("kotelogotiny.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding: 0 30px;
+    height: 60px;
+    line-height: 60px;
+  }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="content">
+      <h1>Contract Safety Checklist</h1>
+      <p>
+        This page describes the steps we've taken to mitigate against potential contract vulnerabilities.
+      </p>
+
+      <h2>Logic Bugs</h2>
+      <p>
+        Simple programmimng mistakes can cause the contract to behave differently to its stated rules, especially on 'edge cases'.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Running over fifty on-chain functional tests against the contract - see our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
+          <li>Performing "fuzz testing" by generating random method calls and applying them to both the real Solidity contract and a Javascript simulation of intended behaviour, then looking for differences. See - TODO.</li>
+          <li>Following Solidity coding standards and general coding best practices for safety-critical software.</li>
+          <li>Avoiding overly complex rules (even at the cost of some functionality) or complicated implementation (even at the cost of some gas).</li>
+        </ul>
+      </p>
+
+      <h2>Failed Sends</h2>
+      <p>
+        An <a href="history.html">earlier version of King of the Ether</a> suffered from <a href="postmortem.html">failure to send compensation payments</a> to wallet contracts created by older versions of the Mist Ethereum Wallet.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Including a reasonable amount of gas with each payment sent.</li>
+          <li>If sending a compensation payment still fails, we detect this and ring-fence the funds for the recipient to withdraw.</li>
+          <li>Running several functional tests for this scenario - see e.g. "Compensation payment failure detected when sending to a very expensive wallet contract" and "Successfully resend failed compensation payment" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
+        </ul>
+      </p>
+
+      <h2>Recursive Calls</h2>
+      <p>
+        Famously, the original <a href="https://daohub.org/">DAO</a> contract exhibited unintended behaviour where a "recursive split" technique was used to move Ether worth over US$ 100 Million out of the DAO.
+        This was possible because when a contract sends payment to another contract, the receiving contract's fallback function can call back into the sending contract, which can often produce behaviour the developer of the sending contract developer had not anticipated.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Using a 'reentry' flag to prevent recursive calls to <b>all</b> external non-constant functions in the contract - see the "ReentryProtectorMixin" in <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/contracts/KingOfTheEtherThrone.sol">our contract code</a>.</li>
+          <li>Running functional tests for this scenario - see e.g. "TODO" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
+        </ul>
+      </p>
+
+      <h2>Integer Arithmetic Overflow</h2>
+      <p>
+        Numbers in Solidity code silently "wrap-around" if they become too large. This can lead to surprising behaviour - e.g. a check like "if (amountOne + amountTwo < myBalance) {...}" can appear to be true if one of the amounts is large enough to cause over-flow.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Auditing every use of arithmetic operations involving user-supplied data.</li>
+          <li>Checking pre-conditions before performing arithmetic where practical.</li>
+        </ul>
+      </p>
+
+      <h2>Poison Data</h2>
+      <p>
+        Contracts that accept user input that is stored or exposed to other users are vulnerable to being supplied with unanticipated input that causes problems for the contract or for other users of the contract.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Limiting the length of user-supplied data such as monarch names.</li>
+          <li>If sending a compensation payment to a user-supplied address fails, we detect this and ring-fence the funds for the recipient to withdraw later, rather than preventing other monarchs claiming the throne.</li>
+          <li>We disallow characters in names that often have special meaning in computer systems such as &lt;, &gt; and ' to avoid causing problems for poorly-written software that reads contract data.</li>
+          <li>Running functional tests for these scenarios - see e.g. "Name Validation" and "Compensation payment failure detected when sending to a very expensive wallet contract" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
+        </ul>
+      </p>
+
+      <h2>Exposed Functions</h2>
+      <p>
+        It is easy to accidentally expose a contract function which was meant to be internal, or to omit protection on a function which was meant to be called only by priviledged accounts (e.g. by the creator).
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Auditing every external function to ensure it is intended to be exposed and has suitable protection.</li>
+          <li>Running functional tests for this scenario - see e.g. "TODO" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
+        </ul>
+      </p>
+
+      <h2>Exposed Secrets</h2>
+      <p>
+        All code and data on the blockchain is visible by anyone, even if not marked as "public" in Solidity. Contracts that attempt to rely on keeping keys or behaviour secret are in for a surpsise.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Ensuring our contracts do not rely on any secret information.</li>
+        </ul>
+      </p>
+
+     <h2>Denial of Service</h2>
+      <p>
+        An attacker may cause inconvenience for other users by supplying the contract with data that is expensive to process, or by repeatedly carrying out actions that prevent others from interacting with the contract.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Limiting the length of user-supplied data such as monarch names.</li>
+          <li>Avoiding looping behaviour where e.g. a function costs more and more gas each time is used.</li>
+          <li>Ensuring that payment is required by a user to make a change that would affect other users' transactions.</li>
+          <li>TODO - we are considering use of DoS protection for websites related to the contract.</li>
+        </ul>
+      </p>
+
+      <h2>Miner Vulnerabilities</h2>
+      <p>
+        Even without serious collusion, Ethereum miners have some limited ability to influence block timestamps and which transactions are chosen in a block (and hence block hashes).
+        A miner or group of miners who control a majority of hashing power in the network can make almost any change they want to contract data or behaviour.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Not using block hashes.</li>
+          <li>Not expecting a precision of better than fifteen minutes or so from block timestamps.</li>
+          <li>Capping the maximum claim price at a level well below that for which a rational miner would take the risk of "cheating".</li>
+        </ul>
+      </p>
+
+      <h2>Malicious Creator</h2>
+      <p>
+        If a contract gives the creator/owner of the contract too much power, they may take funds that should be owned by users of the contract, or change the behaviour of the contract in their favour.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Other than compensation payments that failed to be sent, the contract does not hold user funds.</li>
+          <li>Not allowing the rules of a throne (commission, claim price) to be changed after creation by anyone.</li>
+          <li>Only allowing the creator to withdraw funds from the contract that have been ring-fenced for them - that is, their commission.</li>
+          <li>Not allowing the creator to upgrade or change the behaviour of a Kingdom contract once created.
+              Unfortunately this prevents the creator fixing bugs, though we have a mechanism to replace the contract used for future kingdoms.</li>
+        </ul>
+      </p>
+
+     <h2>Off-chain Safety</h2>
+      <p>
+        Rather than attack the contract itself, an attacker may trick users into interacting with a different contract or into sending funds to her address instead of the real contract.
+        This could be done by phishing, by taking control of the website hosting, or by attacking github accounts.
+        An attacker may also attempt to steal Ethereum account private keys from users (or from the contract administrators).
+        For some contracts, accidental loss of private keys belonging to a user important to the contract's contuining operation (e.g. the creator) could prevent operation of the contract.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>TODO - using HTTPS with strong security settings (pinning) on websites related to the contract.</li>
+          <li>Using security measures such as two-factor authentication on hosting provider, DNS, and github accounts.</li>
+          <li>Following OWASP guidelines for avoiding web vulnerabilities in websites related to the contract.</li>
+          <li>Keeping sensitive data (e.g. passphrases, keys) in encrypted storage on physically separated hardware, with encrypted off-site backups.</li>
+        </ul>
+      </p>
+
+    </div>
+  </div>
+  <script type="text/javascript">
+  <!--
+  // -->
+  </script>
+</body>
+</html>

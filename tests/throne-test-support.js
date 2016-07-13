@@ -4,44 +4,71 @@
 var ThronePropertiesFacade = require('../js/throne-properties-facade.js');
 
 /*
- * TODO - document
+ * Provides some handy function for setting up test conditions
+ * and performing assertions (it also indirectly tests some of
+ * our interface code like ThronePropertiesFacade ...).
 */
 
 function ThroneTestSupport() {
 }
 
-// TODO - too low level, should just be getMonarch(throne, web3, monarchNumber) or similar
-ThroneTestSupport.prototype.getMonarch = function(throne, web3, monarchIndex) {
+  /*
+    struct Monarch {
+        // where to send their compensation
+        address compensationAddress;
+        // their name
+        string name;
+        // when they became our ruler
+        uint coronationTimestamp;
+        // the claim price paid (excluding any over-payment)
+        uint claimPriceWei;
+        // the compensation sent to or held for them so far
+        uint compensationWei;
+    }
+  */  
+ThroneTestSupport.prototype.getMonarch = function(throne, web3, monarchNumber) {
   var thronePropertiesFacade = new ThronePropertiesFacade(throne, web3);
-  return thronePropertiesFacade.getMonarch(monarchIndex);
+  return thronePropertiesFacade.getMonarch(monarchNumber);
 };
 
-// TODO - rename to getThroneConfig
-ThroneTestSupport.prototype.decodeThroneConfig = function(throne, web3) {
+ThroneTestSupport.prototype.decodeThroneRules = function(throne, web3) {
   var thronePropertiesFacade = new ThronePropertiesFacade(throne, web3);
-  return thronePropertiesFacade.getConfig();
+  return thronePropertiesFacade.getRules();
 };
 
-// NB: why doesn't web3 do this for us? anyway, should probably move this to production code so are testing it.
-ThroneTestSupport.prototype.decodeGazetteerEntry = function(gazetteerEntryArray, web3) {
-  return {
-    throneName: web3.toAscii(gazetteerEntryArray[0]),
-    throneContractAddress:   gazetteerEntryArray[1],
-    creationPricePaid:       gazetteerEntryArray[2],
-    creationTimestamp:       gazetteerEntryArray[3]
-  };
+ThroneTestSupport.prototype.getTopWizardBalance = function(throne) {
+  return throne.fundsOf(throne.topWizard());
+};
+
+ThroneTestSupport.prototype.getSubWizardBalance = function(throne) {
+  return throne.fundsOf(throne.subWizard());
 };
 
 ThroneTestSupport.prototype._createThrone = function(helper, configObj) {
-  return helper.txn.createContractInstance('KingOfTheEtherThrone', [
-    configObj.wizardAddress,
-    configObj.deityAddress,
+  
+  /*
+      function Kingdom(
+        string _kingdomName,
+        address _world,
+        address _topWizard,
+        address _subWizard,
+        uint _startingClaimPriceWei,
+        uint _maximumClaimPriceWei,
+        uint _claimPriceAdjustPercent,
+        uint _curseIncubationDurationSeconds,
+        uint _commissionPerThousand
+    ) {
+  */
+  return helper.txn.createContractInstance('Kingdom', [
+    "test",
+    configObj.worldAddress,
+    configObj.topWizardAddress,
+    configObj.subWizardAddress,
     configObj.startingClaimPrice,
-    configObj.claimPriceAdjustPerMille,
-    configObj.commissionPerMille,
-    configObj.incubationDuration,
-    configObj.failedPaymentRingfenceDuration,
-    configObj.throneMakerAddress
+    configObj.maximumClaimPrice,
+    configObj.claimPriceAdjustPercent,
+    configObj.curseIncubationDurationSeconds,
+    configObj.commissionPerThousand
   ]);
 };
 
@@ -51,14 +78,14 @@ ThroneTestSupport.prototype.createStandardTestThrone = function(helper) {
 
 ThroneTestSupport.prototype.createStandardTestThroneExcept = function(helper, nonStandardConfig) {
   var config = {
-    wizardAddress: helper.account.master,
-    deityAddress: helper.account.master,
+    worldAddress: 0,
+    topWizardAddress: helper.account.master,
+    subWizardAddress: helper.account.master,
     startingClaimPrice: helper.math.toWei('1','ether'),
-    claimPriceAdjustPerMille: '500',
-    commissionPerMille: '20',
-    incubationDuration: '180',
-    failedPaymentRingfenceDuration: '240',
-    throneMakerAddress: 0
+    maximumClaimPrice: helper.math.toWei('1000','ether'),
+    claimPriceAdjustPercent: '50',
+    commissionPerThousand: '20',
+    curseIncubationDurationSeconds: '180'
   };
   for (var name in nonStandardConfig) {
     if (nonStandardConfig.hasOwnProperty(name)) {

@@ -2,11 +2,11 @@
 'use strict';
 
 /*
- * TODO - document
+ * TODO - document, port to new contract
 */
 
 function TestThroneMultiNode() {
-};
+}
 
 TestThroneMultiNode.prototype.addTests = function(runner, throneTestSupport) {
 

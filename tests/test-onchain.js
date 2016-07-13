@@ -2,7 +2,7 @@
 'use strict';
 
 /*
- * Perform on-block-chain tests of the King of the Ether Throne contracts & javascript interface.
+ * Perform on-block-chain tests of the King of the Ether Throne contracts & javascript interfaces.
  *
  * Intended to be run against the testnet via the web3 RPC API (it's a bit expensive on main net!).
  *
@@ -36,6 +36,7 @@ runner.setMasterAccount({
 runner.addEtherNode({
   web3RpcUrl: 'http://localhost:8646'
 });
+// TODO - re-instate multi-node tests
 //runner.addEtherNode({
 //  web3RpcUrl: 'http://localhost:8647'
 //});
@@ -48,24 +49,25 @@ var throneTestSupport = new ThroneTestSupport();
 // Perhaps we ought to have concept of suites? Or just use multiple runners?
 var TestThroneCore = require('./test-throne-core.js');
 var TestThronePayments = require('./test-throne-payments.js');
-var TestThroneMaker = require('./test-throne-maker.js');
-var TestThroneSecurity = require('./test-throne-security.js');
-var TestThronePerformance = require('./test-throne-performance.js');
-var TestThroneFuzz = require('./test-throne-fuzz.js');
+//var TestWorld = require('./test-world.js');
+//var TestThroneSecurity = require('./test-throne-security.js');
+//var TestThronePerformance = require('./test-throne-performance.js');
+//var TestThroneFuzz = require('./test-throne-fuzz.js');
 var TestThroneInternals = require('./test-throne-internals.js');
-var TestThroneMultiNode = require('./test-throne-multi-node.js');
-var TestThroneUX = require('./test-throne-ux.js');
+// TODO - re-instate multi-node tests
+//var TestThroneMultiNode = require('./test-throne-multi-node.js');
+// TODO - stuff for data extraction
+// TODO - other stuff can be done off-block-chain in separate tests
 
 var subTestModules = [
   new TestThroneCore(),
   new TestThronePayments(),
-  new TestThroneMaker(),
-  new TestThroneSecurity(),
-  new TestThronePerformance(),
-  new TestThroneFuzz(),
+  //new TestWorld(),
+  //new TestThroneSecurity(),
+  //new TestThronePerformance(),
+  //new TestThroneFuzz(),
   new TestThroneInternals(),
-  new TestThroneMultiNode(),
-  new TestThroneUX()
+  //new TestThroneMultiNode()
 ];
 
 // uncomment to debug concurrency problems
@@ -106,11 +108,11 @@ subTestModules.forEach(function (stm) {
 // Uncomment these to control which tests are run.
 
 //runner.excludeCategory('safe');
-runner.excludeCategory('multinode');
-//runner.excludeCategory('broken');
-
+//runner.excludeCategory('multinode');
+runner.excludeCategory('notported');
+//runner.excludeExceptCategory('quick-retest');
 
 // Run the tests.
 runner.run(function (results) {
-  fs.writeFileSync('tests/test-throne-report.md', results.getMarkdownReport(), 'utf-8');
+  fs.writeFileSync('tests/onchain-test-report.md', results.getMarkdownReport(), 'utf-8');
 });

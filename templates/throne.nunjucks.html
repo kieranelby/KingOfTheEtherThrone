@@ -77,7 +77,7 @@
       <h1>{{ThroneName}}</h1>
       <p>An Ethereum contract, living on the blockchain, that will make you a King or Queen, might grant you riches, and will immortalize your name.</p>
 
-      <a name="Contents" /><h2>Contents</h2>
+      <a name="Contents"><h2>Contents</h2></a>
       <ul>
         <li><a href="#WhatItDo">What's this about?</a></li>
         <li><a href="#WhoMonarch">Who is the Monarch?</a></li>
@@ -88,7 +88,7 @@
         <li><a href="#Disclaimer">Disclaimer</a></li>
       </ul>
 
-      <a name="WhatItDo" /><h2>What's this about?</h2>
+      <a name="WhatItDo"><h2>What's this about?</h2></a>
       <p>The {{ThroneName}} awaits you. It can be yours for a price - here are the contract rules:</p>
       <ul>
         <li>Suppose the current throne claim price is {{ExampleCurrentClaimPrice}}.</li>
@@ -102,7 +102,7 @@
             But surely a successor will appear within {{CurseIncubationDuration}}, and even if they don&#39;t, you&#39;ll be immortalised in the blockchain at least ...</li>
       </ul>
 
-      <a name="WhoMonarch"/><h2>Who is the Monarch?</h2>
+      <a name="WhoMonarch"><h2>Who is the Monarch?</h2></a>
       {% if IsLivingMonarch %}
       <p>The illustrious current {{ThroneName}} is <strong>{{CurrentMonarch.Name}}</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
       <p>Think you can take their place? Read on for <a href="#HowIRule">How to Rule!</a></p>
@@ -116,7 +116,7 @@
       {% endif %}
       <h5>(This information was last updated at {{LastUpdated}}.)</h5>
      
-      <a name="GreatHall"/><h2>Hall of Monarchs</h2>
+      <a name="GreatHall"><h2>Hall of Monarchs</h2></a>
       <p>These are the hallowed rulers of the {{ThroneName}}, immortalized in the block-chain:</p>
       <table>
         <thead>
@@ -137,10 +137,9 @@
         </tbody>
       </table>
       
-      <a name="HowIRule"/><h2>How Can I Rule?</h2>
+      <a name="HowIRule"><h2>How Can I Rule?</h2></a>
       <p>The power of the {{ThroneName}} can be yours for the <strong>current claim price</strong> of just <strong>{{CurrentClaimPrice}}</strong> (as of <span class="timestamp">{{LastUpdated}}</span>). Here's how:</p>
-      <a name="ClaimBySendWallet"/>
-      <h3 class="for-ethereum-wallet">Claim by Sending Ether using the Ethereum Wallet</h3>
+      <a name="ClaimBySendWallet"><h3 class="for-ethereum-wallet">Claim by Sending Ether using the Ethereum Wallet</h3></a>
       <p>Ethereum Wallet users can claim the throne by sending ether to the contract. <button class="js-show-collapsed" data-section-id="claim-by-send-wallet">Show me how ...</button></p>
       <div id="claim-by-send-wallet" class="js-collapse">
         <p>Go to the "Send Funds" page of your Ethereum Wallet app and enter the following details:</p>
@@ -190,37 +189,34 @@
         <p>After you've sent your funds, wait for the transaction to confirm, then reload this page. It may take a few minutes to appear.</p>
       </div>
 
-      <a name="ClaimByUsingGeth"/>
-      <h3 class="for-geth">Claim using the geth console</h3>
+      <a name="ClaimByUsingGeth"><h3 class="for-geth">Claim using the geth console</h3></a>
       <p><b>geth</b> users can claim the throne by sending funds to the contract via the geth console. <button class="js-show-collapsed" data-section-id="claim-by-send-geth">Show me how ...</button></p>
       <div id="claim-by-send-geth" class="js-collapse">
         <p>TODO - explain</p>
       </div>
 
-      <a name="ClaimByInteractWallet"/>
-      <h3 class="for-ethereum-wallet">Claim by Interacting with the {{ThroneName}} Contract in the Ethereum Wallet</h3>
+      <a name="ClaimByInteractWallet"><h3 class="for-ethereum-wallet">Claim by Interacting with the {{ThroneName}} Contract in the Ethereum Wallet</h3></a>
       <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet, you can watch and interact with the {{ThroneName}} contract to become ruler - this shows off the power of Ethereum best! <button class="js-show-collapsed" data-section-id="claim-by-interact-wallet">Show me how ...</button></p>
       <div id="claim-by-interact-wallet" class="js-collapse">
         <p>TODO - explain</p>
       </div>
 
-      <a name="ClaimByOther"/>
-      <h3>Other ways to claim</h3>
+      <a name="ClaimByOther"><h3>Other ways to claim</h3></a>
       <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps. However, be careful - <b>DO NOT</b> send funds from exchange wallets since the compensation payment is likely to go to the exchange, not to you!</p>
       <p>We hope in future to bring back our DApp user inteface - we're wating for the Ethereum Mist browser to mature a little more.</p>
       <p>Whichever way you claim, make sure your read our <a href="#Disclaimer">Disclaimer</a> first.</p>
       
-      <a name="Neighbours"/><h2>Neighbouring Kingdoms</h2>
+      <a name="Neighbours"><h2>Neighbouring Kingdoms</h2></a>
       <p>Price of the {{ThroneName}} too high? Want a Kingdom with fewer uppity peasants?</p>
       <p>For just {{ThroneCreationPrice}} (plus a little gas money) you can start your own alternative Kingdom where you make the rules, you get a 50&#37; share of the commission, and you get your own web page just like this one.</p>
       <p>Interested? See <a href="../throne-maker.html">How to start your own Kingdom</a>.</p>
 
-      <a name="FAQ"><h2>FAQ</h2>
+      <a name="FAQ"><h2>FAQ</h2></a>
       <h3>Where does the source code for the contract live?</h3>
       <p><a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/master/contracts/KingOfTheEtherThrone.sol">github.com - KingOfTheEtherThrone.sol</a></p>
       <h3>What's the address of the contract?</h3>
       <p>The contract for {{ThroneName}} is located at {{ThroneContractAddress}}.</p>
-      <p>Its Contract JSON Interface is: <pre>{{ThroneContractJsonInterface}}</pre></p>
+      <p>Its Contract JSON Interface is:</p><pre>{{ThroneContractJsonInterface}}</pre>
       <p>You can watch it on <a href="{{ThroneContractChainExplorerLink}}">a chain explorer</a> if you like.</p>
       <h3>How much is the commission charge?</h3>
       <p>{{CommissionPercent}}. This is shared equally between the deity (the original creator of the first contract) and the wizard (the creator of the individual throne).</p>
@@ -232,13 +228,20 @@
       <h3>Is this the first version of this contract? Or have there been other throne contracts?</h3>
       <p>This is the third version of the contract. <a href="/history.html">Learn more about the past ages</a> (including celebrity rulers!).</p>
       <h3>I think something went wrong. Can I have my money back?</h3>
-      <p>Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So refunds are - regrettably - both impossible and unethical.</p>
+      <p>Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - (almost) no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So refunds are - regrettably - both impossible and unethical.</p>
+      <h3>Is this safe? Or will we up with all the ether trapped in a DarkKingdom?</h3>
+      <p>
+        As the <a href="#Disclaimer">Disclaimer</a> below points out, sending funds to experimental contracts using experimental wallets in experimental crypto-currency networks is probably <b>not</b> particularly safe.
+      </p>
+      <p>
+        However, we have put considerable effort into mitigating the risks - see our <a href="/contract-safety-checklist.html">Contract Safety Checklist</a>.
+      </p>
 
-      <a name="Disclaimer"/><h2>Disclaimer</h2>
+      <a name="Disclaimer"><h2>Disclaimer</h2></a>
       <p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun.</p>
       <p>If you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
       <p>Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract or list your name.</p>
-      <p>Under no circumstances will refunds or compensation be paid even if the contract steals all your money and/or shoots your dog. The author disclaims all liability for the operation of the contract which should be considered its own autonomous legal entity as far as permitted by law - it is your responsiblity to study its likely behaviour before interacting with it, including taking into account that the actual behaviour of the compiled EVM bytecode in a real eth/geth note may differ from the assumed behaviour based on the solidity source code.</p>
+      <p>Under no circumstances will refunds or compensation be paid even if the contract steals all your money and/or shoots your dog. The author disclaims all liability for the operation of the contract which should be considered its own autonomous entity as far as permitted by law - it is your responsiblity to study its likely behaviour before interacting with it, including taking into account that the actual behaviour of the compiled EVM bytecode in a real eth/geth node may differ from the assumed behaviour based on the apparent intent of the solidity source code.</p>
       <p>By interacting with the contract you agree to accept the conditions in this section as well as those listed at <a href="https://www.ethereum.org/agreement">ethereum.org/agreement</a>.</p>
 
     </div>

@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "generatedTimestamp": "1467496735",
+    "blockNumber": "1238933",
+    "blockTimestamp": "1467496726"
+  },
+  "world": {
+    "topWizard": "0xb028d69032b7ca02056d684e6086030aecbf6eb0",
+    "kingdomCreationFeeWei": "5000000000000000000",
+    "standardRules": {
+      "startingClaimPriceWei": "1000000000000000000",
+      "maximumClaimPriceWei": "100000000000000000000000",
+      "claimPriceAdjustPercent": "50",
+      "curseIncubationDurationSeconds": "2419200",
+      "commissionPerThousand": "20"
+    },
+    "kingdomFactory": "0xa155b2813cb9d7b54bac3f1a42bec23719090e40",
+    "kingdoms": [
+      {
+        "kingdomNumber": "1",
+        "kingdomName": "Queen of Goats",
+        "kingdomContract": "0xc4f141e6efb20e575735b4dd4200932a5dc5a15d",
+        "kingdomCreator": "0xd657bd6d6913034c04c4ee9db01bb3bfa0ede513",
+        "creationTimestamp": "1467492132",
+        "kingdomFactoryUsed": "0xa155b2813cb9d7b54bac3f1a42bec23719090e40",
+        "topWizard": "0xb028d69032b7ca02056d684e6086030aecbf6eb0",
+        "subWizard": "0xd657bd6d6913034c04c4ee9db01bb3bfa0ede513",
+        "rules": {
+          "startingClaimPriceWei": "1000000000000000000",
+          "maximumClaimPriceWei": "100000000000000000000000",
+          "claimPriceAdjustPercent": "50",
+          "curseIncubationDurationSeconds": "2419200",
+          "commissionPerThousand": "20"
+        },
+        "monarchs": [
+          {
+            "monarchNumber": "1",
+            "compensationAddress": "0x8c2076cae2cf7cf955d49a43764217ccdc1e1b57",
+            "name": "Kieran",
+            "coronationTimestamp": "1467496103",
+            "claimPriceWei": "1000000000000000000",
+            "compensationWei": "0"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -2,7 +2,7 @@
 'use strict';
 
 /*
- * TODO - document
+ * Wraps the Kingdom contract to make reading rules and monarch info easier.
 */
 
 function ThronePropertiesFacade(throne, web3) {
@@ -10,64 +10,60 @@ function ThronePropertiesFacade(throne, web3) {
   this.web3 = web3;
 }
 
-ThronePropertiesFacade.prototype.getConfig = function() {
-  var configArray = this.throne.config();
+ThronePropertiesFacade.prototype.getRules = function() {
+  var rulesArray = this.throne.rules();
+  /*
+      struct ThroneRules {
+        uint startingClaimPriceWei;
+        uint maximumClaimPriceWei;
+        uint claimPriceAdjustPercent;
+        uint curseIncubationDurationSeconds;
+        uint commissionPerThousand;
+    }
+  */
   return {
-    wizardAddress:                  configArray[0],
-    deityAddress:                   configArray[1],
-    startingClaimPrice:             configArray[2],
-    claimPriceAdjustPerMille:       configArray[3],
-    commissionPerMille:             configArray[4],    
-    curseIncubationDuration:        configArray[5],
-    failedPaymentRingfenceDuration: configArray[6],
-    throneMaker:                    configArray[7]
+    startingClaimPrice:             rulesArray[0],
+    maximumClaimPriceWei:           rulesArray[1],
+    claimPriceAdjustPercent:        rulesArray[2],    
+    curseIncubationDurationSeconds: rulesArray[3],
+    commissionPerThousand:          rulesArray[4]
   };
-};
-
-ThronePropertiesFacade.prototype.getCurrentClaimPrice = function() {
-  return this.throne.currentClaimPrice();
-};
-
-ThronePropertiesFacade.prototype.isLivingMonarch = function() {
-  return this.throne.isLivingMonarch();
-};
-
-ThronePropertiesFacade.prototype.getMostRecentMonarch = function() {
-  var numMonarchs = this.getNumberOfMonarchs();
-  if (numMonarchs == 0) {
-    return null;
-  } else {
-    return this.getMonarch(numMonarchs - 1);
-  }
-};
-
-ThronePropertiesFacade.prototype.getNumberOfMonarchs = function() {
-  return this.throne.numberOfMonarchs();
 };
 
 ThronePropertiesFacade.prototype.getMonarchs = function() {
   var monarchs = [];
-  for (var i = 0; i < this.getNumberOfMonarchs(); i++) {
+  for (var i = 1; i <= this.getNumberOfMonarchs(); i++) {
     monarchs.push(this.getMonarch(i));
   }
   return monarchs;
 };
 
-ThronePropertiesFacade.prototype.getMonarch = function(monarchIndex) {
-  return this._decodeMonarchArray(this.throne.monarchs(monarchIndex));
+ThronePropertiesFacade.prototype.getMonarch = function(monarchNumber) {
+  return this._decodeMonarchArray(this.throne.monarchsByNumber(monarchNumber));
 };
 
-// TODO - this is too low-level
-ThronePropertiesFacade.prototype._decodeMonarchArray = function(monarchArray) {
+ThronePropertiesFacade.prototype._decodeMonarchArray = function(monarchArray, monarchNumber) {
+  /*
+    struct Monarch {
+        // where to send their compensation
+        address compensationAddress;
+        // their name
+        string name;
+        // when they became our ruler
+        uint coronationTimestamp;
+        // the claim price paid (excluding any over-payment)
+        uint claimPriceWei;
+        // the compensation sent to or held for them so far
+        uint compensationWei;
+    }
+  */  
   return {
+    monarchNumber:              monarchNumber,
     compensationAddress:        monarchArray[0],
-    originAddress:              monarchArray[1],
-    name:     this.web3.toAscii(monarchArray[2]),
-    claimPrice:                 monarchArray[3],
-    coronationTimestamp:        monarchArray[4],
-    compensationStatus:         monarchArray[5],
-    compensationTimestamp:      monarchArray[6],
-    compensationAmount:         monarchArray[7]
+    name:                       monarchArray[1],
+    coronationTimestamp:        monarchArray[2],
+    claimPriceWei:              monarchArray[3],
+    compensationWei:            monarchArray[4]
   };
 };
 
