@@ -3,7 +3,7 @@
 
 - name: ensure geth binary release downloaded
   get_url:   dest=/root/geth-release.tar.bz2
-             url=https://github.com/ethereum/go-ethereum/releases/download/v1.4.6/geth-Linux64-20160606174600-1.4.6-0f036f6.tar.bz2
+             url=https://github.com/ethereum/go-ethereum/releases/download/v1.4.10/geth-Linux64-20160716160600-1.4.10-5f55d95.tar.bz2
 
 - name: ensure geth binary release directory exists
   file:      path=/root/geth-release-files
