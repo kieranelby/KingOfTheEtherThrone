@@ -3,3 +3,4 @@
 
 timezone_enabled: yes
 timezone_timezone: UTC
+iptables_allowed_tcp_ports: [22, 80, 443, 30303]

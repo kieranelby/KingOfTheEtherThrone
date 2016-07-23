@@ -4,3 +4,4 @@
 dependencies:
   - { role: basics }
   - { role: Stouts.timezone }
+  - { role: Stouts.iptables }
