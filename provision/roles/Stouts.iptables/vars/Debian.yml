@@ -1,0 +1,4 @@
+---
+
+iptables_confdir: /etc/iptables
+iptables_rules_path: "{{ iptables_confdir }}/rules.v4"  # Path to rule file

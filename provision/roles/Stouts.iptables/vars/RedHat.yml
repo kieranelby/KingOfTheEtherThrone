@@ -1,0 +1,5 @@
+---
+
+iptables_confdir: /etc/sysconfig
+iptables_rules_path: "{{ iptables_confdir }}/iptables"  # Path to rule file
+iptables_load_path: ""

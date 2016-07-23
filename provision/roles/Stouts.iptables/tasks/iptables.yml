@@ -1,0 +1,23 @@
+---
+
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Ensure iptables is installed (debian)
+  apt:  name=iptables
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure iptables is installed (redhat)
+  yum:  name=iptables
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure that config directory is exists
+  file: state=directory path="{{ iptables_confdir }}"
+
+- name: Prepare iptables rules
+  template: dest={{iptables_rules_path}} src=etc/iptables.rules.j2 owner=root group=root mode=0744
+  notify: iptables load
+
+- name: Autoload the rules
+  template: src=etc/network/if-up.d/iptables_load.j2 dest={{iptables_load_path}} owner=root group=root mode=751
+  when: iptables_load_path
