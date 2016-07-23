@@ -3,6 +3,7 @@
 
 var fse = require('fs-extra');
 var nunjucks = require('nunjucks');
+var HumanFormatter = require('./human-formatter.js');
 
 /*
  * Turns kingdom data into a webpage.
@@ -20,6 +21,7 @@ function ThronePageMaker(
   this.templatesDirname = templatesDirname;
   this.kingdomsDirname = kingdomsDirname;
   this.web3 = web3;
+  this.humanFormatter = new HumanFormatter(web3);
 }
 
 ThronePageMaker.prototype.make = function() {
@@ -28,35 +30,36 @@ ThronePageMaker.prototype.make = function() {
 
   var throneTemplateFilename = this.templatesDirname + '/throne.nunjucks.html';
   var throneTemplateSource = fse.readFileSync(throneTemplateFilename, 'utf8');
+  var monarchsData = this.kingdomData.monarchs;
   var throneContext = {
     'ThroneName': this.kingdomData.kingdomName,
     'ExampleCurrentClaimPrice': '10 ETHER',
     'ExampleNextClaimPrice': '15 ETHER',
-    'StartingClaimPrice': '500 FINNEY',
-    'ClaimPriceAdjustPercent': '50%',
-    'CurseIncubationDuration': '28 days',
-    'IsLivingMonarch': true,
-    'LastUpdated': '2016-09-06 22:08 UTC',
-    'CurrentMonarch': {
-      'Name': 'Fred'
-    },
-    'HallOfMonarchs': [
-      {
-        'Number': '2',
-        'Name': 'Fred',
-        'ClaimPricePaid': '1 ETHER'
-      },
-      {
-        'Number': '1',
-        'Name': 'Bob',
-        'ClaimPricePaid': '500 FINNEY'
-      }
-    ],
-    'ThroneContractAddress': 'TODO',
-    'ThroneContractJsonInterface': 'TODO',
-    'CommissionPercent': '2%',
-    'ThroneCreationPrice': '1 ETHER'
+    'StartingClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.rules.startingClaimPriceWei),
+    'ClaimPriceAdjustPercent': this.humanFormatter.formatPercent(this.kingdomData.rules.claimPriceAdjustPercent),
+    'CurseIncubationDuration': this.humanFormatter.formatDurationSeconds(this.kingdomData.rules.curseIncubationDurationSeconds),
+    'CommissionPercent': this.humanFormatter.formatPerThousand(this.kingdomData.rules.commissionPerThousand),
+    'LastUpdated': this.humanFormatter.formatTimestamp(this.rootData.meta.blockTimestamp),
+    'IsLivingMonarch': this.kingdomData.isLivingMonarch,
+    'HasBeenAMonarch': (monarchsData.length > 0),
+    'CurrentClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.currentClaimPriceWei),
+    'CurrentMonarch': undefined,
+    'HallOfMonarchs': [],
+    'ThroneContractAddress': this.kingdomData.kingdomContract,
+    'ThroneContractJsonInterface': this.kingdomData.kingdomContractAbi,
+    'ThroneCreationPrice': this.humanFormatter.formatAmountWei(this.rootData.world.kingdomCreationFeeWei)
   };
+  var numberOfMonarchs = monarchsData.length;
+  if (numberOfMonarchs > 0) {
+    throneContext.HallOfMonarchs = monarchsData.map(function (monarchData, monarchIndex, junk) {
+      return this._makeMonarchContext(monarchData, monarchIndex);
+    }, this).reverse();
+    if (this.kingdomData.isLivingMonarch) {
+      var currentMonarchIndex = numberOfMonarchs - 1;
+      var currentMonarchData = monarchsData[currentMonarchIndex];
+      throneContext.CurrentMonarch = this._makeMonarchContext(currentMonarchData, currentMonarchIndex);
+    }
+  }
   var throneHtml = nunjucks.renderString(throneTemplateSource, throneContext);
 
   var kingdomDirname = this.kingdomsDirname + '/' + ThronePageMaker.makeSafeKingdomKey(this.kingdomData.kingdomName);
@@ -65,6 +68,15 @@ ThronePageMaker.prototype.make = function() {
 
   console.log('Writing throne index page ...');
   fse.writeFileSync(kingdomDirname + '/index.html', throneHtml, 'utf8');
+};
+
+ThronePageMaker.prototype._makeMonarchContext = function(monarchData, monarchIndex, junk) {
+  return {
+    'Number': monarchData.monarchNumber,
+    'Name': monarchData.name,
+    'CompensationAddress': monarchData.compensationAddress,
+    'ClaimPricePaid': this.humanFormatter.formatAmountWei(monarchData.claimPriceWei)
+  };
 };
 
 // Assumes that the name follows the rules used in the

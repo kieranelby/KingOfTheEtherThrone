@@ -98,7 +98,7 @@
         <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}.</li>
         <li>If an usurper comes along who is willing to pay {{ExampleNextClaimPrice}}, she will depose you and become Queen, and you will receive her payment of {{ExampleNextClaimPrice}} as compensation - a tidy profit for you.</li>
         <li>However, an ancient curse applies to the throne: every Monarch dies once their reign reaches {{CurseIncubationDuration}}.
-            No compensation is paid if this happens, and the claim price for the next monarch is reset back to {{StartingClaimPrice}}.<br>
+            No compensation is paid if this happens, and the claim price for the next monarch is reset back to the original starting price of {{StartingClaimPrice}}.<br>
             But surely a successor will appear within {{CurseIncubationDuration}}, and even if they don&#39;t, you&#39;ll be immortalised in the blockchain at least ...</li>
       </ul>
 
@@ -130,7 +130,10 @@
           {% for Monarch in HallOfMonarchs %}
           <tr>
             <td>{{Monarch.Number}}</td>
-            <td>{{Monarch.Name}}</td>
+            <td>
+              {{Monarch.Name}}<br>
+              <span style="font-size:70%">({{Monarch.CompensationAddress}})</span>
+            </td>
             <td>{{Monarch.ClaimPricePaid}}</td>
           </tr>
           {% endfor %}

@@ -20,18 +20,21 @@
         "kingdomNumber": "1",
         "kingdomName": "Queen of Goats",
         "kingdomContract": "0xc4f141e6efb20e575735b4dd4200932a5dc5a15d",
+        "kingdomContractAbi": "[{\"constant\":false,\"inputs\":[{\"name\":\"_monarchName\",\"type\":\"string\"}],\"name\":\"claimThrone\",\"outputs\":[],\"type\":\"function\"},\n {\"constant\":false,\"inputs\":[{\"name\":\"_monarchName\",\"type\":\"string\"},{\"name\":\"_compensationAddress\",\"type\":\"address\"}],\"name\":\"claimThroneAdvanced\",\"outputs\":[],\"type\":\"function\"},\n {\"constant\":false,\"inputs\":[],\"name\":\"withdrawFunds\",\"outputs\":[],\"type\":\"function\"},\n {\"constant\":false,\"inputs\":[{\"name\":\"_toAddress\",\"type\":\"address\"},{\"name\":\"_valueWei\",\"type\":\"uint256\"},{\"name\":\"_extraGas\",\"type\":\"uint256\"}],\"name\":\"withdrawFundsAdvanced\",\"outputs\":[],\"type\":\"function\"},\n {\"constant\":false,\"inputs\":[{\"name\":\"_replacement\",\"type\":\"address\"}],\"name\":\"replaceWizard\",\"outputs\":[],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"currentClaimPriceWei\",\"outputs\":[{\"name\":\"priceInWei\",\"type\":\"uint256\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"currentClaimPriceInFinney\",\"outputs\":[{\"name\":\"priceInFinney\",\"type\":\"uint256\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"numberOfMonarchs\",\"outputs\":[{\"name\":\"totalCount\",\"type\":\"uint256\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"monarchsByNumber\",\"outputs\":[{\"name\":\"compensationAddress\",\"type\":\"address\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"coronationTimestamp\",\"type\":\"uint256\"},{\"name\":\"claimPriceWei\",\"type\":\"uint256\"},{\"name\":\"compensationWei\",\"type\":\"uint256\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"isLivingMonarch\",\"outputs\":[{\"name\":\"alive\",\"type\":\"bool\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"kingdomName\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"rules\",\"outputs\":[{\"name\":\"startingClaimPriceWei\",\"type\":\"uint256\"},{\"name\":\"maximumClaimPriceWei\",\"type\":\"uint256\"},{\"name\":\"claimPriceAdjustPercent\",\"type\":\"uint256\"},{\"name\":\"curseIncubationDurationSeconds\",\"type\":\"uint256\"},{\"name\":\"commissionPerThousand\",\"type\":\"uint256\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[{\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"fundsOf\",\"outputs\":[{\"name\":\"valueWei\",\"type\":\"uint256\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"world\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"topWizard\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[],\"name\":\"subWizard\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"type\":\"function\"},\n {\"constant\":true,\"inputs\":[{\"name\":\"_monarchName\",\"type\":\"string\"}],\"name\":\"validateProposedMonarchName\",\"outputs\":[{\"name\":\"allowed\",\"type\":\"bool\"}],\"type\":\"function\"},\n {\"inputs\":[{\"name\":\"_kingdomName\",\"type\":\"string\"},{\"name\":\"_world\",\"type\":\"address\"},{\"name\":\"_topWizard\",\"type\":\"address\"},{\"name\":\"_subWizard\",\"type\":\"address\"},{\"name\":\"_startingClaimPriceWei\",\"type\":\"uint256\"},{\"name\":\"_maximumClaimPriceWei\",\"type\":\"uint256\"},{\"name\":\"_claimPriceAdjustPercent\",\"type\":\"uint256\"},{\"name\":\"_curseIncubationDurationSeconds\",\"type\":\"uint256\"},{\"name\":\"_commissionPerThousand\",\"type\":\"uint256\"}],\"type\":\"constructor\"},\n {\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"monarchNumber\",\"type\":\"uint256\"}],\"name\":\"ThroneClaimedEvent\",\"type\":\"event\"},\n {\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"toAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"valueWei\",\"type\":\"uint256\"}],\"name\":\"CompensationSentEvent\",\"type\":\"event\"},\n {\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"toAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"valueWei\",\"type\":\"uint256\"}],\"name\":\"CompensationFailEvent\",\"type\":\"event\"},\n {\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"byAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"valueWei\",\"type\":\"uint256\"}],\"name\":\"CommissionEarnedEvent\",\"type\":\"event\"},\n {\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"oldWizard\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"newWizard\",\"type\":\"address\"}],\"name\":\"WizardReplacedEvent\",\"type\":\"event\"},\n {\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"fromAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"toAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"valueWei\",\"type\":\"uint256\"}],\"name\":\"FundsWithdrawnEvent\",\"type\":\"event\"}]",
         "kingdomCreator": "0xd657bd6d6913034c04c4ee9db01bb3bfa0ede513",
         "creationTimestamp": "1467492132",
         "kingdomFactoryUsed": "0xa155b2813cb9d7b54bac3f1a42bec23719090e40",
         "topWizard": "0xb028d69032b7ca02056d684e6086030aecbf6eb0",
         "subWizard": "0xd657bd6d6913034c04c4ee9db01bb3bfa0ede513",
         "rules": {
-          "startingClaimPriceWei": "1000000000000000000",
+          "startingClaimPriceWei": "500000000000000000",
           "maximumClaimPriceWei": "100000000000000000000000",
           "claimPriceAdjustPercent": "50",
           "curseIncubationDurationSeconds": "2419200",
           "commissionPerThousand": "20"
         },
+        "isLivingMonarch": true,
+        "currentClaimPriceWei": "22500000000000000000",
         "monarchs": [
           {
             "monarchNumber": "1",
@@ -39,6 +42,14 @@
             "name": "Kieran",
             "coronationTimestamp": "1467496103",
             "claimPriceWei": "1000000000000000000",
+            "compensationWei": "1470000000000000000"
+          },
+          {
+            "monarchNumber": "2",
+            "compensationAddress": "0x8c2076cae2cf7cf955d49a43764217ccdc1e1b57",
+            "name": "Bellsprout",
+            "coronationTimestamp": "1467496203",
+            "claimPriceWei": "1500000000000000000",
             "compensationWei": "0"
           }
         ]
