@@ -8,3 +8,9 @@
 # Useful.
 - name: ensure unzip installed
   apt: pkg=unzip state=present
+
+# Otherwise services run with systemd won't have persistent logs.
+- name: ensure systemd journal directory exists
+  file:      path=/var/log/journal
+             state=directory
+             owner=root group=root
