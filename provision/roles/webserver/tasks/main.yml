@@ -1,6 +1,10 @@
 ---
 # This carries out tasks needed to get a webserver running.
 
+- name: ensure apache2 is not running (nginx install can fail)
+  service:    name=apache2 state=stopped
+  ignore_errors: yes
+
 - name: Make sure nginx is installed
   apt:        name=nginx
 
