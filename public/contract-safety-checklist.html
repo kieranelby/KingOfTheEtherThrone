@@ -129,7 +129,7 @@
         </ul>
       </p>
 
-     <h2>Denial of Service</h2>
+     <h2>Denial of Service / Spam</h2>
       <p>
         An attacker may cause inconvenience for other users by supplying the contract with data that is expensive to process, or by repeatedly carrying out actions that prevent others from interacting with the contract.
       </p>
@@ -138,8 +138,8 @@
         <ul>
           <li>Limiting the length of user-supplied data such as monarch names.</li>
           <li>Avoiding looping behaviour where e.g. a function costs more and more gas each time is used.</li>
-          <li>Ensuring that payment is required by a user to make a change that would affect other users' transactions.</li>
-          <li>TODO - we are considering use of DoS protection for websites related to the contract.</li>
+          <li>Ensuring that a non-trivial payment is required by a user to make a change that would affect other users' transactions.</li>
+          <li>TODO - Using DDOS protection on websites related to the contract.</li>
         </ul>
       </p>
 
@@ -175,16 +175,16 @@
      <h2>Off-chain Safety</h2>
       <p>
         Rather than attack the contract itself, an attacker may trick users into interacting with a different contract or into sending funds to her address instead of the real contract.
-        This could be done by phishing, by taking control of the website hosting, or by attacking github accounts.
+        This could be done by phishing, by taking control of the website hosting, or by attacking github or social media accounts.
         An attacker may also attempt to steal Ethereum account private keys from users (or from the contract administrators).
         For some contracts, accidental loss of private keys belonging to a user important to the contract's contuining operation (e.g. the creator) could prevent operation of the contract.
       </p>
       <p>
         We have mitigated against this risk by:
         <ul>
-          <li>TODO - using HTTPS with strong security settings (pinning) on websites related to the contract.</li>
-          <li>Using security measures such as two-factor authentication on hosting provider, DNS, and github accounts.</li>
-          <li>Following OWASP guidelines for avoiding web vulnerabilities in websites related to the contract.</li>
+          <li>TODO - using HTTPS with strong security settings (e.g. pinning) on websites related to the contract (including origin servers).</li>
+          <li>Using security measures such as strong passwords and two-factor authentication (where available) on hosting provider, DNS, email, reddit and github accounts.</li>
+          <li>Following OWASP guidelines for avoiding web vulnerabilities in websites related to the contract, and employing ISO270001 controls (where applicable) internally.</li>
           <li>Keeping sensitive data (e.g. passphrases, keys) in encrypted storage on physically separated hardware, with encrypted off-site backups.</li>
         </ul>
       </p>

@@ -4,6 +4,7 @@ var fse = require('fs-extra');
 var Web3 = require('web3');
 
 var ThronePageMaker = require('../js/throne-page-maker.js');
+var WorldPageMaker = require('../js/world-page-maker.js');
 
 // only needed to help with formatting
 var web3 = new Web3();
@@ -29,13 +30,22 @@ var templatesDirname = 'templates';
 
 rootData.world.kingdoms.forEach(function (kingdomData) {
 
-  maker = new ThronePageMaker(
+  var thronePageMaker = new ThronePageMaker(
     rootData,
     kingdomData,
     templatesDirname,
     kingdomsDirname,
     web3
   );
-  maker.make();
+  thronePageMaker.make();
 
 });
+
+var worldDirname = generatedDirname;
+var worldPageMaker = new WorldPageMaker(
+  rootData,
+  templatesDirname,
+  worldDirname,
+  web3
+);
+worldPageMaker.make();

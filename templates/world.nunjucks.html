@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>The World of King of the Ether</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <style>
+  body {
+    background-color: #FFF7F0;
+  }
+  .content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13pt;
+  }
+  .error-message {
+    font-weight: bold;
+    color: #800000;
+  }
+  th, td {
+    border: 1px solid #c0c0c0;
+    padding: 3px;
+  }
+  th.for-row {
+    vertical-align: top;
+    text-align: left;
+  }
+  h2 {
+    background-image: url("/kotelogotiny.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding: 0 30px;
+    height: 60px;
+    line-height: 60px;
+  }
+  input.read-only-for-copy {
+    background-color: #e8e8e8;
+  }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="content">
+      
+      <h1>The World of King of the Ether</h1>
+      <p>
+        Thought <a href="thrones/kingoftheether/">King of the Ether</a> was the only Throne?
+        Well, there's a whole world out there - and if you like, you can create (fork?) your own alternative Kingdom where you make the rules and get a 50&#37; share of the commission ...
+      </p>
+
+      <a name="Contents"><h2>Contents</h2></a>
+      <ul>
+        <li><a href="#TheKingdoms">The Kingdoms</a></li>
+        <li><a href="#IWantOne">I Want a Kingdom!</a></li>
+        <li><a href="#FAQ">FAQ</a></li>
+        <li><a href="#Disclaimer">Disclaimer</a></li>
+      </ul>
+
+      <a name="TheKingdoms"><h2>The Kingdoms</h2></a>
+      <p>These are the fine kingdoms that have been established so far ...</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th style="width:20em">Name</th>
+            <th>Current Claim Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for Kingdom in TheKingdoms %}
+          <tr>
+            <td><a href="{{Kingdom.RelativeUrl}}">{{Kingdom.Number}}</a></td>
+            <td><a href="{{Kingdom.RelativeUrl}}">{{Kingdom.Name}}</a></td>
+            <td>{{Kingdom.CurrentClaimPrice}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+      <a name="IWantOne"><h2>I Want a Kingdom!</h2></a>
+      <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet,
+      you can watch and interact with the World contract to create your own Kingdom. The fee to create a kingdom is currently {{KingdomCreationFee}}.</p>
+      <p>1. Open your Ethereum Wallet. Choose 'Contracts' in the top-bar, then click 'Watch Contract'.</p>
+      <p>2. On the 'Watch Contract' pop-up, fill in the following details:<br>
+For CONTRACT NAME, enter 'World'.<br>
+For CONTRACT ADDRESS, enter:<br>
+<input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="{{WorldContract}}" /><br>
+For JSON INTERFACE, copy-and-paste this:<br>
+<textarea class="read-only-for-copy" readonly="readonly" cols="60" rows="5">{{WorldContractJsonInterface}}</textarea><br>
+Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract to the collection of 'Custom Contracts' you're watching.
+</p>
+      <p>3. Click on the 'World' contract you just created in the 'Custom Contracts' section. You should now be able to interact with the World contract using the 'READ FROM CONTRACT' section on the left, and the 'WRITE TO CONTRACT section on the right.</p>
+      <p>4. TODO</p>
+      <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'.</p>
+      <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear. In the Ethereum Wallet, you may need to leave the contract page and go back to it to see the details under 'READ FROM CONTRACT' change.</p>
+
+      <a name="Disclaimer"><h2>Disclaimer</h2></a>
+      <p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun.</p>
+      <p>If you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
+      <p>Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract or list your name or Kingdom.</p>
+      <p>Under no circumstances will refunds or compensation be paid even if the contract steals all your money and/or shoots your dog. The author disclaims all liability for the operation of the contract which should be considered its own autonomous entity as far as permitted by law - it is your responsiblity to study its likely behaviour before interacting with it, including taking into account that the actual behaviour of the compiled EVM bytecode in a real eth/geth node may differ from the assumed behaviour based on the apparent intent of the solidity source code.</p>
+      <p>By interacting with the contract you agree to accept the conditions in this section as well as those listed at <a href="https://www.ethereum.org/agreement">ethereum.org/agreement</a>.</p>
+
+    </div>
+  </div>
+  <script type="text/javascript">
+  <!--
+  function makeCopyPasteEasier() {
+    var elems = document.querySelectorAll('.read-only-for-copy');
+    for (var i = 0; i < elems.length; i++) {
+      var elem = elems[i];
+      elem.addEventListener('click', function() {
+        this.select();
+      });
+    }
+  }
+  function init() {
+    makeCopyPasteEasier();
+  }
+  init();
+  // -->
+  </script>
+</body>
+</html>

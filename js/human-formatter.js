@@ -16,7 +16,7 @@ HumanFormatter.prototype.formatAmountWei = function(amountWei) {
   }
   var amountFinney = this.web3.fromWei(amountWei, 'finney');
   var amountEther = this.web3.fromWei(amountWei, 'ether');
-  if (amountEther.lessThan('1')) {
+  if (amountEther.lessThan('1') && !amountEther.isZero()) {
     return amountFinney.toString() + ' FINNEY' + ' (' + amountEther.toString() + ' ETHER)';
   } else {
     return amountEther.toString() + ' ETHER';

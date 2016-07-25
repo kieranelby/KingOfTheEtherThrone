@@ -31,11 +31,15 @@ ThronePageMaker.prototype.make = function() {
   var throneTemplateFilename = this.templatesDirname + '/throne.nunjucks.html';
   var throneTemplateSource = fse.readFileSync(throneTemplateFilename, 'utf8');
   var monarchsData = this.kingdomData.monarchs;
+  var exampleCurrentClaimPriceWei = this.web3.toBigNumber(this.web3.toWei('10', 'ether'));
+  var exampleIncreaseFactor = this.web3.toBigNumber(this.kingdomData.rules.claimPriceAdjustPercent).plus('100').dividedBy('100');
+  var exampleNextClaimPriceWei = exampleCurrentClaimPriceWei.times(exampleIncreaseFactor);
   var throneContext = {
     'ThroneName': this.kingdomData.kingdomName,
-    'ExampleCurrentClaimPrice': '10 ETHER',
-    'ExampleNextClaimPrice': '15 ETHER',
+    'ExampleCurrentClaimPrice': this.humanFormatter.formatAmountWei(exampleCurrentClaimPriceWei),
+    'ExampleNextClaimPrice': this.humanFormatter.formatAmountWei(exampleNextClaimPriceWei),
     'StartingClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.rules.startingClaimPriceWei),
+    'MaximumClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.rules.maximumClaimPriceWei),
     'ClaimPriceAdjustPercent': this.humanFormatter.formatPercent(this.kingdomData.rules.claimPriceAdjustPercent),
     'CurseIncubationDuration': this.humanFormatter.formatDurationSeconds(this.kingdomData.rules.curseIncubationDurationSeconds),
     'CommissionPercent': this.humanFormatter.formatPerThousand(this.kingdomData.rules.commissionPerThousand),
@@ -43,9 +47,12 @@ ThronePageMaker.prototype.make = function() {
     'IsLivingMonarch': this.kingdomData.isLivingMonarch,
     'HasBeenAMonarch': (monarchsData.length > 0),
     'CurrentClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.currentClaimPriceWei),
+    'CurrentClaimPriceEther': this.web3.fromWei(this.kingdomData.currentClaimPriceWei, 'ether').toString(),
+    'CurrentClaimPriceFinney': this.kingdomData.currentClaimPriceFinney,
     'CurrentMonarch': undefined,
     'HallOfMonarchs': [],
     'ThroneContractAddress': this.kingdomData.kingdomContract,
+    'ThroneContractChainExplorerLink': 'https://etherscan.io/address/' + this.kingdomData.kingdomContract,
     'ThroneContractJsonInterface': this.kingdomData.kingdomContractAbi,
     'ThroneCreationPrice': this.humanFormatter.formatAmountWei(this.rootData.world.kingdomCreationFeeWei)
   };

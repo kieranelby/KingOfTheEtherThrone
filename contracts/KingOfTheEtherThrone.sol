@@ -846,7 +846,7 @@ contract KingdomFactory {
             _maximumClaimPriceWei > 100000 ether) {
             return false;
         }
-        if (_startingClaimPriceWei * 10 > _maximumClaimPriceWei) {
+        if (_startingClaimPriceWei * 20 > _maximumClaimPriceWei) {
             return false;
         }
         if (_claimPriceAdjustPercent < 1 ||

@@ -5,23 +5,6 @@
   <title>{{ThroneName}}</title>
   <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-  <!--
-  variables are:
-  ThroneName - King of the Ether Throne
-  ExampleCurrentClaimPrice - 10 ETHER
-  ExampleNextClaimPrice - 15 ETHER
-  StartingClaimPrice - 500 FINNEY
-  ClaimPriceAdjustPercent - 50%
-  CurseIncubationDuration - 28 days
-  IsLivingMonarch - true/false
-  HasBeenAMonarch - true/false
-  LastUpdated
-  CurrentMonarch.Name
-  ThroneContractAddress
-  ThroneContractJsonInterface
-  CommissionPercent
-  ThroneCreationPrice
-  -->
   <style>
   body {
     background-color: #FFF7F0;
@@ -35,12 +18,20 @@
     font-family: 'Roboto', sans-serif;
     font-size: 13pt;
   }
+  .error-message {
+    font-weight: bold;
+    color: #800000;
+  }
   th, td {
-    border: 1px solid black;
+    border: 1px solid #c0c0c0;
     padding: 3px;
   }
+  th.for-row {
+    vertical-align: top;
+    text-align: left;
+  }
   h2 {
-    background-image: url("../kotelogotiny.png");
+    background-image: url("/kotelogotiny.png");
     background-position: left center;
     background-repeat: no-repeat;
     padding: 0 30px;
@@ -48,7 +39,7 @@
     line-height: 60px;
   }
   h3.for-ethereum-wallet {
-    background-image: url("../ethereum-wallet.png");
+    background-image: url("/ethereum-wallet.png");
     background-size: 24px 24px;
     background-position: left center;
     background-repeat: no-repeat;
@@ -57,7 +48,7 @@
     line-height: 24px;
   }
   h3.for-geth {
-    background-image: url("../geth.png");
+    background-image: url("/geth.png");
     background-size: 24px 24px;
     background-position: left center;
     background-repeat: no-repeat;
@@ -66,7 +57,7 @@
     line-height: 24px;
   }
   input.read-only-for-copy {
-    background-color: #e0e0e0;
+    background-color: #e8e8e8;
   }
   </style>
 </head>
@@ -89,14 +80,14 @@
       </ul>
 
       <a name="WhatItDo"><h2>What's this about?</h2></a>
-      <p>The {{ThroneName}} awaits you. It can be yours for a price - here are the contract rules:</p>
+      <p>The {{ThroneName}} Throne awaits you. It can be yours for a price - here are the contract rules:</p>
       <ul>
-        <li>Suppose the current throne claim price is {{ExampleCurrentClaimPrice}}.</li>
+        <li>Suppose - for example - the current throne claim price is {{ExampleCurrentClaimPrice}}. (To find out what it really is, <a href="#HowIRule">see below</a>.)</li>
         <li>You like the sound of being the Monarch, so you send {{ExampleCurrentClaimPrice}} to the contract.</li>
         <li>This makes you the illustrious new {{ThroneName}}. Your name will be added to the <a href="#GreatHall">Hall of Monarchs</a> in the blockchain.</li>
         <li>The contract will then send your {{ExampleCurrentClaimPrice}} (less a small commission) to the previous Monarch you have usurped, as compensation.</li>
-        <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}.</li>
-        <li>If an usurper comes along who is willing to pay {{ExampleNextClaimPrice}}, she will depose you and become Queen, and you will receive her payment of {{ExampleNextClaimPrice}} as compensation - a tidy profit for you.</li>
+        <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}. (It stops increasing at {{MaximumClaimPrice}}).</li>
+        <li>If an usurper comes along who is willing to pay {{ExampleNextClaimPrice}}, she will depose you and become Queen, and you will receive her payment of {{ExampleNextClaimPrice}} (less a small commission) as compensation - a tidy profit for you.</li>
         <li>However, an ancient curse applies to the throne: every Monarch dies once their reign reaches {{CurseIncubationDuration}}.
             No compensation is paid if this happens, and the claim price for the next monarch is reset back to the original starting price of {{StartingClaimPrice}}.<br>
             But surely a successor will appear within {{CurseIncubationDuration}}, and even if they don&#39;t, you&#39;ll be immortalised in the blockchain at least ...</li>
@@ -117,7 +108,7 @@
       <h5>(This information was last updated at {{LastUpdated}}.)</h5>
      
       <a name="GreatHall"><h2>Hall of Monarchs</h2></a>
-      <p>These are the hallowed rulers of the {{ThroneName}}, immortalized in the block-chain:</p>
+      <p>These are the hallowed rulers of the {{ThroneName}} Throne, immortalized in the block-chain:</p>
       <table>
         <thead>
           <tr>
@@ -141,88 +132,144 @@
       </table>
       
       <a name="HowIRule"><h2>How Can I Rule?</h2></a>
-      <p>The power of the {{ThroneName}} can be yours for the <strong>current claim price</strong> of just <strong>{{CurrentClaimPrice}}</strong> (as of <span class="timestamp">{{LastUpdated}}</span>). Here's how:</p>
+      <p>The power of the {{ThroneName}} Throne can be yours for the <strong>current claim price</strong> of just <strong>{{CurrentClaimPrice}}</strong> (as of <span class="timestamp">{{LastUpdated}}</span>). Here's how:</p>
+      
       <a name="ClaimBySendWallet"><h3 class="for-ethereum-wallet">Claim by Sending Ether using the Ethereum Wallet</h3></a>
-      <p>Ethereum Wallet users can claim the throne by sending ether to the contract. <button class="js-show-collapsed" data-section-id="claim-by-send-wallet">Show me how ...</button></p>
+      <p>Ethereum Wallet users can claim the throne by sending ether to the contract.<br><button class="js-show-collapsed" data-section-id="claim-by-send-wallet">Show me how ...</button></p>
       <div id="claim-by-send-wallet" class="js-collapse">
-        <p>Go to the "Send Funds" page of your Ethereum Wallet app and enter the following details:</p>
+        <p>1. Go to the "Send Funds" page of your Ethereum Wallet app and enter the following details:</p>
         <form>
         <table>
           <tr>
-            <th>From</th>
+            <th class="for-row">From</th>
             <td>
               We recommend using your 'Etherbase' account to pay the contract.<br>
               Wallet-contract accounts should work, but you'll need to make sure you have some funds in your 'Etherbase' account to pay for the 'gas' fee.
             </td>
           </tr>
           <tr>
-            <th>To</th>
+            <th class="for-row">To</th>
             <td>
               Send funds to the {{ThroneName}} contract at address:<br>
               <input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="{{ThroneContractAddress}}" />
             </td>
           </tr>
           <tr>
-            <th>Amount</th>
+            <th class="for-row">Amount</th>
             <td>
               As of {{LastUpdated}}, to claim the throne you will need to send:<br>
-              <input readonly="readonly" class="read-only-for-copy" type="number" name="amount" value="2.25" size="5" /> FINNEY<br>
+              <input readonly="readonly" class="read-only-for-copy" type="number" name="amount" value="{{CurrentClaimPriceFinney}}" size="7" /> FINNEY (that's {{CurrentClaimPriceEther}} ETHER)<br>
               (Don't worry though, if the amount turns out to be too little or too much, the transaction will be cancelled and your funds returned, minus the gas fee).
             </td>
           </tr>
           <tr>
-            <th>Data</th>
+            <th class="for-row">Data</th>
             <td>
               To make sure everyone knows who is the Monarch, you'll need to include your name using the 'ADD DATA' button.<br>
               For technical reasons, you'll need to <i>encode</i> your name as data using this converter:<br>
-              Choose Your Royal Name: <input type="text" name="name_text" value="AAAAA" size="32" /> converts to:<br>
-              &rArr; <input readonly="readonly" class="read-only-for-copy" type="text" name="name_data" size="66" value="0x41414141" />
+              Choose Your Royal Name: <input type="text" class="js-name-convert" data-name-convert-destination-id="name_data" autocomplete="off" name="name_text" value="" placeholder="your name" size="32" /> converts to:<br>
+              &rArr; <input readonly="readonly" id="name_data" class="read-only-for-copy" type="text" name="name_data" size="66" value="" /><br>
+              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)
             </td>
           </tr>
           <tr>
-            <th>Fee</th>
+            <th class="for-row">Fee</th>
             <td>
               The Ethereum Wallet should estimate the gas fee for you - you don't need to change anything.<br>
-              You can expect to be charged up to around 200,000 gas, which is worth about 5 FINNEY as of June 2016.
+              You can expect to be charged up to around 200,000 gas.
             </td>
           </tr>
         </table>
         </form>
-        <p>After clicking SEND, a confirmation popup will appear where you will need to enter your password. Check the amount, then click CONFIRM.</p>
-        <p>After you've sent your funds, wait for the transaction to confirm, then reload this page. It may take a few minutes to appear.</p>
+        <p>2. After clicking SEND, a confirmation popup will appear where you will need to enter your password. Check the amount, then click CONFIRM.</p>
+        <p>3. After you've sent your funds, wait for the transaction to confirm, then reload this page. It may take a few minutes to appear.</p>
       </div>
 
       <a name="ClaimByUsingGeth"><h3 class="for-geth">Claim using the geth console</h3></a>
-      <p><b>geth</b> users can claim the throne by sending funds to the contract via the geth console. <button class="js-show-collapsed" data-section-id="claim-by-send-geth">Show me how ...</button></p>
+      <p><b>geth</b> users can claim the throne by sending funds to the contract via the geth console.<br><button class="js-show-collapsed" data-section-id="claim-by-send-geth">Show me how ...</button></p>
       <div id="claim-by-send-geth" class="js-collapse">
-        <p>TODO - explain</p>
+        <p>In the geth Javascript console, this command will claim the throne by sending {{CurrentClaimPrice}} to {{ThroneContractAddress}}:</p>
+        <textarea id="geth_js_command" rows="8" cols="72" readonly="readonly" class="read-only-for-copy">
+eth.sendTransaction({
+   from:  eth.accounts[0],
+   value: web3.toWei('{{CurrentClaimPriceFinney}}', 'finney'),
+   to: '{{ThroneContractAddress}}',
+   gas: 250000,
+   data: web3.fromAscii('NAME:' + 'YOUR NAME HERE')
+)});</textarea>
+        <p>Don't forget to unlock your ethereum account first - the Javascript above assumes you're using account 0.</p>
+        <p>To update the Javascript above with your chosen name, enter it here:<br>
+        Choose Your Royal Name: <input type="text" id="geth_name_text" autocomplete="off" name="geth_name_text" value="" placeholder="your name" size="32" /><br>
+        <span id="geth_name_error" class="error-message"></span>
+        (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)
+        <p>The claim price above was last updated at {{LastUpdated}} - refresh this page to get the latest (and to see yourself appear once your transaction is confirmed!).</p>
       </div>
 
       <a name="ClaimByInteractWallet"><h3 class="for-ethereum-wallet">Claim by Interacting with the {{ThroneName}} Contract in the Ethereum Wallet</h3></a>
-      <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet, you can watch and interact with the {{ThroneName}} contract to become ruler - this shows off the power of Ethereum best! <button class="js-show-collapsed" data-section-id="claim-by-interact-wallet">Show me how ...</button></p>
+      <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet,
+        you can watch and interact with the {{ThroneName}} contract to become ruler - this shows off the power of Ethereum best!<br>
+        <button class="js-show-collapsed" data-section-id="claim-by-interact-wallet">Show me how ...</button></p>
       <div id="claim-by-interact-wallet" class="js-collapse">
-        <p>TODO - explain</p>
+        <p>1. Open your Ethereum Wallet. Choose 'Contracts' in the top-bar, then click 'Watch Contract'.</p>
+        <p>2. On the 'Watch Contract' pop-up, fill in the following details:<br>
+For CONTRACT NAME, enter '{{ThroneName}}'.<br>
+For CONTRACT ADDRESS, enter:<br>
+<input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="{{ThroneContractAddress}}" /><br>
+For JSON INTERFACE, copy-and-paste this:<br>
+<textarea class="read-only-for-copy" readonly="readonly" cols="60" rows="5">{{ThroneContractJsonInterface}}</textarea><br>
+Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract to the collection of 'Custom Contracts' you're watching.
+</p>
+        <p>3. Click on the '{{ThroneName}}' contract you just added to the 'Custom Contracts' section. You should now be able to interact with the {{ThroneName}} contract using the 'READ FROM CONTRACT' section on the left, and the 'WRITE TO CONTRACT section on the right.</p>
+        <p>
+          4. Under the 'WRITE TO CONTRACT' section, choose 'Claim Throne' from the 'Select Function' drop-down. Fill in these details:
+          <table>
+            <tr>
+              <th class="for-row">Monarch Name</th>
+              <td>
+                What should we call you, your majesty?<br>
+                (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)<br>
+                To check if the name is allowed first, use the 'Validate proposed monarch name' in the 'READ FROM CONTRACT' section on the left.
+              </td>
+            </tr>
+            <tr>
+              <th class="for-row">Account</th>
+              <td>
+                Which Ethereum Wallet account do you want to use? It's generally recommended to use the 'Etherbase' account, not contract-wallets.
+              </td>
+            </tr>
+            <tr>
+              <th class="for-row">Send</th>
+              <td>
+                You'll need to specify the claim price you will send here.
+                As of {{LastUpdated}}, the claim price was {{CurrentClaimPrice}}. The {{ThroneName}} contract page in the Ethereum Wallet will show the latest in the 'Current claim price in finney' section on the left of the screen.
+              </td>
+            </tr>
+          </table>
+          </form>
+        </p>
+        <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'.</p>
+        <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear.</p>
       </div>
 
       <a name="ClaimByOther"><h3>Other ways to claim</h3></a>
       <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps. However, be careful - <b>DO NOT</b> send funds from exchange wallets since the compensation payment is likely to go to the exchange, not to you!</p>
-      <p>We hope in future to bring back our DApp user inteface - we're wating for the Ethereum Mist browser to mature a little more.</p>
+      <p>We're planning to launch a DApp web interface in the Ethereum Mist browser shortly to make it even easier and more interactive.</p>
       <p>Whichever way you claim, make sure your read our <a href="#Disclaimer">Disclaimer</a> first.</p>
       
       <a name="Neighbours"><h2>Neighbouring Kingdoms</h2></a>
       <p>Price of the {{ThroneName}} too high? Want a Kingdom with fewer uppity peasants?</p>
-      <p>For just {{ThroneCreationPrice}} (plus a little gas money) you can start your own alternative Kingdom where you make the rules, you get a 50&#37; share of the commission, and you get your own web page just like this one.</p>
-      <p>Interested? See <a href="../throne-maker.html">How to start your own Kingdom</a>.</p>
+      <p>For just {{ThroneCreationPrice}} (plus a little gas money) you can fork your own alternative Kingdom where you make the rules, you get a 50&#37; share of the commission, and you get your own web page just like this one.</p>
+      <p>Interested? Or just want to see other Kingdoms people have created? <a href="/world.html">See More of the World!</a>.</p>
 
       <a name="FAQ"><h2>FAQ</h2></a>
       <h3>Where does the source code for the contract live?</h3>
       <p><a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/master/contracts/KingOfTheEtherThrone.sol">github.com - KingOfTheEtherThrone.sol</a></p>
       <h3>What's the address of the contract?</h3>
       <p>The contract for {{ThroneName}} is located at {{ThroneContractAddress}}.</p>
-      <p>Its Contract JSON Interface is:</p><pre>{{ThroneContractJsonInterface}}</pre>
+      <p>Its Contract JSON Interface is:</p><textarea class="read-only-for-copy" readonly="readonly" cols="60" rows="5">{{ThroneContractJsonInterface}}</textarea>
       <p>You can watch it on <a href="{{ThroneContractChainExplorerLink}}">a chain explorer</a> if you like.</p>
       <h3>How much is the commission charge?</h3>
-      <p>{{CommissionPercent}}. This is shared equally between the deity (the original creator of the first contract) and the wizard (the creator of the individual throne).</p>
+      <p>{{CommissionPercent}}. This is shared equally between the top-wizard (the original creator of the first contract) and the sub-wizard (the creator of the individual kingdom).</p>
       <h3>Haven&#39;t I seen something like this before?</h3>
       <p>Yes, probably - there are/were a number of Bitcoin chain games along similar lines (though they normally seemed to involve owning a magnificent gem or a special coin).</p>
       <p>The difference with Ethereum is that you don&#39;t have to trust the author not to run away with the money - instead, you can inspect the contract and rely on the blockchain to ensure it is executed as written.</p>
@@ -251,6 +298,141 @@
   </div>
   <script type="text/javascript">
   <!--
+  function makeCopyPasteEasier() {
+    var elems = document.querySelectorAll('.read-only-for-copy');
+    for (var i = 0; i < elems.length; i++) {
+      var elem = elems[i];
+      elem.addEventListener('click', function() {
+        this.select();
+      });
+    }
+  }
+  function convertNameToData(name) {
+    var len = name.length;
+    if (len === 0) {
+      return '';
+    }
+    var maxLen = 25;
+    if (len > maxLen) {
+      throw new Error('name too long');
+    }
+    var foundNonPunctuation = false;
+    var data = '';
+    var prefix = 'NAME:';
+    var prefixedName = prefix + name;
+    for (var i = 0; i < prefixedName.length; i++) {
+      var b = prefixedName.charCodeAt(i);
+      valid = false;
+      if (
+          (b >= 48 && b <= 57) || // 0 - 9
+          (b >= 65 && b <= 90) || // A - Z
+          (b >= 97 && b <= 122)   // a - z
+      ) {
+          foundNonPunctuation = true;
+          valid = true;
+      } else if (
+          b == 32 || // space
+          b == 33 || // !
+          b == 40 || // (
+          b == 41 || // )
+          b == 45 || // -
+          b == 46 || // .
+          b == 95    // _
+      ) {
+          valid = true;
+      }
+      if (!valid && i >= prefix.length) {
+        throw new Error('character not allowed');
+      }
+      data += ('0' + (b.toString(16))).slice(-2).toUpperCase();
+    }
+    if (!foundNonPunctuation) {
+      throw new Error('needs non-punctuation');
+    }
+    return data;
+  }
+  function addTextInputHandler(elem, handler) {
+    elem.addEventListener('click', handler);
+    elem.addEventListener('change', handler);
+    elem.addEventListener('input', handler);
+    elem.addEventListener('keyup', handler);
+  }
+  function setupNameDataConverters() {
+    var elems = document.querySelectorAll('.js-name-convert');
+    for (var i = 0; i < elems.length; i++) {
+      var elem = elems[i];
+      var handler = function() {
+        var name = this.value;
+        var destinationId = this.getAttribute('data-name-convert-destination-id');
+        var destination = document.getElementById(destinationId);
+        try {
+          destination.value = convertNameToData(name);
+        } catch (e) {
+          destination.value = 'Sorry, this name is not allowed.';
+        }
+      };
+      addTextInputHandler(elem, handler);
+    }
+    var elem = document.getElementById('geth_name_text');
+    var handler = function() {
+      var name = this.value;
+      var destination = document.getElementById('geth_js_command');
+      var data = 'web3.fromAscii(\'NAME:\' + \'YOUR NAME HERE\')';
+      var isError = false;
+      if (name.length > 0) {
+        try {
+          data = '\'' + convertNameToData(name) + '\'';
+        } catch (e) {
+          isError = true;
+        }
+      } 
+      var currentCommand = geth_js_command.value;
+      var replacementData = 'data: ' + data;
+      var oldDataRe = /data:[^\n]+/;
+      var result = oldDataRe.exec(currentCommand);
+      var matchStart = result.index;
+      var matchEnd = matchStart + result[0].length;
+      var updatedCommand =
+        currentCommand.substring(0, matchStart) +
+        replacementData +
+        currentCommand.substring(matchEnd);
+      geth_js_command.value = updatedCommand;
+      var errorElem = document.getElementById('geth_name_error');
+      if (isError) {
+        errorElem.innerHTML = 'Sorry, that name is not allowed.';
+      } else {
+        errorElem.innerHTML = '';
+      }
+    }
+    addTextInputHandler(elem, handler);
+  }
+  function hideOrShowSectionAssociatedWith(elem, show) {
+    var sectionId = elem.getAttribute('data-section-id');
+    var section = document.getElementById(sectionId);
+    if (show) {
+      section.style.display = '';
+      elem.style.display = 'none';
+    } else {
+      section.style.display = 'none';
+    }
+  }
+  function makeExpandablesWork() {
+    var elems = document.querySelectorAll('.js-show-collapsed');
+    for (var i = 0; i < elems.length; i++) {
+      var elem = elems[i];
+      hideOrShowSectionAssociatedWith(elem, false);
+      var handler = function() {
+        hideOrShowSectionAssociatedWith(this, true);
+      };
+      elem.addEventListener('click', handler);
+    }
+  }
+  function init() {
+    makeCopyPasteEasier();
+    setupNameDataConverters();
+    makeExpandablesWork();
+  }
+  init();
   // -->
   </script>
 </body>
