@@ -1,0 +1,8 @@
+[ethservers]
+preprod.internal.kingoftheether.com
+
+[genservers]
+preprod.internal.kingoftheether.com
+
+[webservers]
+preprod.internal.kingoftheether.com
