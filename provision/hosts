@@ -1,8 +1,0 @@
-[ethservers]
-preprod.internal.kingoftheether.com ansible_ssh_user=root
-
-[genservers]
-preprod.internal.kingoftheether.com ansible_ssh_user=root
-
-[webservers]
-preprod.internal.kingoftheether.com ansible_ssh_user=root
