@@ -82,7 +82,8 @@ ThronePageMaker.prototype._makeMonarchContext = function(monarchData, monarchInd
     'Number': monarchData.monarchNumber,
     'Name': monarchData.name,
     'CompensationAddress': monarchData.compensationAddress,
-    'ClaimPricePaid': this.humanFormatter.formatAmountWei(monarchData.claimPriceWei)
+    'ClaimPricePaid': this.humanFormatter.formatAmountWei(monarchData.claimPriceWei),
+    'CoronationTime': this.humanFormatter.formatTimestamp(monarchData.coronationTimestamp)
   };
 };
 

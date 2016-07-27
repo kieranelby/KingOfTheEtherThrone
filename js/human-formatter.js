@@ -10,7 +10,7 @@ function HumanFormatter(web3) {
 }
 
 HumanFormatter.prototype.formatAmountWei = function(amountWei) {
-  var amountWei = this.web3.toBigNumber(amountWei);
+  amountWei = this.web3.toBigNumber(amountWei);
   if (amountWei.decimalPlaces() || amountWei.isNegative()) {
     return 'UNKNOWN';
   }
@@ -24,12 +24,12 @@ HumanFormatter.prototype.formatAmountWei = function(amountWei) {
 };
 
 HumanFormatter.prototype.formatPercent = function(percent) {
-  var percent = this.web3.toBigNumber(percent);
+  percent = this.web3.toBigNumber(percent);
   return percent.toString() + '%';
 };
 
 HumanFormatter.prototype.formatPerThousand = function(perThousand) {
-  var perThousand = this.web3.toBigNumber(perThousand);
+  perThousand = this.web3.toBigNumber(perThousand);
   if (perThousand.isNegative()) {
     return 'UNKNOWN';
   }
@@ -37,7 +37,7 @@ HumanFormatter.prototype.formatPerThousand = function(perThousand) {
 };
 
 HumanFormatter.prototype.formatDurationSeconds = function(durationSeconds) {
-  var durationSeconds = this.web3.toBigNumber(durationSeconds);
+  durationSeconds = this.web3.toBigNumber(durationSeconds);
   durationSeconds = durationSeconds.ceil();
   if (durationSeconds.isNegative()) {
     return 'UNKNOWN';
@@ -66,7 +66,7 @@ HumanFormatter.prototype.formatDurationSeconds = function(durationSeconds) {
 };
 
 HumanFormatter.prototype.formatTimestamp = function(posixTimestampSeconds) {
-  var posixTimestampSeconds = this.web3.toBigNumber(posixTimestampSeconds);
+  posixTimestampSeconds = this.web3.toBigNumber(posixTimestampSeconds);
   posixTimestampSeconds = posixTimestampSeconds.round();
   if (posixTimestampSeconds.lessThan('0') || posixTimestampSeconds.greaterThan('2e9')) {
     return 'UNKNOWN';

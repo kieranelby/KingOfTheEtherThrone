@@ -56,8 +56,8 @@
     height: 24px;
     line-height: 24px;
   }
-  input.read-only-for-copy {
-    background-color: #e8e8e8;
+  .read-only-for-copy {
+    background-color: #f0f0f0;
   }
   </style>
 </head>
@@ -95,7 +95,7 @@
 
       <a name="WhoMonarch"><h2>Who is the Monarch?</h2></a>
       {% if IsLivingMonarch %}
-      <p>The illustrious current {{ThroneName}} is <strong>{{CurrentMonarch.Name}}</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
+      <p>Since {{CoronationTime}}, the illustrious current {{ThroneName}} is <strong>{{CurrentMonarch.Name}}</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
       <p>Think you can take their place? Read on for <a href="#HowIRule">How to Rule!</a></p>
       {% else %}
       {% if HasBeenAMonarch %}

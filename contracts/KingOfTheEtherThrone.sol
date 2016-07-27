@@ -1,6 +1,6 @@
 // King of the Ether Throne Contracts.
 // Copyright (c) 2016 Kieran Elby. Released under the MIT License.
-// Version 0.9.9.0, July 2016.
+// Version 0.9.9.1, July 2016.
 //
 // See also http://www.kingoftheether.com and
 // https://github.com/kieranelby/KingOfTheEtherThrone .
@@ -417,7 +417,7 @@ contract NameableMixin {
 /// @title Mixin to help define the rules of a throne.
 contract ThroneRulesMixin {
 
-    // See World.createKingdomAdvanced(..) for documentation.
+    // See World.createKingdom(..) for documentation.
     struct ThroneRules {
         uint startingClaimPriceWei;
         uint maximumClaimPriceWei;
@@ -486,7 +486,7 @@ contract Kingdom is
     // WARN - does NOT validate arguments; you MUST either call
     // KingdomFactory.validateProposedThroneRules() or create
     // the Kingdom via KingdomFactory/World's createKingdom().
-    // See World.createKingdomAdvanced(..) for parameter documentation.
+    // See World.createKingdom(..) for parameter documentation.
     function Kingdom(
         string _kingdomName,
         address _world,
@@ -637,29 +637,6 @@ contract Kingdom is
         externalLeave();
     }
 
-    /// @notice Claim throne in the given `_monarchName`, on behalf of
-    /// `_compensationAddress` to whom any compensation will be sent.
-    /// Caller must include payment equal to currentClaimPriceWei().
-    /// Using a contract `_compensationAddress` is not recommended
-    /// unless you know what you're doing (and you've tested it).
-    /// Will consume up to ~300,000 gas.
-    /// Will throw an error if:
-    ///   - name is invalid (see `validateProposedMonarchName(string)`)
-    ///   - payment is too low or too high
-    ///   - _compensationAddress is "obviously" wrong (e.g. 0x0).
-    /// Produces events:
-    ///   - `ThroneClaimedEvent
-    ///   - `CompensationSentEvent` / `CompensationFailEvent`
-    ///   - `CommissionEarnedEvent`
-    function claimThroneAdvanced(
-        string _monarchName,
-        address _compensationAddress
-    ) {
-        externalEnter();
-        claimThroneAdvancedRP(_monarchName, _compensationAddress);
-        externalLeave();
-    }
-
     /// @notice Used by either the topWizard or subWizard to transfer
     /// all rights to future commissions to the `_replacement` wizard.
     /// WARN: The original wizard retains ownership of any past
@@ -681,15 +658,11 @@ contract Kingdom is
         }
     }
     
-    function claimThroneRP(string _monarchName) internal {
-        address _compensationAddress = msg.sender;
-        claimThroneAdvancedRP(_monarchName, msg.sender);
-    }
-
-    function claimThroneAdvancedRP(
-        string _monarchName,
-        address _compensationAddress
+    function claimThroneRP(
+        string _monarchName
     ) internal {
+
+        address _compensationAddress = msg.sender;
 
         if (!validateNameInternal(_monarchName)) {
             throw;
@@ -830,7 +803,7 @@ contract KingdomFactory {
         throw;
     }
 
-    // See World.createKingdomAdvanced(..) for parameter documentation.
+    // See World.createKingdom(..) for parameter documentation.
     function validateProposedThroneRules(
         uint _startingClaimPriceWei,
         uint _maximumClaimPriceWei,
@@ -872,7 +845,7 @@ contract KingdomFactory {
     ///   - wizard addresses "obviously" wrong
     ///   - out of gas quite likely (perhaps in future should consider
     ///     using solidity libraries to reduce Kingdom size?)
-    // See World.createKingdomAdvanced(..) for parameter documentation.
+    // See World.createKingdom(..) for parameter documentation.
     function createKingdom(
         string _kingdomName,
         address _world,
@@ -948,8 +921,10 @@ contract World is
     // The first kingdom is number 1; the zero-th entry is a dummy.
     KingdomListing[] public kingdomsByNumber;
 
-    // These rules are used if plain createKingdom() is used.
-    ThroneRules public standardRules;
+    // For safety, we cap just how high the price can get.
+    // Can be changed by the topWizard, though it will only affect
+    // kingdoms created after that.
+    uint public maximumClaimPriceWei;
 
     // Helper contract for creating Kingdom instances. Can be
     // upgraded by the topWizard (won't affect existing ones).
@@ -963,47 +938,28 @@ contract World is
 
     event KingdomCreatedEvent(uint kingdomNumber);
     event CreationFeeChangedEvent(uint newFeeWei);
-    event StandardRulesChangedEvent();
     event FactoryChangedEvent(address newFactory);
     event WizardReplacedEvent(address oldWizard, address newWizard);
     // NB: we also have a `FundsWithdrawnEvent` from FundsHolderMixin
 
     // Create the world with no kingdoms yet.
-    // The rule parameters will set the standard rules - see
-    // createKingdomAdvanced(..) for documentation.
-    // Costs about 1.9M gas to deploy.   
+    // Costs about 1.9M gas to deploy.
     function World(
         address _topWizard,
         uint _kingdomCreationFeeWei,
         KingdomFactory _kingdomFactory,
-        uint _startingClaimPriceWei,
-        uint _maximumClaimPriceWei,
-        uint _claimPriceAdjustPercent,
-        uint _curseIncubationDurationSeconds,
-        uint _commissionPerThousand
+        uint _maximumClaimPriceWei
     ) {
         if (_topWizard == 0) {
             throw;
         }
-        if (!kingdomFactory.validateProposedThroneRules(
-            _startingClaimPriceWei,
-            _maximumClaimPriceWei,
-            _claimPriceAdjustPercent,
-            _curseIncubationDurationSeconds,
-            _commissionPerThousand
-        )) {
+        if (_maximumClaimPriceWei < 1 ether) {
             throw;
         }
         topWizard = _topWizard;
         kingdomCreationFeeWei = _kingdomCreationFeeWei;
         kingdomFactory = _kingdomFactory;
-        standardRules = ThroneRules(
-            _startingClaimPriceWei,
-            _maximumClaimPriceWei,
-            _claimPriceAdjustPercent,
-            _curseIncubationDurationSeconds,
-            _commissionPerThousand
-        );
+        maximumClaimPriceWei = _maximumClaimPriceWei;
         // We number the kingdoms starting from 1 since it's sometimes
         // useful to use zero = invalid. Create dummy zero-th entry.
         kingdomsByNumber.push(KingdomListing(0, "", 0, 0, 0, 0));
@@ -1037,17 +993,16 @@ contract World is
     }
 
     // Check if rules would be allowed for a new custom Kingdom.
-    // Typically used before calling `createKingdomAdvanced(...)`.
+    // Typically used before calling `createKingdom(...)`.
     function validateProposedThroneRules(
         uint _startingClaimPriceWei,
-        uint _maximumClaimPriceWei,
         uint _claimPriceAdjustPercent,
         uint _curseIncubationDurationSeconds,
         uint _commissionPerThousand
     ) constant returns (bool allowed) {
         return kingdomFactory.validateProposedThroneRules(
             _startingClaimPriceWei,
-            _maximumClaimPriceWei,
+            maximumClaimPriceWei,
             _claimPriceAdjustPercent,
             _curseIncubationDurationSeconds,
             _commissionPerThousand
@@ -1061,62 +1016,18 @@ contract World is
         return roundMoneyUpToWholeFinney(kingdomCreationFeeWei);
     }
 
-    /// @notice Create a new kingdom by sending funds to the contract.
-    ///
-    /// To supply the name of the kingdom, send data encoded using
-    /// web3.fromAscii('NAME:' + 'your_chosen_valid_name').
-    /// Kingdom created will use a copy of the curent standard rules.
-    /// The sender (`msg.sender`) will become the subWizard within the
-    /// created kingdom and earn half any commission earned (they will
-    /// need to call withdrawFunds() on the Kingdom contract to get it).
-    /// Sender must include payment equal to kingdomCreationFeeWei.
-    /// Will consume up to 1,900,000 gas (!)
-    /// Will throw an error if:
-    ///   - no name data supplied
-    ///   - name is invalid (see `validateProposedKingdomName(string)`)
-    ///   - name is already in use (see `findKingdomCalled(string)`)
-    ///   - payment is too low or too high
-    ///   - insufficient gas (quite likely!)
-    /// Produces event KingdomCreatedEvent.
+    // Reject funds sent to the contract - wizards who cannot interact
+    // with it via the API won't be able to withdraw their commission.
     function () {
-        externalEnter();
-        fallbackRP();
-        externalLeave();
-    }
-
-    /// @notice Create a new kingdom using the standard rules.
-    /// @param _kingdomName e.g. "King of the Ether Throne"
-    ///
-    /// The sender (`msg.sender`) will become the subWizard within the
-    /// created kingdom and earn half any commission earned (they will
-    /// need to call withdrawFunds() on the Kingdom contract to get it).
-    /// Caller must include payment equal to kingdomCreationFeeWei.
-    /// Will consume up to 1,900,000 gas (!)
-    /// Will throw an error if:
-    ///   - name is invalid (see `validateProposedKingdomName(string)`)
-    ///   - name is already in use (see `findKingdomCalled(string)`)
-    ///   - payment is too low or too high
-    ///   - insufficient gas (quite likely!)
-    /// Produces event KingdomCreatedEvent.
-    function createKingdom(string _kingdomName) {
-        externalEnter();
-        createKingdomRP(_kingdomName);
-        externalLeave();
+        throw;
     }
 
     /// @notice Create a new kingdom using custom rules.
     /// @param _kingdomName \
     ///   e.g. "King of the Ether Throne"
-    /// @param _subWizard \
-    ///   Will earn half any commission charged by the Kingdom.
-    ///   Note they will need to call withdrawFunds() on the Kingdom
-    ///   contract to get their commission.
     /// @param _startingClaimPriceWei \
     ///   How much it will cost the first monarch to claim the throne
     ///   (and also the price after the death of a monarch).
-    /// @param _maximumClaimPriceWei \
-    ///   The maximum price the throne can ever reach (it stops going
-    ///   up after this. Useful to avoid The DAO $150MM fiascos.
     /// @param _claimPriceAdjustPercent \
     ///   Percentage increase after each claim - e.g. if claim price
     ///   was 200 ETH, and `_claimPriceAdjustPercent` is 50, the next
@@ -1130,6 +1041,11 @@ contract World is
     ///   or 2.5%.
     /// 
     /// Caller must include payment equal to kingdomCreationFeeWei.
+    /// The caller will become the 'sub-wizard' and will earn half
+    /// any commission charged by the Kingdom.  Note however they
+    /// will need to call withdrawFunds() on the Kingdom contract
+    /// to get their commission - it's not send automatically.
+    ///
     /// Will consume up to 1,900,000 gas (!)
     /// Will throw an error if:
     ///   - name is invalid (see `validateProposedKingdomName(string)`)
@@ -1138,21 +1054,17 @@ contract World is
     ///   - payment is too low or too high
     ///   - insufficient gas (quite likely!)
     /// Produces event KingdomCreatedEvent.
-    function createKingdomAdvanced(
+    function createKingdom(
         string _kingdomName,
-        address _subWizard,
         uint _startingClaimPriceWei,
-        uint _maximumClaimPriceWei,
         uint _claimPriceAdjustPercent,
         uint _curseIncubationDurationSeconds,
         uint _commissionPerThousand
     ) {
         externalEnter();
-        createKingdomAdvancedRP(
+        createKingdomRP(
             _kingdomName,
-            _subWizard,
             _startingClaimPriceWei,
-            _maximumClaimPriceWei,
             _claimPriceAdjustPercent,
             _curseIncubationDurationSeconds,
             _commissionPerThousand
@@ -1173,9 +1085,16 @@ contract World is
     }
 
     /// @notice Used by topWizard to vary the fee for creating kingdoms.
-    function setCreationFee(uint _kingdomCreationFeeWei) {
+    function setKingdomCreationFeeWei(uint _kingdomCreationFeeWei) {
         externalEnter();
-        setCreationFeeRP(_kingdomCreationFeeWei);
+        setKingdomCreationFeeWeiRP(_kingdomCreationFeeWei);
+        externalLeave();
+    }
+
+    /// @notice Used by topWizard to vary the cap on claim price.
+    function setMaximumClaimPriceWei(uint _maximumClaimPriceWei) {
+        externalEnter();
+        setMaximumClaimPriceWeiRP(_maximumClaimPriceWei);
         externalLeave();
     }
 
@@ -1187,57 +1106,15 @@ contract World is
         externalLeave();
     }
 
-    /// @notice Used by topWizard to vary the standard rules which
-    /// will be used to create future standard Kingdoms.
-    function setStandardRules(
-        uint _startingClaimPriceWei,
-        uint _maximumClaimPriceWei,
-        uint _claimPriceAdjustPercent,
-        uint _curseIncubationDurationSeconds,
-        uint _commissionPerThousand
-    ) {
-        externalEnter();
-        setStandardRulesRP(
-            _startingClaimPriceWei,
-            _maximumClaimPriceWei,
-            _claimPriceAdjustPercent,
-            _curseIncubationDurationSeconds,
-            _commissionPerThousand
-        );
-        externalLeave();
-    }
-
-    function fallbackRP() internal {
-        if (msg.data.length == 0) {
-            throw;
-        } else {
-            string memory _kingdomName = extractNameFromData(msg.data);
-            createKingdomRP(_kingdomName);
-        }
-    }
-    
-    function createKingdomRP(string _kingdomName) internal {
-        address subWizard = msg.sender;
-        createKingdomAdvancedRP(
-            _kingdomName,
-            subWizard,
-            standardRules.startingClaimPriceWei,
-            standardRules.maximumClaimPriceWei,
-            standardRules.claimPriceAdjustPercent,
-            standardRules.curseIncubationDurationSeconds,
-            standardRules.commissionPerThousand
-        );
-    }
-
-    function createKingdomAdvancedRP(
+    function createKingdomRP(
         string _kingdomName,
-        address _subWizard,
         uint _startingClaimPriceWei,
-        uint _maximumClaimPriceWei,
         uint _claimPriceAdjustPercent,
         uint _curseIncubationDurationSeconds,
         uint _commissionPerThousand
     ) internal {
+
+        address subWizard = msg.sender;
 
         if (!validateNameInternal(_kingdomName)) {
             throw;
@@ -1266,9 +1143,9 @@ contract World is
             _kingdomName,
             address(this),
             topWizard,
-            _subWizard,
+            subWizard,
             _startingClaimPriceWei,
-            _maximumClaimPriceWei,
+            maximumClaimPriceWei,
             _claimPriceAdjustPercent,
             _curseIncubationDurationSeconds,
             _commissionPerThousand
@@ -1296,7 +1173,7 @@ contract World is
         WizardReplacedEvent(oldWizard, replacement);
     }
 
-    function setCreationFeeRP(uint _kingdomCreationFeeWei) internal {
+    function setKingdomCreationFeeWeiRP(uint _kingdomCreationFeeWei) internal {
         if (msg.sender != topWizard) {
             throw;
         }
@@ -1305,6 +1182,16 @@ contract World is
         }
         kingdomCreationFeeWei = _kingdomCreationFeeWei;
         CreationFeeChangedEvent(kingdomCreationFeeWei);
+    }
+
+    function setMaximumClaimPriceWeiRP(uint _maximumClaimPriceWei) {
+        if (msg.sender != topWizard) {
+            throw;
+        }
+        if (_maximumClaimPriceWei < 1 ether) {
+            throw;
+        }
+        maximumClaimPriceWei = _maximumClaimPriceWei;
     }
 
     function setKingdomFactoryRP(KingdomFactory _kingdomFactory) internal {
@@ -1316,37 +1203,6 @@ contract World is
         }
         kingdomFactory = _kingdomFactory;
         FactoryChangedEvent(kingdomFactory);
-    }
-
-    function setStandardRulesRP(
-        uint _startingClaimPriceWei,
-        uint _maximumClaimPriceWei,
-        uint _claimPriceAdjustPercent,
-        uint _curseIncubationDurationSeconds,
-        uint _commissionPerThousand
-    ) internal {
-        if (msg.sender != topWizard) {
-            throw;
-        }
-        if (msg.value != 0) {
-            throw;
-        }
-        if (!validateProposedThroneRules(
-            _startingClaimPriceWei,
-            _maximumClaimPriceWei,
-            _claimPriceAdjustPercent,
-            _curseIncubationDurationSeconds,
-            _commissionPerThousand
-        )) {
-            throw;
-        }
-        standardRules.startingClaimPriceWei = _startingClaimPriceWei;
-        standardRules.maximumClaimPriceWei = _maximumClaimPriceWei;
-        standardRules.claimPriceAdjustPercent = _claimPriceAdjustPercent;
-        standardRules.curseIncubationDurationSeconds =
-          _curseIncubationDurationSeconds;
-        standardRules.commissionPerThousand = _commissionPerThousand;
-        StandardRulesChangedEvent();        
     }
 
     // If there is no existing kingdom called `_kingdomName`, create

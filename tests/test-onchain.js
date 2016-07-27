@@ -49,7 +49,7 @@ var throneTestSupport = new ThroneTestSupport();
 // Perhaps we ought to have concept of suites? Or just use multiple runners?
 var TestThroneCore = require('./test-throne-core.js');
 var TestThronePayments = require('./test-throne-payments.js');
-//var TestWorld = require('./test-world.js');
+var TestWorld = require('./test-world.js');
 //var TestThroneSecurity = require('./test-throne-security.js');
 //var TestThronePerformance = require('./test-throne-performance.js');
 //var TestThroneFuzz = require('./test-throne-fuzz.js');
@@ -62,7 +62,7 @@ var TestThroneInternals = require('./test-throne-internals.js');
 var subTestModules = [
   new TestThroneCore(),
   new TestThronePayments(),
-  //new TestWorld(),
+  new TestWorld(),
   //new TestThroneSecurity(),
   //new TestThronePerformance(),
   //new TestThroneFuzz(),
@@ -107,10 +107,10 @@ subTestModules.forEach(function (stm) {
 
 // Uncomment these to control which tests are run.
 
-//runner.excludeCategory('safe');
-//runner.excludeCategory('multinode');
+runner.excludeCategory('safe');
+runner.excludeCategory('multinode');
 runner.excludeCategory('notported');
-//runner.excludeExceptCategory('quick-retest');
+runner.excludeExceptCategory('world');
 
 // Run the tests.
 runner.run(function (results) {

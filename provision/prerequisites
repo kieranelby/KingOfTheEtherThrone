@@ -1,0 +1,6 @@
+- make sure python2.7 installed for ansible
+- add ssh authorized keys
+- bit of ssh hardening in /etc/ssh/sshd_config (make sure keys work first!)
+  Port 2222
+  PasswordAuthentication no
+  ChallengeResponseAuthentication no

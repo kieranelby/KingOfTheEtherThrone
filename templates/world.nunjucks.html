@@ -38,8 +38,8 @@
     height: 60px;
     line-height: 60px;
   }
-  input.read-only-for-copy {
-    background-color: #e8e8e8;
+  .read-only-for-copy {
+    background-color: #f0f0f0;
   }
   </style>
 </head>
@@ -74,9 +74,9 @@
         <tbody>
           {% for Kingdom in TheKingdoms %}
           <tr>
-            <td><a href="{{Kingdom.RelativeUrl}}">{{Kingdom.Number}}</a></td>
-            <td><a href="{{Kingdom.RelativeUrl}}">{{Kingdom.Name}}</a></td>
-            <td>{{Kingdom.CurrentClaimPrice}}</td>
+            <td><a href="{{Kingdom.RelativeUrl}}#GreatHall">{{Kingdom.Number}}</a></td>
+            <td><a href="{{Kingdom.RelativeUrl}}#GreatHall">{{Kingdom.Name}}</a></td>
+            <td>><a href="{{Kingdom.RelativeUrl}}#HowIRule">{{Kingdom.CurrentClaimPrice}}</a></td>
           </tr>
           {% endfor %}
         </tbody>
