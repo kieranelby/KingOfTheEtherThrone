@@ -822,7 +822,7 @@ contract KingdomFactory {
         // I suppose there is a danger that massive deflation/inflation could
         // change the real-world sanity of these checks, but in that case we
         // can deploy a new factory and update the world.
-        if (_startingClaimPriceWei < 1 finney ||
+        if (_startingClaimPriceWei < 10 finney ||
             _startingClaimPriceWei > 100 ether) {
             return false;
         }
@@ -833,11 +833,11 @@ contract KingdomFactory {
         if (_startingClaimPriceWei * 20 > _maximumClaimPriceWei) {
             return false;
         }
-        if (_claimPriceAdjustPercent < 1 ||
+        if (_claimPriceAdjustPercent < 10 ||
             _claimPriceAdjustPercent > 900) {
             return false;
         }
-        if (_curseIncubationDurationSeconds < 15 minutes ||
+        if (_curseIncubationDurationSeconds < 2 hours ||
             _curseIncubationDurationSeconds > 10000 days) {
             return false;
         }

@@ -74,8 +74,8 @@
         <tbody>
           {% for Kingdom in TheKingdoms %}
           <tr>
-            <td><a href="{{Kingdom.RelativeUrl}}#GreatHall">{{Kingdom.Number}}</a></td>
-            <td><a href="{{Kingdom.RelativeUrl}}#GreatHall">{{Kingdom.Name}}</a></td>
+            <td><a href="{{Kingdom.RelativeUrl}}">{{Kingdom.Number}}</a></td>
+            <td><a href="{{Kingdom.RelativeUrl}}">{{Kingdom.Name}}</a></td>
             <td><a href="{{Kingdom.RelativeUrl}}#HowIRule">{{Kingdom.CurrentClaimPrice}}</a></td>
           </tr>
           {% endfor %}
@@ -101,44 +101,59 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
           <tr>
             <th class="for-row">Kingdom Name</th>
             <td>
-              TODO
+              We use the name you enter here for the name of the Kingdom, and the title of its Ruler, and for the Throne.<br>
+              For example, 'Queen of Goats' works well in a sentence like 'In the Queen of Goats Kingdom, the current Queen of Goats is Bob, who sits on the Queen of Goats Throne'.<br>
+              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)<br>
+              To check if the name is allowed first, you can use the 'Validate proposed kingdom name' in the 'READ FROM CONTRACT' section on the left. Names must be unique - cannot have two Kingdom with same name.
             </td>
           </tr>
           <tr>
             <th class="for-row">Starting Claim Price Wei</th>
             <td>
-              What should the price of your throne start at, in wei?
+              What should the price of your throne start at, in wei?<br>
               Some useful conversions are:
-              0.1 ether = ??? wei
-              0.5 ether = ??? wei
-              1 ether = ??? wei
-              Must be between TODO and TODO.
+              <ul>
+              <li>0.1 ether = 100000000000000000 wei</li>
+              <li>0.5 ether = 500000000000000000 wei</li>
+              <li>1 ether = 100000000000000000 wei</li>
+              </ul>
+              Must be between 10 finney (10000000000000000 wei) and 100 ether (10000000000000000000 wei).
             </td>
           </tr>
           <tr>
             <th class="for-row">Claim Price Adjust Percent</th>
             <td>
-              How much should the throne price go up by each time it is claimed, in percent?
-              For example, 50 means that claiming the throne at a price of 10 ether bumps the price to 15 ether for the next usurper.
-              Must be a whole number between TODO and TODO.
+              How much should the throne price go up by each time it is claimed, in percent?<br>
+              For example, 50 means that claiming the throne at a price of 10 ether bumps the price to 15 ether for the next usurper.<br>
+              Must be a whole number between 10 and 900.
             </td>
           </tr>
           <tr>
             <th class="for-row">Curse Incubation Duration Seconds</th>
             <td>
-              How long can a monarch rule before they die due to the mysterious curse, in seconds?
+              How long can a monarch rule before they die due to the mysterious curse, in seconds?<br>
               Some useful conversions are:
-              TODO
-              Must be a whole number between TODO and TODO.
+              <ul>
+              <li>0.1 ether = 100000000000000000 wei</li>
+              <li>0.5 ether = 500000000000000000 wei</li>
+              <li>1 ether = 100000000000000000 wei</li>
+              </ul>
+              Must be a whole number between 7200 (2 hours) and 864000000 (10000 days).</br>
             </td>
           </tr>
           <tr>
             <th class="for-row">Commission Per Thousand</th>
             <td>
-              TODO, in parts-per-thousand.
-              For example, 20 means that a commission of 2.0% is charged on each payment.
-              Must be a whole number between TODO and TODO.
-              TODO
+              How much commission is deducted from the compensation, in parts-per-thousand?<br>
+              For example, 20 means that a commission of 2.0% is charged on each payment.<br>
+              Must be a whole number between 10 (1%) and 100 (10%).
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Execute From</th>
+            <td>
+              Which Ethereum Wallet account do you want to use? It's generally recommended to use the 'Etherbase' account, not contract-wallets.
+              Don't lose the account - you'll need to use the same account to withdraw any commission you earn from the Kingdom contract.
             </td>
           </tr>
           <tr>

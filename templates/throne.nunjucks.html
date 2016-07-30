@@ -99,13 +99,13 @@
       <p>Think you can take their place? Read on for <a href="#HowIRule">How to Rule!</a></p>
       {% else %}
       {% if HasBeenAMonarch %}
-      <p>Owing to an unfortunate incident, the {{ThroneName}} is currently vacant.</p>
+      <p>Owing to an unfortunate incident, the {{ThroneName}} Throne is currently vacant.</p>
       {% else %}
-      <p>The newly-established {{ThroneName}} is still vacant.</p>
+      <p>The newly-established {{ThroneName}} Throne is still vacant.</p>
       {% endif %}
       <p>This is your chance - read on for <a href="#HowIRule">How to Rule!</a></p>
       {% endif %}
-      <h5>(This information was last updated at {{LastUpdated}}.)</h5>
+      <h5>(This information was last updated at {{LastUpdated}} - reload this page to check for changes.)</h5>
      
       <a name="GreatHall"><h2>Hall of Monarchs</h2></a>
       <p>These are the hallowed rulers of the {{ThroneName}} Throne, immortalized in the block-chain:</p>
@@ -130,7 +130,8 @@
           {% endfor %}
         </tbody>
       </table>
-      
+      <h5>(This information was last updated at {{LastUpdated}} - reload this page to check for changes.)</h5>
+            
       <a name="HowIRule"><h2>How Can I Rule?</h2></a>
       <p>The power of the {{ThroneName}} Throne can be yours for the <strong>current claim price</strong> of just <strong>{{CurrentClaimPrice}}</strong> (as of <span class="timestamp">{{LastUpdated}}</span>). Here's how:</p>
       
@@ -228,13 +229,14 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
               <td>
                 What should we call you, your majesty?<br>
                 (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)<br>
-                To check if the name is allowed first, use the 'Validate proposed monarch name' in the 'READ FROM CONTRACT' section on the left.
+                To double-check if the name is allowed first, you can use the 'Validate proposed monarch name' in the 'READ FROM CONTRACT' section on the left.
               </td>
             </tr>
             <tr>
-              <th class="for-row">Account</th>
+              <th class="for-row">Execute From</th>
               <td>
                 Which Ethereum Wallet account do you want to use? It's generally recommended to use the 'Etherbase' account, not contract-wallets.
+                Don't lose the account - your compensation payment will only be sent to this account.
               </td>
             </tr>
             <tr>
