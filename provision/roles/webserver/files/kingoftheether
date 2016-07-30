@@ -21,9 +21,16 @@ server {
 }
 
 server {
+    # want www.origin.internal.kingoftheether.com as canonical name
+    listen 80;
+    server_name origin.internal.kingoftheether.com;
+    return 301 $scheme://www.origin.internal.kingoftheether.com$request_uri;
+}
+
+server {
     listen 80;
     # preprod name quite long - need 'server_names_hash_bucket_size 64' in http section of main config
-    server_name www.kingoftheether.com www.preprod.internal.kingoftheether.com;
+    server_name www.kingoftheether.com www.preprod.internal.kingoftheether.com www.origin.internal.kingoftheether.com;
 
     root /var/www/kingoftheether;
     index index.html index.htm;
