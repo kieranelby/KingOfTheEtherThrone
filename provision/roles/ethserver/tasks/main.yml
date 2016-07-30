@@ -40,3 +40,7 @@
 - name: ensure geth is restarted
   # TODO - perhaps we should only restart if we downloaded a new version or changed the service definition?
   service:   name=geth state=restarted
+
+- name: ensure geth is enabled (that is, will start on boot)
+  command:   systemctl enable geth
+

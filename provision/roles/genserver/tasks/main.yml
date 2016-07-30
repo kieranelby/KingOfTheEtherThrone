@@ -5,8 +5,13 @@
   user:      name=kgen
              groups=www-data
 
-- name: Make sure node is installed
-  apt:        name=npm
+- name: Make sure node etc is installed (need git for npm)
+  apt: name={{item}} state=installed
+  with_items:
+       - npm
+       - nodejs
+       - nodejs-legacy
+       - git
 
 - name: ensure KoTE release downloaded
   get_url:   dest=/home/kgen/KingOfTheEtherThrone-{{kote_version}}.zip
@@ -19,7 +24,10 @@
              copy=no
 
 - name: link release into current dir
-- file: src=/home/kgen/KingOfTheEtherThrone-{{kote_version}} dest=/home/kgen/KingOfTheEtherThrone owner=kgen group=kgen state=link
+  file: src=/home/kgen/KingOfTheEtherThrone-{{kote_version}} dest=/home/kgen/KingOfTheEtherThrone owner=kgen group=kgen state=link
+
+- name: ensure shell script is executable
+  file: path=/home/kgen/KingOfTheEtherThrone/bin/refresh.sh mode=u+x
 
 - name: ensure kgen service definition exists
   copy:      dest=/etc/systemd/system/kgen.service
@@ -34,3 +42,7 @@
 - name: ensure kgen is restarted
   # TODO - perhaps we should only restart if we downloaded a new version or changed the service definition?
   service:   name=kgen state=restarted
+
+- name: ensure kgen is enabled (that is, will start on boot)
+  command:   systemctl enable kgen
+  

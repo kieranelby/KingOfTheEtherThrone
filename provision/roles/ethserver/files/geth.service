@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/geth --maxpeers 25 --cache 128
+ExecStart=/usr/bin/geth --maxpeers 25 --cache 128 -rpc -rpcport 8545 -rpcapi 'eth,web3'
 User=geth
 Restart=always
 RestartSec=30

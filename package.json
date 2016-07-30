@@ -10,13 +10,13 @@
     "lint": "jshint js tests"
   },
   "dependencies": {
-    "dapp-test-runner": "*",
     "nunjucks" : "2.3.0",
     "web3" : "0.17.0-alpha",
     "fs-extra" : "0.30.0",
     "random-js": "1.0.8"
   },
   "devDependencies": {
+    "dapp-test-runner": "*",
     "jshint": "2.5.0"
   }
 }
