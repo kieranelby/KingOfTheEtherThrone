@@ -29,9 +29,9 @@
   file:       path=/etc/nginx/sites-enabled/default
               state=absent
 
-- name: Make sure site content directory for kingoftheether is present
+- name: Make sure site content directory for kingoftheether is present (and writable by www-data)
   file:       path=/var/www/kingoftheether
-              state=directory owner=www-data group=www-data
+              state=directory owner=www-data group=www-data mode=g+x
 
 - name: ensure nginx is restarted
   # TODO - perhaps we should only restart if something changed? and if we've tested the config?
