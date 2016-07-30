@@ -1,9 +1,13 @@
 ---
 # Variables listed here are applicable to all host groups
 
+kote_version: 0.9.9.2
+
 timezone_enabled: yes
 timezone_timezone: UTC
+
 iptables_allowed_tcp_ports: [2222, 80, 443, 30303, 31313]
+
 ansible_connection: ssh
 ansible_user: root
 ansible_port: 2222

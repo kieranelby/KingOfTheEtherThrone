@@ -5,9 +5,32 @@
   user:      name=kgen
              groups=www-data
 
-- name: Make sure nginx is installed
+- name: Make sure node is installed
   apt:        name=npm
 
-# TODO - install npm
-# TODO - deploy release
-# TODO - cron? systemd?
+- name: ensure KoTE release downloaded
+  get_url:   dest=/home/kgen/KingOfTheEtherThrone-{{kote_version}}.zip
+             url=https://github.com/kieranelby/KingOfTheEtherThrone/archive/v{{kote_version}}.zip
+
+- name: ensure KoTE release unpacked
+  unarchive: dest=/home/kgen
+             src=/home/kgen/KingOfTheEtherThrone-{{kote_version}}.zip
+             owner=kgen group=kgen
+             copy=no
+
+- name: link release into current dir
+- file: src=/home/kgen/KingOfTheEtherThrone-{{kote_version}} dest=/home/kgen/KingOfTheEtherThrone owner=kgen group=kgen state=link
+
+- name: ensure kgen service definition exists
+  copy:      dest=/etc/systemd/system/kgen.service
+             src=roles/genserver/files/kgen.service
+             mode=644 owner=root group=root
+  register:  kgenservicedefinition
+
+- name: ensure systemd is reloaded if geth.service has changed
+  command:   systemctl daemon-reload
+  when:      kgenservicedefinition.changed
+
+- name: ensure kgen is restarted
+  # TODO - perhaps we should only restart if we downloaded a new version or changed the service definition?
+  service:   name=kgen state=restarted
