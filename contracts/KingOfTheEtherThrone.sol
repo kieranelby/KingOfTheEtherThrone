@@ -1,6 +1,6 @@
 // King of the Ether Throne Contracts.
 // Copyright (c) 2016 Kieran Elby. Released under the MIT License.
-// Version 0.9.9.2, July 2016.
+// Version 0.9.9.4, July 2016.
 //
 // See also http://www.kingoftheether.com and
 // https://github.com/kieranelby/KingOfTheEtherThrone .
