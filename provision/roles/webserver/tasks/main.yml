@@ -31,7 +31,7 @@
 
 - name: Make sure site content directory for kingoftheether is present (and writable by www-data)
   file:       path=/var/www/kingoftheether
-              state=directory owner=www-data group=www-data mode=g+x
+              state=directory owner=www-data group=www-data mode=g+w
 
 - name: ensure nginx is restarted
   # TODO - perhaps we should only restart if something changed? and if we've tested the config?
