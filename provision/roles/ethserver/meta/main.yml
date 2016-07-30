@@ -1,3 +1,4 @@
 ---
+# An 'ethserver' runs a local ethereum node.
 # This specifies the other roles needed before this role.
 

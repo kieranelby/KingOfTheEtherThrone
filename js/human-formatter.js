@@ -71,7 +71,7 @@ HumanFormatter.prototype.formatTimestamp = function(posixTimestampSeconds) {
   if (posixTimestampSeconds.lessThan('0') || posixTimestampSeconds.greaterThan('2e9')) {
     return 'UNKNOWN';
   }
-  var posixTimestampMilliseconds = posixTimestampSeconds.times('10');
+  var posixTimestampMilliseconds = posixTimestampSeconds.times('1000');
   var date = new Date(posixTimestampMilliseconds.toNumber());
   // e.g. 2016-07-14T20:50:47.451Z
   var isoString = date.toISOString();

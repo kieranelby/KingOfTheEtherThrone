@@ -22,7 +22,8 @@ ThronePropertiesFacade.prototype.getRules = function() {
     }
   */
   return {
-    startingClaimPrice:             rulesArray[0],
+    startingClaimPrice:             rulesArray[0], // backwards-compat
+    startingClaimPriceWei:          rulesArray[0],
     maximumClaimPriceWei:           rulesArray[1],
     claimPriceAdjustPercent:        rulesArray[2],    
     curseIncubationDurationSeconds: rulesArray[3],
@@ -32,14 +33,14 @@ ThronePropertiesFacade.prototype.getRules = function() {
 
 ThronePropertiesFacade.prototype.getMonarchs = function() {
   var monarchs = [];
-  for (var i = 1; i <= this.getNumberOfMonarchs(); i++) {
+  for (var i = 1; i <= this.throne.numberOfMonarchs(); i++) {
     monarchs.push(this.getMonarch(i));
   }
   return monarchs;
 };
 
 ThronePropertiesFacade.prototype.getMonarch = function(monarchNumber) {
-  return this._decodeMonarchArray(this.throne.monarchsByNumber(monarchNumber));
+  return this._decodeMonarchArray(this.throne.monarchsByNumber(monarchNumber), monarchNumber);
 };
 
 ThronePropertiesFacade.prototype._decodeMonarchArray = function(monarchArray, monarchNumber) {

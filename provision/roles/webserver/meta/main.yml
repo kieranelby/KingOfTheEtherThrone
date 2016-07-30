@@ -1,3 +1,3 @@
 ---
+# A 'webserver' is a static/proxy webserver.
 # This specifies the other roles needed before this role.
-

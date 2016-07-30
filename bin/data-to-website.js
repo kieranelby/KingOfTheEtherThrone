@@ -9,7 +9,8 @@ var WorldPageMaker = require('../js/world-page-maker.js');
 // only needed to help with formatting
 var web3 = new Web3();
 
-var worldDataFilename = 'tests/sample-data/world.json';
+//var worldDataFilename = 'tests/sample-data/world.json';
+var worldDataFilename = 'world.json';
 
 console.log('Reading world data file ' + worldDataFilename + '...');
 var rootData = JSON.parse(fse.readFileSync(worldDataFilename, 'utf8'));

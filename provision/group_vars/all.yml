@@ -3,7 +3,7 @@
 
 timezone_enabled: yes
 timezone_timezone: UTC
-iptables_allowed_tcp_ports: [2222, 80, 443, 30303]
+iptables_allowed_tcp_ports: [2222, 80, 443, 30303, 31313]
 ansible_connection: ssh
 ansible_user: root
 ansible_port: 2222

@@ -50,9 +50,9 @@ var throneTestSupport = new ThroneTestSupport();
 var TestThroneCore = require('./test-throne-core.js');
 var TestThronePayments = require('./test-throne-payments.js');
 var TestWorld = require('./test-world.js');
-//var TestThroneSecurity = require('./test-throne-security.js');
-//var TestThronePerformance = require('./test-throne-performance.js');
-//var TestThroneFuzz = require('./test-throne-fuzz.js');
+var TestThroneSecurity = require('./test-throne-security.js');
+var TestThronePerformance = require('./test-throne-performance.js');
+var TestThroneFuzz = require('./test-throne-fuzz.js');
 var TestThroneInternals = require('./test-throne-internals.js');
 // TODO - re-instate multi-node tests
 //var TestThroneMultiNode = require('./test-throne-multi-node.js');
@@ -63,9 +63,9 @@ var subTestModules = [
   new TestThroneCore(),
   new TestThronePayments(),
   new TestWorld(),
-  //new TestThroneSecurity(),
-  //new TestThronePerformance(),
-  //new TestThroneFuzz(),
+  new TestThroneSecurity(),
+  new TestThronePerformance(),
+  new TestThroneFuzz(),
   new TestThroneInternals(),
   //new TestThroneMultiNode()
 ];
@@ -76,6 +76,10 @@ var subTestModules = [
 // Register the contract we want to test.
 var throneContractSource = fs.readFileSync('contracts/KingOfTheEtherThrone.sol', 'utf8');
 runner.registerSolidityContracts(throneContractSource);
+
+// Some of our tests need to use special contracts to explore behaviour
+var helperContractSource = fs.readFileSync('tests/helper-contracts/Helper.sol', 'utf8');
+runner.registerSolidityContracts(helperContractSource);
 
 // Register the tests from our sub-modules.
 subTestModules.forEach(function (stm) {
@@ -107,10 +111,13 @@ subTestModules.forEach(function (stm) {
 
 // Uncomment these to control which tests are run.
 
-runner.excludeCategory('safe');
+//runner.excludeCategory('safe');
 runner.excludeCategory('multinode');
 runner.excludeCategory('notported');
-runner.excludeExceptCategory('world');
+//runner.excludeExceptCategory('security');
+//runner.excludeExceptCategory('inprogress');
+//runner.excludeExceptCategory('world');
+
 
 // Run the tests.
 runner.run(function (results) {

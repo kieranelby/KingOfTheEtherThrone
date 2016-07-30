@@ -76,7 +76,7 @@
           <tr>
             <td><a href="{{Kingdom.RelativeUrl}}#GreatHall">{{Kingdom.Number}}</a></td>
             <td><a href="{{Kingdom.RelativeUrl}}#GreatHall">{{Kingdom.Name}}</a></td>
-            <td>><a href="{{Kingdom.RelativeUrl}}#HowIRule">{{Kingdom.CurrentClaimPrice}}</a></td>
+            <td><a href="{{Kingdom.RelativeUrl}}#HowIRule">{{Kingdom.CurrentClaimPrice}}</a></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -94,10 +94,67 @@ For JSON INTERFACE, copy-and-paste this:<br>
 <textarea class="read-only-for-copy" readonly="readonly" cols="60" rows="5">{{WorldContractJsonInterface}}</textarea><br>
 Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract to the collection of 'Custom Contracts' you're watching.
 </p>
-      <p>3. Click on the 'World' contract you just created in the 'Custom Contracts' section. You should now be able to interact with the World contract using the 'READ FROM CONTRACT' section on the left, and the 'WRITE TO CONTRACT section on the right.</p>
-      <p>4. TODO</p>
-      <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'.</p>
+      <p>3. Click on the 'World' contract you just created in the 'Custom Contracts' section. You should now be able to interact with the World contract using the 'READ FROM CONTRACT' section on the left, and the 'WRITE TO CONTRACT' section on the right.</p>
+      <p>4. Choose the 'Create Kingdom' method from the drop-down under 'WRITE TO CONTRACT'. Fill in the following details:
+        <form>
+        <table>
+          <tr>
+            <th class="for-row">Kingdom Name</th>
+            <td>
+              TODO
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Starting Claim Price Wei</th>
+            <td>
+              What should the price of your throne start at, in wei?
+              Some useful conversions are:
+              0.1 ether = ??? wei
+              0.5 ether = ??? wei
+              1 ether = ??? wei
+              Must be between TODO and TODO.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Claim Price Adjust Percent</th>
+            <td>
+              How much should the throne price go up by each time it is claimed, in percent?
+              For example, 50 means that claiming the throne at a price of 10 ether bumps the price to 15 ether for the next usurper.
+              Must be a whole number between TODO and TODO.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Curse Incubation Duration Seconds</th>
+            <td>
+              How long can a monarch rule before they die due to the mysterious curse, in seconds?
+              Some useful conversions are:
+              TODO
+              Must be a whole number between TODO and TODO.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Commission Per Thousand</th>
+            <td>
+              TODO, in parts-per-thousand.
+              For example, 20 means that a commission of 2.0% is charged on each payment.
+              Must be a whole number between TODO and TODO.
+              TODO
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Send</th>
+            <td>
+              You'll need to specify the kingdom creation fee you will send to pay for the creation and listing of your contract here.
+              As of {{LastUpdated}}, the creation fee is {{KingdomCreationFee}}. The World contract page in your Ethereum Wallet will show the latest fee in the 'Kingdom Creation Fee in Finney' section on the left of the screen.
+            </td>
+          </tr>
+        </table>
+        </form>
+      </p>
+      <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'. Yes, the gas amount is very high - about 1.9 million. Less than 0.1 ether though.</p>
       <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear. In the Ethereum Wallet, you may need to leave the contract page and go back to it to see the details under 'READ FROM CONTRACT' change.</p>
+      <p>7. Follow the link to the web page for your Kingdom at <a href="#TheKingdoms">The Kingdoms</a>. Use the instructions there to start watching your new Kingdom Contract in your Ethereum Wallet.</p>
+      <p>8. To withdraw any commission earned, you'll need to use the Withdraw Funds method on your Kingdom Contract (not the one on the World contract).</p>
 
       <a name="Disclaimer"><h2>Disclaimer</h2></a>
       <p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun.</p>

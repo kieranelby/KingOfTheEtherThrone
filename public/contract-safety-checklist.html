@@ -48,10 +48,13 @@
         We have mitigated against this risk by:
         <ul>
           <li>Running over forty on-chain functional tests against the contract - see our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
-          <li>Performing "fuzz testing" by generating random method calls and applying them to both the real Solidity contract and a Javascript simulation of intended behaviour, then looking for differences. See - TODO.</li>
+          <li>Performing "fuzz testing" by generating random method calls and applying them to both the real Solidity contract and a Javascript simulation of intended behaviour, then looking for differences.</li>
           <li>Following Solidity coding standards and general coding best practices for safety-critical software.</li>
           <li>Avoiding overly complex rules (even at the cost of some functionality) or complicated implementation (even at the cost of some gas).</li>
         </ul>
+      </p>
+      <p>
+        Note that we have chosen not to include a mechanism for fixing bugs during the life of the contract due to concern that this mechanism would itself be a serious vulnerability.
       </p>
 
       <h2>Failed Sends</h2>
@@ -76,7 +79,7 @@
         We have mitigated against this risk by:
         <ul>
           <li>Using a 'reentry' flag to prevent recursive calls to <b>all</b> external non-constant functions in the contract - see the "ReentryProtectorMixin" in <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/contracts/KingOfTheEtherThrone.sol">our contract code</a>.</li>
-          <li>Running functional tests for this scenario - see e.g. "TODO" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
+          <li>Running functional tests for this scenario - see e.g. "Recursive call attack (nested withdraw)" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
         </ul>
       </p>
 
@@ -113,8 +116,8 @@
       <p>
         We have mitigated against this risk by:
         <ul>
+          <li>Auditing the compiler-generated ABI to ensure no unexpected functions appear.</li>
           <li>Auditing every external function to ensure it is intended to be exposed and has suitable protection.</li>
-          <li>Running functional tests for this scenario - see e.g. "TODO" in our <a href="https://github.com/kieranelby/KingOfTheEtherThrone/tree/v1.0/tests/onchain-test-report.md">on-chain test report</a>.</li>
         </ul>
       </p>
 
@@ -139,7 +142,7 @@
           <li>Limiting the length of user-supplied data such as monarch names.</li>
           <li>Avoiding looping behaviour where e.g. a function costs more and more gas each time is used.</li>
           <li>Ensuring that a non-trivial payment is required by a user to make a change that would affect other users' transactions.</li>
-          <li>TODO - Using DDOS protection on websites related to the contract.</li>
+          <li>Using DDOS protection on websites related to the contract.</li>
         </ul>
       </p>
 
@@ -182,13 +185,24 @@
       <p>
         We have mitigated against this risk by:
         <ul>
-          <li>TODO - using HTTPS with strong security settings (e.g. pinning) on websites related to the contract (including origin servers).</li>
+          <li>Using HTTPS with strong security settings on websites related to the contract (including origin servers).</li>
           <li>Using security measures such as strong passwords and two-factor authentication (where available) on hosting provider, DNS, email, reddit and github accounts.</li>
-          <li>Following OWASP guidelines for avoiding web vulnerabilities in websites related to the contract, and employing ISO270001 controls (where applicable) internally.</li>
+          <li>Following OWASP guidelines for avoiding web vulnerabilities in websites related to the contract, and employing ISO-270001 controls (where applicable) internally.</li>
           <li>Keeping sensitive data (e.g. passphrases, keys) in encrypted storage on physically separated hardware, with encrypted off-site backups.</li>
         </ul>
       </p>
 
+     <h2>Cross-chain Replay Attacks</h2>
+      <p>
+        Following the Ethereum hard-fork, activity has also continued on the Ethereum Classic Chain. Transactions on one chain can be replayed on the other.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Including a warning about accidental ETC transfers in our instructions.</li>
+          <li>Creating these contracts from a hard-fork-only address, so they appear only on the Ethereum Foundation Hard-Fork chain. This does however mean that ETC sent to the addresses will likely be lost.</li>
+        </ul>
+      </p>
     </div>
   </div>
   <script type="text/javascript">

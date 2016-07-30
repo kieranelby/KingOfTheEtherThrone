@@ -2,43 +2,33 @@
 'use strict';
 
 /*
- * TODO - document, port to new contract
+ * Explicitly test for security problems that aren't covered by general logic tests.
 */
 
 function TestThroneSecurity() {
 }
 
-// TODO - more re-use of steps across tests!
 TestThroneSecurity.prototype.addTests = function(runner, throneTestSupport) {
-
-  // TODO - call functions from address not meant to be allowed to
-  // TODO - ask to sweep more comission than allowed
-  // TODO - RECURSIVE CALL ATTACK
-// voidFailedPayment
-// switchDeity
-// maker sweepDeityCommission
-// maker switchDeity  
 
   runner.addTest({
     title: 'Non-wizards cannot take wizard comission',
-    categories: ['security','safe'],
+    categories: ['security'],
     steps: [
       function(helper) {
-        // given seperate deity, wizard, player, and stranger accounts
-        this.deityAccount = helper.account.createWith(helper.math.toWei('1', 'ether'));
-        this.wizardAccount = helper.account.createWith(helper.math.toWei('1', 'ether'));
+        // given seperate accounts
+        this.topWizardAccount = helper.account.createWith(helper.math.toWei('1', 'ether'));
+        this.subWizardAccount = helper.account.createWith(helper.math.toWei('1', 'ether'));
         this.playerAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
-        this.strangerAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
       },
       function(helper) {
         this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
-          deityAddress: this.deityAccount,
-          wizardAddress: this.wizardAccount
+          topWizardAddress: this.topWizardAccount,
+          subWizardAddress: this.subWizardAccount,
         });
       },
       function(helper) {
         // and given the player has paid the exact claim price (which should be 1 ether)
-        var originalClaimPrice = this.throne.currentClaimPrice();
+        var originalClaimPrice = this.throne.currentClaimPriceWei();
         helper.assert.equal(helper.math.toWei('1','ether'), originalClaimPrice, 'starting claim price');
         this.throne.claimThrone('player', {
           from: this.playerAccount,
@@ -47,182 +37,374 @@ TestThroneSecurity.prototype.addTests = function(runner, throneTestSupport) {
         });
       },
       function(helper) {
-        // which should have given the wizard comission held in the throne (half the first claim price)
-        this.wizardThroneBalanceBeforeSweep = this.throne.wizardBalance();
-        helper.assert.equal(helper.math.toWei('0.5','ether'), this.wizardThroneBalanceBeforeSweep, 'wizard should have commission of half claim price');
+        // which should have given the wizards comission held in the throne (half the first claim price)
+        this.topWizardThroneFundsBeforeSweep = throneTestSupport.getTopWizardBalance(this.throne);
+        this.subWizardThroneFundsBeforeSweep = throneTestSupport.getSubWizardBalance(this.throne);
+        helper.assert.equal(helper.math.toWei('0.5','ether'), this.topWizardThroneFundsBeforeSweep, 'subwizard should have commission of half claim price');
+        helper.assert.equal(helper.math.toWei('0.5','ether'), this.subWizardThroneFundsBeforeSweep, 'topwizard should have commission of half claim price');
       },
       function(helper) {
-        // when the deity tries to sweep the wizard's comission
-        this.throne.sweepWizardCommission(this.throne.wizardBalance(), { from: this.deityAccount } );
+        // when the topwizard tries to sweep the subwizard's comission too
+        this.throne.withdrawFunds({ from: this.topWizardAccount });
+        this.throne.withdrawFunds({ from: this.topWizardAccount });
       },
       function(helper) {
         // then it doesn't work
-        helper.assert.equal(this.wizardThroneBalanceBeforeSweep, this.throne.wizardBalance(), 'sweep should fail');
+        helper.assert.equal(this.subWizardThroneFundsBeforeSweep, throneTestSupport.getSubWizardBalance(this.throne), 'top wizard withdrawal should not influence subwizard balance');
       },
       function(helper) {
         // and when the player tries to sweep the wizard's comission
-        this.throne.sweepWizardCommission(this.throne.wizardBalance(), { from: this.playerAccount });
+        this.throne.withdrawFunds({ from: this.playerAccount });
       },
       function(helper) {
         // then it doesn't work
-        helper.assert.equal(this.wizardThroneBalanceBeforeSweep, this.throne.wizardBalance(), 'sweep should fail');
+        helper.assert.equal(this.subWizardThroneFundsBeforeSweep, throneTestSupport.getSubWizardBalance(this.throne), 'player withdrawal should not influence subwizard balance');
       },
       function(helper) {
-        // and when a stranger tries to sweep the wizard's comission
-        this.throne.sweepWizardCommission(this.throne.wizardBalance(), { from: this.strangerAccount });
+        // but just to make sure we are testing correctly (and that the funds are still there), the subwizard CAN withdraw it
+        this.throne.withdrawFunds({ from: this.subWizardAccount });
       },
       function(helper) {
-        // then it doesn't work
-        helper.assert.equal(this.wizardThroneBalanceBeforeSweep, this.throne.wizardBalance(), 'sweep should fail');
-      },
-      function(helper) {
-        // but just to make sure we are testing correctly (and that the funds are still there), the wizard CAN sweep it
-        this.throne.sweepWizardCommission(this.throne.wizardBalance(), { from: this.wizardAccount });
-      },
-      function(helper) {
-        helper.assert.equal(0, this.throne.wizardBalance(), 'sweep should succeed');
+        this.subWizardThroneFundsAfterSweep = throneTestSupport.getSubWizardBalance(this.throne);
+        helper.assert.equal(0, this.throne.subWizardThroneFundsAfterSweep, 'sweep should succeed');
       }
     ]
   });
 
   runner.addTest({
-    title: 'Non-deity cannot take deity comission',
-    categories: ['security','safe'],
-    steps: [
-      function(helper) {
-        // given seperate deity, wizard, player, and stranger accounts
-        this.deityAccount = helper.account.createWith(helper.math.toWei('1', 'ether'));
-        this.wizardAccount = helper.account.createWith(helper.math.toWei('1', 'ether'));
-        this.playerAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
-        this.strangerAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
-      },
-      function(helper) {
-        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
-          deityAddress: this.deityAccount,
-          wizardAddress: this.wizardAccount
-        });
-      },
-      function(helper) {
-        // and given the player has paid the exact claim price (which should be 1 ether)
-        var originalClaimPrice = this.throne.currentClaimPrice();
-        helper.assert.equal(helper.math.toWei('1','ether'), originalClaimPrice, 'starting claim price');
-        this.throne.claimThrone('player', {
-          from: this.playerAccount,
-          value: originalClaimPrice,
-          gas: 500000
-        });
-      },
-      function(helper) {
-        // which should have given the deity comission held in the throne (half the first claim price)
-        this.deityThroneBalanceBeforeSweep = this.throne.wizardBalance();
-        helper.assert.equal(helper.math.toWei('0.5','ether'), this.deityThroneBalanceBeforeSweep, 'deity should have commission of half claim price');
-      },
-      function(helper) {
-        // when the wizrd tries to sweep the deity's comission
-        this.throne.sweepDeityCommission(this.throne.deityBalance(), { from: this.wizardAccount } );
-      },
-      function(helper) {
-        // then it doesn't work
-        helper.assert.equal(this.deityThroneBalanceBeforeSweep, this.throne.deityBalance(), 'sweep should fail');
-      },
-      function(helper) {
-        // and when the player tries to sweep the wizard's comission
-        this.throne.sweepDeityCommission(this.throne.deityBalance(), { from: this.playerAccount });
-      },
-      function(helper) {
-        // then it doesn't work
-        helper.assert.equal(this.deityThroneBalanceBeforeSweep, this.throne.deityBalance(), 'sweep should fail');
-      },
-      function(helper) {
-        // and when a stranger tries to sweep the wizard's comission
-        this.throne.sweepDeityCommission(this.throne.deityBalance(), { from: this.strangerAccount });
-      },
-      function(helper) {
-        // then it doesn't work
-        helper.assert.equal(this.deityThroneBalanceBeforeSweep, this.throne.deityBalance(), 'sweep should fail');
-      },
-      function(helper) {
-        // but just to make sure we are testing correctly (and that the funds are still there), the deity CAN sweep it
-        this.throne.sweepDeityCommission(this.throne.deityBalance(), { from: this.deityAccount });
-      },
-      function(helper) {
-        helper.assert.equal(0, this.throne.deityBalance(), 'sweep should succeed');
-      }
-    ]
-  });
-  
-  runner.addTest({
     title: 'Non-wizard cannot transfer wizard-ship',
-    categories: ['security', 'safe'],
+    categories: ['security'],
     steps: [
       function(helper) {
-        // given seperate deity, wizard (old and new), and player accounts
-        this.deityAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
-        this.originalWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
-        this.newWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
-        this.thirdWizardAccount = helper.account.create();
+        // given seperate topwizard, subwizards (old and new), and player accounts
+        this.topWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
+        this.originalSubWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
+        this.newSubWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
+        this.thirdSubWizardAccount = helper.account.create();
         this.playerAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
       },
       function(helper) {
         // and a throne
         this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
-          deityAddress: this.deityAccount,
-          wizardAddress: this.originalWizardAccount
+          topWizardAddress: this.topWizardAccount,
+          subWizardAddress: this.originalSubWizardAccount
         });
       },
       function(helper) {
         // double-check pre-conditions first
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        helper.assert.equal(this.originalWizardAccount, config.wizardAddress, 'wizardAddress is what we expect');
+        helper.assert.equal(this.originalSubWizardAccount, this.throne.subWizard(), 'subWizardAddress is what we expect');
       },
       function(helper) {
-        // when the deity tries to make someone else the wizard
-        this.throne.switchWizard(this.newWizardAccount, { from: this.deityAccount });
-      },
-      function(helper) {
-        // then it doesn't work (or at least, config says it didn't)
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        helper.assert.equal(this.originalWizardAccount, config.wizardAddress, 'wizardAddress unchanged by deity');
-      },
-      function(helper) {
-        // similarly, when a player tries to make someone else the wizard
-        this.throne.switchWizard(this.newWizardAccount, { from: this.playerAccount });
+        // when the player tries to make someone else the sub wizard
+        this.throne.replaceWizard(this.newSubWizardAccount, { from: this.playerAccount });
       },
       function(helper) {
         // then it doesn't work (or at least, config says it didn't)
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        helper.assert.equal(this.originalWizardAccount, config.wizardAddress, 'wizardAddress unchanged by player');
+        helper.assert.equal(this.originalSubWizardAccount, this.throne.subWizard(), 'subWizardAddress not affected by player');
       },
       function(helper) {
-        // but when the wizard does it
-        this.throne.switchWizard(this.newWizardAccount, { from: this.originalWizardAccount });
+        // but when the subwizard does it
+        this.throne.replaceWizard(this.newSubWizardAccount, { from: this.originalSubWizardAccount });
       },
       function(helper) {
         // then it DOES work
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        helper.assert.equal(this.newWizardAccount, config.wizardAddress, 'wizardAddress changed by wizard');
+        helper.assert.equal(this.newSubWizardAccount, this.throne.subWizard(), 'subWizardAddress can be changed by subWizard');
       },
       function(helper) {
         // but in doing so they lose the right to change it again
-        this.throne.switchWizard(this.thirdWizardAccount, { from: this.originalWizardAccount });
+        this.throne.replaceWizard(this.thirdSubWizardAccount, { from: this.originalSubWizardAccount });
       },
       function(helper) {
         // according to config
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        helper.assert.equal(this.newWizardAccount, config.wizardAddress, 'wizardAddress not changed by ex-wizard');
+        helper.assert.equal(this.newSubWizardAccount, this.throne.subWizard(), 'subWizardAddress not affected by ex-wizard');
       },
       function(helper) {
         // oh, and the new wizard can change it
-        this.throne.switchWizard(this.thirdWizardAccount, { from: this.newWizardAccount });
+        this.throne.replaceWizard(this.thirdSubWizardAccount, { from: this.newSubWizardAccount });
       },
       function(helper) {
         // according to config
-        var config = throneTestSupport.decodeThroneConfig(this.throne, helper.txn.rawWeb3);
-        helper.assert.equal(this.thirdWizardAccount, config.wizardAddress, 'new wizrd can change wizardAddress');
+        helper.assert.equal(this.thirdSubWizardAccount, this.throne.subWizard(), 'subWizardAddress can be changed by new subWizard');
       }
     ]
   });
-  
+
+  runner.addTest({
+    title: 'Recursive call attack (claim, compensate, withdraw)',
+    categories: ['security'],
+    steps: [
+      function(helper) {
+        this.originalSubWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
+        this.playerAccount = helper.account.createWith(helper.math.toWei('2.00', 'ether'));
+        this.masterAccount = helper.account.createWith(helper.math.toWei('1.50', 'ether'));
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
+          subWizardAddress: this.originalSubWizardAccount
+        });
+      },
+      function(helper) {
+        // setup the attack contract with an interesting fallback fn
+        this.attackContract = helper.txn.createContractInstance('RecursiveAttackerOne', [
+          this.throne.address,
+          this.masterAccount,
+          helper.math.toWei('0.05', 'ether')
+        ]);
+      },
+      function(helper) {
+        // make the attack contract be the sub-wizard so that a withdraw funds call should succeed later
+        // (were it not for our recursive protection)
+        this.throne.replaceWizard(this.attackContract.address, { from: this.originalSubWizardAccount });
+      },
+      function(helper) {
+        // send funds to the attackContract
+        helper.txn.send({
+          to: this.attackContract.address,
+          value: helper.math.toWei('0.25', 'ether')
+        });
+      },
+      function(helper) {
+        // attackContract (who is also the subwizard!) claims the throne
+        this.originalClaimPrice = this.throne.currentClaimPriceWei();
+        this.attackContract.claim(this.originalClaimPrice, 250000, {
+          value: this.throne.currentClaimPriceWei(),
+          gas: 400000,
+          from: this.masterAccount
+        });
+      },
+      function(helper) {
+        // make note of balance
+        this.attackBalanceAfterHisClaim = helper.account.getBalance(this.attackContract.address);
+        // check attackContract earned commission
+        helper.assert.equal(this.originalClaimPrice.dividedBy(2), this.throne.fundsOf(this.attackContract.address),
+          'attackContract has funds in throne due to subwizard commission');
+        // player claims throne (will compensate attackContract and invoke withdrawFunds)
+        this.playerClaimPrice = this.throne.currentClaimPriceWei();
+        this.throne.claimThrone('player', {
+          from: this.playerAccount,
+          value: this.playerClaimPrice,
+          gas: 400000
+        });
+      },
+      function(helper) {
+        // check withdraw failed
+        var originalCommissionFromFirstClaim = this.originalClaimPrice.dividedBy(2);
+        var grossCompensation = this.playerClaimPrice;
+        var topWizardCommissionOnCompensation = this.playerClaimPrice.times('0.01');
+        var expectedFunds = originalCommissionFromFirstClaim.plus(grossCompensation).minus(topWizardCommissionOnCompensation);
+        helper.assert.equal(expectedFunds, this.throne.fundsOf(this.attackContract.address),
+          'attackContract funds in throne are as expected without the withdrawal');
+        helper.assert.equal(this.attackBalanceAfterHisClaim, helper.account.getBalance(this.attackContract.address),
+          'attackContract balance did not change');
+      },
+    ]
+  });
+
+  runner.addTest({
+    title: 'Recursive call attack (nested withdraw)',
+    categories: ['security'],
+    steps: [
+      function(helper) {
+        this.originalSubWizardAccount = helper.account.createWith(helper.math.toWei('0.25', 'ether'));
+        this.playerAccount = helper.account.createWith(helper.math.toWei('1.25', 'ether'));
+        this.masterAccount = helper.account.createWith(helper.math.toWei('1.50', 'ether'));
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
+          subWizardAddress: this.originalSubWizardAccount
+        });
+      },
+      function(helper) {
+        // setup the attack contract with an interesting fallback fn
+        this.withdrawalAmount = helper.math.toWei('0.05', 'ether');
+        this.attackContract = helper.txn.createContractInstance('RecursiveAttackerOne', [
+          this.throne.address,
+          this.masterAccount,
+          this.withdrawalAmount
+        ]);
+      },
+      function(helper) {
+        // make the attack contract be the sub-wizard so that a withdraw funds call should succeed later
+        // (were it not for our recursive protection)
+        this.throne.replaceWizard(this.attackContract.address, { from: this.originalSubWizardAccount });
+      },
+      function(helper) {
+        // player claims throne (this will yield commission for the attackContract as subWizard)
+        this.originalClaimPrice = this.throne.currentClaimPriceWei();
+        this.throne.claimThrone('player', {
+          from: this.playerAccount,
+          value: this.throne.currentClaimPriceWei(),
+          gas: 250000
+        });
+      },
+      function(helper) {
+        // make note of balance
+        this.attackBalanceAfterHisClaim = helper.account.getBalance(this.attackContract.address);
+        // check attackContract earned commission
+        helper.assert.equal(this.originalClaimPrice.dividedBy(2), this.throne.fundsOf(this.attackContract.address),
+          'attackContract has funds in throne due to subwizard commission');
+        // attackContract (who is also the subwizard!) withdraws commission, sending it
+        // to itself which will call the armed fallback function which will withdraw again
+        this.attackContract.withdrawToSelf(250000, true, {
+          gas: 400000
+        });
+      },
+      function(helper) {
+        // check withdraw failed
+        helper.assert.equal(this.originalClaimPrice.dividedBy(2), this.throne.fundsOf(this.attackContract.address),
+          'attackContract funds in throne did not change');
+        helper.assert.equal(this.attackBalanceAfterHisClaim, helper.account.getBalance(this.attackContract.address),
+          'attackContract balance did not change');
+      },
+      function(helper) {
+        // just to prove the test is valid, try disarming the fallback and doing it again
+        this.attackContract.withdrawToSelf(250000, false, {
+          gas: 400000
+        });
+      },
+      function(helper) {
+        // check withdraw succeeded this time
+        helper.assert.equal(this.originalClaimPrice.dividedBy(2).minus(this.withdrawalAmount), this.throne.fundsOf(this.attackContract.address),
+          'attackContract funds in throne did change after disarm');
+        helper.assert.equal(this.attackBalanceAfterHisClaim.plus(this.withdrawalAmount), helper.account.getBalance(this.attackContract.address),
+          'attackContract balance did change after disarm');
+      }
+    ]
+  });
+
+
+  runner.addTest({
+    title: 'Cannot create a kingdom via the world without playing claim price',
+    categories: ['world'],
+    steps: [
+      function(helper) {
+        // awkwardly we need to create the KingdomFactory first
+        this.kingdomFactory = throneTestSupport.createKingdomFactory(helper);
+      },
+      function(helper) {
+        // given a new world and a player
+        this.creationPriceWei = helper.math.toWei('0.2','ether');
+        this.world = throneTestSupport.createStandardWorldExcept(helper, this.kingdomFactory, {
+          kingdomCreationFeeWei: this.creationPriceWei
+        });
+        // gonna need loadsa gas
+        this.subWizardAccount = helper.account.createWith(helper.math.toWei('0.35', 'ether'));
+        this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('0.25', 'ether'));
+      },
+      function(helper) {
+        // when we create a kingdom
+        this.throneName = 'myKingdom';
+        this.startingClaimPriceWei = helper.math.toWei('0.25','ether');
+        this.claimPriceAdjustPercent = 100;
+        this.curseIncubationDurationSeconds = 86400;
+        this.commissionPerThousand = 20;
+        /*
+        function createKingdom(
+          string _kingdomName,
+          uint _startingClaimPriceWei,
+          uint _claimPriceAdjustPercent,
+          uint _curseIncubationDurationSeconds,
+          uint _commissionPerThousand
+        )
+        */
+        this.world.createKingdom(
+          this.throneName,
+          this.startingClaimPriceWei,
+          this.claimPriceAdjustPercent,
+          this.curseIncubationDurationSeconds,
+          this.commissionPerThousand,
+          {
+            from: this.subWizardAccount,
+            value: this.creationPriceWei,
+            gas: 3100000
+          }
+        );
+      },
+      function(helper) {
+        helper.assert.equal(1, this.world.numberOfKingdoms(), 'one kingdom should have been created');
+  	    helper.debug.log('throneName is ', this.throneName);
+        // then we can find its entry in the world's list of kingdoms
+        this.kingdomNumber = this.world.findKingdomCalled(this.throneName);
+        this.kingdomEntry = throneTestSupport.getWorldKingdomEntry(this.world, helper.txn.rawWeb3, this.kingdomNumber);
+  	    helper.debug.log('kingdomEntry is ', this.kingdomEntry);
+        // and the entry matches what we expect
+   	    helper.assert.equal(this.throneName, this.kingdomEntry.kingdomName, 'throne name');
+   	    helper.math.assertRoughlyEqual(helper.txn.getLatestBlockTime(), this.kingdomEntry.creationTimestamp, 300, 'creationTimestamp');
+        // and we can find the throne contract from the gazetteer entry
+        this.myThroneAddress = this.kingdomEntry.kingdomContractAddress;
+  	    helper.debug.log('myThroneAddress is ', this.myThroneAddress);
+        this.myThrone = helper.txn.getRegisteredContractInstanceAt('Kingdom', this.myThroneAddress);
+      },
+      function(helper) {
+        // and the throne we created has the expected properties
+        helper.assert.equal(this.startingClaimPriceWei, this.myThrone.currentClaimPriceWei(),
+          'expected claim price for newly created throne to match the starting claim price we specified');
+        helper.assert.equal(this.world.address, this.myThrone.world(), 'world');
+        helper.assert.equal(this.subWizardAccount, this.myThrone.subWizard(), 'subWizardAddress');
+        helper.assert.equal(helper.account.master, this.myThrone.topWizard(), 'topWizardAddress');
+        // including the rules
+        var config = throneTestSupport.decodeThroneRules(this.myThrone, helper.txn.rawWeb3);
+        helper.assert.equal(this.claimPriceAdjustPercent, config.claimPriceAdjustPercent, 'claimPriceAdjustPercent');
+        helper.assert.equal(this.commissionPerThousand, config.commissionPerThousand, 'commissionPerThousand');
+        helper.assert.equal(this.curseIncubationDurationSeconds, config.curseIncubationDurationSeconds, 'curseIncubationDurationSeconds');
+      },
+      function(helper) {
+        // and when we claim the newly created throne
+        this.myThrone.claimThrone('playerOne', {
+          from: this.playerOneAccount,
+          value: this.myThrone.currentClaimPriceWei(),
+          gas: 500000
+        });
+      },
+      function(helper) {
+        // then it succeeds and the claim price increases as expected according to our custom rules
+        var newClaimPrice = this.myThrone.currentClaimPriceWei();
+        helper.assert.equal(helper.math.toWei('0.5','ether'), newClaimPrice,
+          'expected claim price to double from 0.25 to 0.5 since we specified _claimPriceAdjustPercent = 100');
+      }
+    ]
+  });
+
+  runner.addTest({
+    title: 'Throne claim price is eventually capped',
+    categories: ['security'],
+    steps: [
+      function(helper) {
+        // given a new throne (with somewhat unrealistic settings) and two players
+        this.throne = throneTestSupport.createStandardTestThroneExcept(helper, {
+          startingClaimPrice: helper.math.toWei('0.1', 'ether'),
+          maximumClaimPrice: helper.math.toWei('0.5', 'ether'),
+          claimPriceAdjustPercent: 200
+        });
+        this.playerOneAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
+        this.playerTwoAccount = helper.account.createWithJustOver(helper.math.toWei('1', 'ether'));
+      },
+      function(helper) {
+        this.throne.claimThrone('playerOne', {
+          from: this.playerOneAccount,
+          value: this.throne.currentClaimPriceWei(),
+          gas: 250000
+        });
+      },
+      function(helper) {
+        helper.assert.equal(helper.math.toWei('0.3','ether'), this.throne.currentClaimPriceWei(), 'expected claim price to go up x3');
+        this.throne.claimThrone('playerTwo', {
+          from: this.playerOneAccount,
+          value: this.throne.currentClaimPriceWei(),
+          gas: 250000
+        });
+      },
+      function(helper) {
+        helper.assert.equal(helper.math.toWei('0.5','ether'), this.throne.currentClaimPriceWei(), 'expected claim price to get capped at 0.5');
+        this.throne.claimThrone('playerOne', {
+          from: this.playerOneAccount,
+          value: this.throne.currentClaimPriceWei(),
+          gas: 250000
+        });
+      },
+      function(helper) {
+        helper.assert.equal(helper.math.toWei('0.5','ether'), this.throne.currentClaimPriceWei(), 'expected claim price to stay capped at 0.5');
+        helper.assert.equal(3, this.throne.numberOfMonarchs(), 'expected claiming to keep working');
+      }
+    ]
+  });
+
 };
 
 exports = module.exports = TestThroneSecurity;

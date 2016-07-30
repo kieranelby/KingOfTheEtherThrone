@@ -1,6 +1,6 @@
 // King of the Ether Throne Contracts.
 // Copyright (c) 2016 Kieran Elby. Released under the MIT License.
-// Version 0.9.9.1, July 2016.
+// Version 0.9.9.2, July 2016.
 //
 // See also http://www.kingoftheether.com and
 // https://github.com/kieranelby/KingOfTheEtherThrone .
@@ -533,8 +533,13 @@ contract Kingdom is
         if (numberOfMonarchs() == 0) {
             return false;
         }
-        uint reignStartedTimestamp =
-          monarchsByNumber[monarchsByNumber.length - 1].coronationTimestamp;
+        uint reignStartedTimestamp = latestMonarchInternal().coronationTimestamp;
+        if (now < reignStartedTimestamp) {
+            // Should not be possible, think miners reject blocks with
+            // timestamps that go backwards? But some drift possible and
+            // it needs handling for unsigned overflow audit checks ...
+            return true;
+        }
         uint elapsedReignDurationSeconds = now - reignStartedTimestamp;
         if (elapsedReignDurationSeconds > rules.curseIncubationDurationSeconds) {
             return false;
@@ -549,6 +554,7 @@ contract Kingdom is
             return rules.startingClaimPriceWei;
         } else {
             uint lastClaimPriceWei = latestMonarchInternal().claimPriceWei;
+            // no danger of overflow because claim price never gets that high
             uint newClaimPrice =
               (lastClaimPriceWei * (100 + rules.claimPriceAdjustPercent)) / 100;
             newClaimPrice = roundMoneyDownNicely(newClaimPrice);
@@ -779,7 +785,7 @@ contract Kingdom is
             // 'stuck' (it's not the new usurpers fault) - instead save
             // the funds we could not send so can be claimed later.
             // Their monarch contract would need to have been designed
-            // to/ call our withdrawFundsAdvanced(..) function mind you.
+            // to call our withdrawFundsAdvanced(..) function mind you.
             funds[compensationAddress] += _compensationWei;
             CompensationFailEvent(compensationAddress, _compensationWei);
         }
@@ -793,6 +799,8 @@ contract Kingdom is
 /// contract to modify the Kingdom contract and/or rule validation
 /// logic to be used for *future* Kingdoms created by the World.
 /// We do not implement rentry protection because we don't send/call.
+/// We do not charge a fee here - but if you bypass the World then
+/// you won't be listed on the official World page of course.
 contract KingdomFactory {
 
     function KingdomFactory() {
@@ -811,11 +819,14 @@ contract KingdomFactory {
         uint _curseIncubationDurationSeconds,
         uint _commissionPerThousand
     ) constant returns (bool allowed) {
+        // I suppose there is a danger that massive deflation/inflation could
+        // change the real-world sanity of these checks, but in that case we
+        // can deploy a new factory and update the world.
         if (_startingClaimPriceWei < 1 finney ||
             _startingClaimPriceWei > 100 ether) {
             return false;
         }
-        if (_maximumClaimPriceWei < 1 finney ||
+        if (_maximumClaimPriceWei < 1 ether ||
             _maximumClaimPriceWei > 100000 ether) {
             return false;
         }
@@ -1184,7 +1195,7 @@ contract World is
         CreationFeeChangedEvent(kingdomCreationFeeWei);
     }
 
-    function setMaximumClaimPriceWeiRP(uint _maximumClaimPriceWei) {
+    function setMaximumClaimPriceWeiRP(uint _maximumClaimPriceWei) internal {
         if (msg.sender != topWizard) {
             throw;
         }

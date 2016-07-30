@@ -136,7 +136,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
           {
             from: this.subWizardOneAccount,
             value: this.creationPriceWei,
-            gas: 3100000
+            gas: 2000000
           }
         );
       },
@@ -162,7 +162,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
           {
             from: this.subWizardTwoAccount,
             value: this.creationPriceWei,
-            gas: 3100000
+            gas: 2000000
           }
         );
       },
@@ -214,7 +214,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
           {
             from: this.subWizardOneAccount,
             value: this.creationPriceWei,
-            gas: 3100000
+            gas: 2000000
           }
         );
       },
@@ -241,7 +241,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
           {
             from: this.subWizardTwoAccount,
             value: this.creationPriceWei,
-            gas: 3100000
+            gas: 2000000
           }
         );
       },
@@ -260,7 +260,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
   });
 
   runner.addTest({
-    title: 'Create second bespoke throne via World with different name has expected properties, appears in gazetteer and can be claimed',
+    title: 'Create second bespoke throne via World with different name has expected properties, appears in world listing and can be claimed',
     categories: ['world'],
     steps: [
       function(helper) {
@@ -331,7 +331,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
         // and when we claim the second throne
         this.secondThrone.claimThrone('playerOne', {
           from: this.playerOneAccount,
-          value: this.myThrone.currentClaimPriceWei(),
+          value: this.secondThrone.currentClaimPriceWei(),
           gas: 500000
         });
       },
@@ -370,7 +370,7 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
         // then we can read back the updated price
         helper.assert.equal(this.updatedCreationPriceWei, this.world.kingdomCreationFeeWei(),
           'expected to read back new creation price');
-        helper.assert.equal('250', this.world.kingdomCreationFeeFinney(),
+        helper.assert.equal('250', this.world.kingdomCreationFeeInFinney(),
           'expected to read back new creation price in finney');
         // and we can create a throne using the updated price
         this.throneName = 'myKingdom';
@@ -385,8 +385,8 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
           this.commissionPerThousand,
           {
             from: this.subWizardAccount,
-            value: this.creationPriceWei,
-            gas: 3100000
+            value: this.updatedCreationPriceWei,
+            gas: 2000000
           }
         );
       },
@@ -427,14 +427,14 @@ TestWorld.prototype.addTests = function(runner, throneTestSupport) {
         this.commissionPerThousand = 20;
         this.world.createKingdom(
           this.throneName,
-          this.updatedCreationPriceWei,
+          this.kingdomCreationFeeWei,
           this.claimPriceAdjustPercent,
           this.curseIncubationDurationSeconds,
           this.commissionPerThousand,
           {
             from: this.subWizardAccount,
-            value: this.creationPriceWei,
-            gas: 3100000
+            value: this.kingdomCreationFeeWei,
+            gas: 2000000
           }
         );
       },

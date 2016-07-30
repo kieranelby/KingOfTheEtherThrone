@@ -31,6 +31,7 @@ WorldPageMaker.prototype.make = function() {
   var worldTemplateFilename = this.templatesDirname + '/world.nunjucks.html';
   var worldTemplateSource = fse.readFileSync(worldTemplateFilename, 'utf8');
   var worldContext = {
+    LastUpdated: this.humanFormatter.formatTimestamp(this.rootData.meta.blockTimestamp),
     KingdomCreationFee: this.humanFormatter.formatAmountWei(worldData.kingdomCreationFeeWei),
     WorldContract: worldData.worldContract,
     WorldContractJsonInterface: worldData.worldContractAbi,

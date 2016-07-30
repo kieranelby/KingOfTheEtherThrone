@@ -1,3 +1,4 @@
 ---
+# A 'genserver' is a static content generator.
 # This specifies the other roles needed before this role.
 

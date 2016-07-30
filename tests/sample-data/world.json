@@ -9,13 +9,6 @@
     "worldContractAbi": "TODO",
     "topWizard": "0x2f88180369377869a1BC5ae807416F72d736c206",
     "kingdomCreationFeeWei": "5000000000000000000",
-    "standardRules": {
-      "startingClaimPriceWei": "1000000000000000000",
-      "maximumClaimPriceWei": "100000000000000000000000",
-      "claimPriceAdjustPercent": "50",
-      "curseIncubationDurationSeconds": "2419200",
-      "commissionPerThousand": "20"
-    },
     "kingdomFactory": "0xAbc109EF244e4dEC9dAB0BFEdDa522688fc00581",
     "kingdoms": [
       {

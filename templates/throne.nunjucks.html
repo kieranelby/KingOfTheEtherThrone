@@ -86,7 +86,7 @@
         <li>You like the sound of being the Monarch, so you send {{ExampleCurrentClaimPrice}} to the contract.</li>
         <li>This makes you the illustrious new {{ThroneName}}. Your name will be added to the <a href="#GreatHall">Hall of Monarchs</a> in the blockchain.</li>
         <li>The contract will then send your {{ExampleCurrentClaimPrice}} (less a small commission) to the previous Monarch you have usurped, as compensation.</li>
-        <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}. (It stops increasing at {{MaximumClaimPrice}}).</li>
+        <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}. (It eventually stops increasing at {{MaximumClaimPrice}} for safety).</li>
         <li>If an usurper comes along who is willing to pay {{ExampleNextClaimPrice}}, she will depose you and become Queen, and you will receive her payment of {{ExampleNextClaimPrice}} (less a small commission) as compensation - a tidy profit for you.</li>
         <li>However, an ancient curse applies to the throne: every Monarch dies once their reign reaches {{CurseIncubationDuration}}.
             No compensation is paid if this happens, and the claim price for the next monarch is reset back to the original starting price of {{StartingClaimPrice}}.<br>
@@ -95,7 +95,7 @@
 
       <a name="WhoMonarch"><h2>Who is the Monarch?</h2></a>
       {% if IsLivingMonarch %}
-      <p>Since {{CoronationTime}}, the illustrious current {{ThroneName}} is <strong>{{CurrentMonarch.Name}}</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
+      <p>The illustrious current {{ThroneName}} is <strong>{{CurrentMonarch.Name}}</strong>, the First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
       <p>Think you can take their place? Read on for <a href="#HowIRule">How to Rule!</a></p>
       {% else %}
       {% if HasBeenAMonarch %}
@@ -254,6 +254,7 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
       <a name="ClaimByOther"><h3>Other ways to claim</h3></a>
       <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps. However, be careful - <b>DO NOT</b> send funds from exchange wallets since the compensation payment is likely to go to the exchange, not to you!</p>
       <p>We're planning to launch a DApp web interface in the Ethereum Mist browser shortly to make it even easier and more interactive.</p>
+      <p>All contract addresses shown here exist ONLY on the Ethereum Foundation (Hard Fork) chain - do not attempt to use the contract on the "Ethereum Classic" chain! You should 'split' addresses created prior to the fork if you are worried about losing ETC.</p>
       <p>Whichever way you claim, make sure your read our <a href="#Disclaimer">Disclaimer</a> first.</p>
       
       <a name="Neighbours"><h2>Neighbouring Kingdoms</h2></a>
@@ -263,7 +264,7 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
 
       <a name="FAQ"><h2>FAQ</h2></a>
       <h3>Where does the source code for the contract live?</h3>
-      <p><a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/master/contracts/KingOfTheEtherThrone.sol">github.com - KingOfTheEtherThrone.sol</a></p>
+      <p><a href="https://github.com/kieranelby/KingOfTheEtherThrone/blob/v1.0/contracts/KingOfTheEtherThrone.sol">github.com - KingOfTheEtherThrone.sol</a></p>
       <h3>What's the address of the contract?</h3>
       <p>The contract for {{ThroneName}} is located at {{ThroneContractAddress}}.</p>
       <p>Its Contract JSON Interface is:</p><textarea class="read-only-for-copy" readonly="readonly" cols="60" rows="5">{{ThroneContractJsonInterface}}</textarea>

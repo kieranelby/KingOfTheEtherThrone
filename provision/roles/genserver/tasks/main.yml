@@ -1,0 +1,13 @@
+---
+# This carries out tasks needed to get the content generator running.
+
+- name: ensure kgen user exists
+  user:      name=kgen
+             groups=www-data
+
+- name: Make sure nginx is installed
+  apt:        name=npm
+
+# TODO - install npm
+# TODO - deploy release
+# TODO - cron? systemd?

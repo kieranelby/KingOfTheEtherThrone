@@ -1,0 +1,13 @@
+[Unit]
+Description=Static Content Generator
+After=network.target geth.service
+
+[Service]
+Type=simple
+ExecStart=/home/kgen/KingOfTheEtherThrone/bin/refresh.sh
+User=kgen
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

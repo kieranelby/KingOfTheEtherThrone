@@ -6,6 +6,8 @@ After=network.target
 Type=simple
 ExecStart=/usr/bin/geth --maxpeers 25 --cache 128
 User=geth
+Restart=always
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
