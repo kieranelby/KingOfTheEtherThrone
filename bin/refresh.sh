@@ -6,7 +6,7 @@ cd /home/kgen/KingOfTheEtherThrone
 npm install --production
 
 while true; do 
-    npm run chain-to-data http://localhost:8545 0xe15551395A6832439B54D21E892EBe6c90a49B5A
+    npm run chain-to-data http://localhost:8545 0xEDCA5Cf34E4AEa9798127B21751bFfB1609684FF
     npm run data-to-website
     echo "Copying to webserver ..."
     rsync -r generated/ /var/www/kingoftheether/

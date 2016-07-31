@@ -8,6 +8,7 @@ ExecStart=/usr/bin/geth --maxpeers 25 --cache 128 -rpc -rpcport 8545 -rpcapi 'et
 User=geth
 Restart=always
 RestartSec=30
+WatchdogSec=7200
 
 [Install]
 WantedBy=multi-user.target
