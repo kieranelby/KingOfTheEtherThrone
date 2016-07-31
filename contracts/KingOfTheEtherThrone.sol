@@ -1,6 +1,6 @@
 // King of the Ether Throne Contracts.
 // Copyright (c) 2016 Kieran Elby. Released under the MIT License.
-// Version 0.9.9.4, July 2016.
+// Version 1.0.0, 31 July 2016.
 //
 // See also http://www.kingoftheether.com and
 // https://github.com/kieranelby/KingOfTheEtherThrone .
@@ -1197,6 +1197,9 @@ contract World is
 
     function setMaximumClaimPriceWeiRP(uint _maximumClaimPriceWei) internal {
         if (msg.sender != topWizard) {
+            throw;
+        }
+        if (msg.value != 0) {
             throw;
         }
         if (_maximumClaimPriceWei < 1 ether) {

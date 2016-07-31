@@ -125,7 +125,7 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
             <td>
               How much should the throne price go up by each time it is claimed, in percent?<br>
               For example, 50 means that claiming the throne at a price of 10 ether bumps the price to 15 ether for the next usurper.<br>
-              Must be a whole number between 10 and 900.
+              Must be a whole number between 10 and 900 (though you probably don't want to go above 100).
             </td>
           </tr>
           <tr>
@@ -134,11 +134,15 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
               How long can a monarch rule before they die due to the mysterious curse, in seconds?<br>
               Some useful conversions are:
               <ul>
-              <li>0.1 ether = 100000000000000000 wei</li>
-              <li>0.5 ether = 500000000000000000 wei</li>
-              <li>1 ether = 100000000000000000 wei</li>
+              <li>2 hours = 7200 seconds</li>
+              <li>24 hours = 86400 seconds</li>
+              <li>48 hours = 172800 seconds</li>
+              <li>7 days = 604800 seconds</li>
+              <li>14 days = 1209600 seconds</li>
+              <li>28 days = 2419200 seconds</li>
+              <li>365 days = 31536000 seconds</li>
               </ul>
-              Must be a whole number between 7200 (2 hours) and 864000000 (10000 days).</br>
+              Must be a whole number between 7200 (2 hours) and 864000000 (10000 days, about 27 years).</br>
             </td>
           </tr>
           <tr>
