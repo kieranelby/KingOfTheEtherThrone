@@ -204,6 +204,21 @@
           <li>Creating these contracts from a hard-fork-only address, so they appear only on the Ethereum Foundation Hard-Fork chain. This does however mean that ETC sent to the addresses will likely be lost.</li>
         </ul>
       </p>
+      
+     <h2>Tx.Origin Problem</h2>
+      <p>
+        This is kind of a "confused depty" problem.
+        If a contract relies on Solidity 'tx.origin' to decide who the caller is (e.g. to see if they're allowed to withdraw their funds),
+        there's a danger that a malicious intermediary contract could make calls to the contract on behalf of the user (who presumably thought the malicious intermediary contract would do something else).
+        See <a href="http://vessenes.com/tx-origin-and-ethereum-oh-my/">vessenes.com - Tx.Origin And Ethereum Oh My!</a> for a better description.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Not using tx.origin for authentication (or indeed, at all).</li>
+        </ul>
+      </p>
+      
     </div>
   </div>
   <script type="text/javascript">
