@@ -16,6 +16,7 @@
 - name: ensure KoTE release downloaded
   get_url:   dest=/home/kgen/KingOfTheEtherThrone-{{kote_version}}.zip
              url=https://github.com/kieranelby/KingOfTheEtherThrone/archive/v{{kote_version}}.zip
+             force=yes
 
 - name: ensure KoTE release unpacked
   unarchive: dest=/home/kgen
