@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>{{ThroneName}}</title>
   <link rel="stylesheet" href="/pure-min.css">
   <link href="//fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <meta property="og:image" content="https://www.kingoftheether.com/kotelogotiny.png" />
   <style>
   body {
     background-color: #FFF7F0;
@@ -223,32 +224,31 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
         <p>3. Click on the '{{ThroneName}}' contract you just added to the 'Custom Contracts' section. You should now be able to interact with the {{ThroneName}} contract using the 'READ FROM CONTRACT' section on the left, and the 'WRITE TO CONTRACT section on the right.</p>
         <p>
           4. Under the 'WRITE TO CONTRACT' section, choose 'Claim Throne' from the 'Select Function' drop-down. Fill in these details:
-          <table>
-            <tr>
-              <th class="for-row">Monarch Name</th>
-              <td>
-                What should we call you, your majesty?<br>
-                (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)<br>
-                To double-check if the name is allowed first, you can use the 'Validate proposed monarch name' in the 'READ FROM CONTRACT' section on the left.
-              </td>
-            </tr>
-            <tr>
-              <th class="for-row">Execute From</th>
-              <td>
-                Which Ethereum Wallet account do you want to use? It's generally recommended to use the 'Etherbase' account, not contract-wallets.
-                Don't lose the account - your compensation payment will only be sent to this account.
-              </td>
-            </tr>
-            <tr>
-              <th class="for-row">Send</th>
-              <td>
-                You'll need to specify the claim price you will send here.
-                As of {{LastUpdated}}, the claim price was {{CurrentClaimPrice}}. If you want to double-check, the {{ThroneName}} contract page in the Ethereum Wallet will show the latest in the 'Current claim price in finney' section on the left of the screen.
-              </td>
-            </tr>
-          </table>
-          </form>
         </p>
+        <table>
+          <tr>
+            <th class="for-row">Monarch Name</th>
+            <td>
+              What should we call you, your majesty?<br>
+              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)<br>
+              To double-check if the name is allowed first, you can use the 'Validate proposed monarch name' in the 'READ FROM CONTRACT' section on the left.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Execute From</th>
+            <td>
+              Which Ethereum Wallet account do you want to use? It's generally recommended to use the 'Etherbase' account, not contract-wallets.
+              Don't lose the account - your compensation payment will only be sent to this account.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Send</th>
+            <td>
+              You'll need to specify the claim price you will send here.
+              As of {{LastUpdated}}, the claim price was {{CurrentClaimPrice}}. If you want to double-check, the {{ThroneName}} contract page in the Ethereum Wallet will show the latest in the 'Current claim price in finney' section on the left of the screen.
+            </td>
+          </tr>
+        </table>
         <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'.</p>
         <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear.</p>
       </div>
