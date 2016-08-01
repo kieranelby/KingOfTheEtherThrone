@@ -35,12 +35,12 @@
 <body>
   <div class="content-wrapper">
     <div class="content">
-      <h1>Contract Safety Checklist</h1>
+      <h1>Contract Safety and Security Checklist</h1>
       <p>
         This page describes the steps <a href="/">King of the Ether</a> has taken to mitigate against potential contract vulnerabilities.
       </p>
 
-      <h2>Logic Bugs</h2>
+      <h2>C1. Logic Bugs</h2>
       <p>
         Simple programming mistakes can cause the contract to behave differently to its stated rules, especially on 'edge cases'.
       </p>
@@ -57,7 +57,7 @@
         Note that we have chosen not to include a mechanism for fixing bugs during the life of the contract due to concern that this mechanism would itself be a serious vulnerability.
       </p>
 
-      <h2>Failed Sends</h2>
+      <h2>C2. Failed Sends</h2>
       <p>
         An <a href="history.html">earlier version of King of the Ether</a> suffered from <a href="postmortem.html">failure to send compensation payments</a> to wallet contracts created by older versions of the Mist Ethereum Wallet.
       </p>
@@ -70,7 +70,7 @@
         </ul>
       </p>
 
-      <h2>Recursive Calls</h2>
+      <h2>C3. Recursive Calls</h2>
       <p>
         Famously, the original <a href="https://daohub.org/">DAO</a> contract exhibited unintended behaviour where a "recursive split" technique was used to move Ether worth over US$ 100 Million out of the DAO.
         This was possible because when a contract sends payment to another contract, the receiving contract's fallback function can call back into the sending contract, which can often produce behaviour the developer of the sending contract developer had not anticipated.
@@ -83,7 +83,7 @@
         </ul>
       </p>
 
-      <h2>Integer Arithmetic Overflow</h2>
+      <h2>C4. Integer Arithmetic Overflow</h2>
       <p>
         Numbers in Solidity code silently "wrap-around" if they become too large. This can lead to surprising behaviour - e.g. a check like "if (amountOne + amountTwo < myBalance) {...}" can appear to be true if one of the amounts is large enough to cause over-flow.
       </p>
@@ -95,7 +95,7 @@
         </ul>
       </p>
 
-      <h2>Poison Data</h2>
+      <h2>C5. Poison Data</h2>
       <p>
         Contracts that accept user input that is stored or exposed to other users are vulnerable to being supplied with unanticipated input that causes problems for the contract or for other users of the contract.
       </p>
@@ -109,7 +109,7 @@
         </ul>
       </p>
 
-      <h2>Exposed Functions</h2>
+      <h2>C6. Exposed Functions</h2>
       <p>
         It is easy to accidentally expose a contract function which was meant to be internal, or to omit protection on a function which was meant to be called only by priviledged accounts (e.g. by the creator).
       </p>
@@ -121,7 +121,7 @@
         </ul>
       </p>
 
-      <h2>Exposed Secrets</h2>
+      <h2>C7. Exposed Secrets</h2>
       <p>
         All code and data on the blockchain is visible by anyone, even if not marked as "public" in Solidity. Contracts that attempt to rely on keeping keys or behaviour secret are in for a surpsise.
       </p>
@@ -132,7 +132,7 @@
         </ul>
       </p>
 
-     <h2>Denial of Service / Spam</h2>
+     <h2>C8. Denial of Service / Dust Spam</h2>
       <p>
         An attacker may cause inconvenience for other users by supplying the contract with data that is expensive to process, or by repeatedly carrying out actions that prevent others from interacting with the contract.
       </p>
@@ -143,10 +143,11 @@
           <li>Avoiding looping behaviour where e.g. a function costs more and more gas each time is used.</li>
           <li>Ensuring that a non-trivial payment is required by a user to make a change that would affect other users' transactions.</li>
           <li>Using DDOS protection on websites related to the contract.</li>
+          <li>Hosting websites and services related to the contract in multiple redundant datacentres with automated hot failover.</li>
         </ul>
       </p>
 
-      <h2>Miner Vulnerabilities</h2>
+      <h2>C9. Miner Vulnerabilities</h2>
       <p>
         Even without serious collusion, Ethereum miners have some limited ability to influence block timestamps and which transactions are chosen in a block (and hence block hashes).
         A miner or group of miners who control a majority of hashing power in the network can make almost any change they want to contract data or behaviour.
@@ -160,7 +161,7 @@
         </ul>
       </p>
 
-      <h2>Malicious Creator</h2>
+      <h2>C10. Malicious Creator</h2>
       <p>
         If a contract gives the creator/owner of the contract too much power, they may take funds that should be owned by users of the contract, or change the behaviour of the contract in their favour.
       </p>
@@ -175,7 +176,7 @@
         </ul>
       </p>
 
-     <h2>Off-chain Safety</h2>
+     <h2>C11. Off-chain Safety</h2>
       <p>
         Rather than attack the contract itself, an attacker may trick users into interacting with a different contract or into sending funds to her address instead of the real contract.
         This could be done by phishing, by taking control of the website hosting, or by attacking github or social media accounts.
@@ -193,7 +194,7 @@
         </ul>
       </p>
 
-     <h2>Cross-chain Replay Attacks</h2>
+     <h2>C12. Cross-chain Replay Attacks</h2>
       <p>
         Following the Ethereum hard-fork, activity has also continued on the Ethereum Classic Chain. Transactions on one chain can be replayed on the other.
       </p>
@@ -205,7 +206,7 @@
         </ul>
       </p>
       
-     <h2>Tx.Origin Problem</h2>
+     <h2>C13. Tx.Origin Problem</h2>
       <p>
         This is kind of a "confused depty" problem.
         If a contract relies on Solidity 'tx.origin' to decide who the caller is (e.g. to see if they're allowed to withdraw their funds),
@@ -218,7 +219,56 @@
           <li>Not using tx.origin for authentication (or indeed, at all).</li>
         </ul>
       </p>
+
+     <h2>C14. Collisions between Solidity Function Signatures and Fallback Function Data</h2>
+      <p>
+        This one is a little bit obscure - but it might catch someone out.
+      </p>
+      <p>
+        Under the hood, when you call a non-constant external function on a Solidity contract you are really just sending a transaction to the contract with some "magic" data.
+        This works because the Solidity compiler has put some special bytecode at the start of the contract which checks the magic data and invokes the correct function.
+      </p>
+      <p>
+        Solidity contracts can also have a "fallback" function which is called if there is no data present in the transaction, or if the data does not match any of the contract functions. The fallback function can examine the data sent using the msg.data property.
+      </p>
+      <p>
+        This can lead to problems in two ways:
+        <ol>
+          <li>
+            Phishing - A user might be tricked into calling a function on a contract - e.g. 'sendAllMyTokensTo(address)' - by being told by another user to send some special data to the contract.
+          </li>
+          <li>
+            Poisoning - There are some items of data that can never be sent to a fallback function, because they clash with a function signature. For example, if my contract has a function whose signature is foo(uint256), then I can never send data starting with 2FBEBD38 to the fallback function.
+          </li>
+        </ol>
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>
+            The KingOfTheEther fallback function only accepts monarch names sent to it in msg.data if they are prefixed with 'NAME:' in ASCII, which does not clash with any Solidity function signatures.
+          </li>
+        </ul>
+      </p>
+      <p>
+        However, in hindsight, we think having a fallback function read msg.data is a mistake - it makes things unnecessarily complicated.
+        It is sometimes desirable to allow users to interact with the contract by sending simple transactions to it (e.g. from web wallets) without having to copy-and-paste an enormous ABI or run a native app.
+        Perhaps it is better to provide some off-chain means (e.g. a Javascript converter) to generate the "magic" data needed to invoke the desired Solidity function? There is a risk of encouraging phishing attacks though by encouraging people to send mysterious data to contracts.
+      </p>
       
+     <h2>C15. Incorrect use of Cryptography</h2>
+      <p>
+        Cryptographic primitives are notoriously difficult to use correctly - see e.g. <a href="https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2009/july/if-youre-typing-the-letters-a-e-s-into-your-code-youre-doing-it-wrong">If you're typing the letters A E S into your code you're doing it wrong</a>.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>
+            We do not make use of any cryptography.
+          </li>
+        </ul>
+      </p>
+ 
     </div>
   </div>
   <script type="text/javascript">
