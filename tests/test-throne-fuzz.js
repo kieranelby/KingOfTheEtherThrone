@@ -66,7 +66,7 @@ TestThroneFuzz.prototype.addTests = function(runner, throneTestSupport) {
 
   runner.addTest({
     title: 'Fuzz test #' + seed + ' for ' + numSteps,
-    categories: ['fuzz', 'inprogress'],
+    categories: ['fuzz'],
     steps: setUpSteps.concat(fuzzSteps)
   });
 
