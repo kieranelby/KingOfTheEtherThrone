@@ -1,12 +1,16 @@
 # Monitors origin servers and updates CloudFlare to point to the good one.
 # Uses "last updated at ..." text from the page to detect staleness.
-# Favours the primary over the failover.
+# Favours the primary over the failover - failover not used in normal operation.
+# Assumes that kingoftheether DNS record already exists at CloudFlare.
 # Prequisites:
-#  - If on ancient Ubuntu might need to use --upgrade with pip or use a venv
+#  - If on ancient Ubuntu might need to mess about with some nonsense:
+#      pip install requests --upgrade
+#      apt-get install build-essential python-dev libssl-dev libffi-dev
+#      pip install urllib3 pyasn1 ndg-httpsclient pyOpenSSL
 #  - pip install requests
 #  - pip install cloudflare
 #  - CloudFlare API details in ~/.cloudflare/cloudflare.cfg (careful!)
-#  - origin server IP address in /etc/hosts
+#  - origin server IP addresses in /etc/hosts
 
 import re
 from datetime import datetime, timedelta
@@ -46,6 +50,7 @@ def set_host_if_needed(host):
     current_ip = dns_record['content']
   except Exception as ex:
     print('ERROR: failed to query existing CloudFlare DNS record, not changing: %s', (ex,))
+    return
   if current_ip == target_ip:
     print('no change needed')
     return
@@ -110,7 +115,7 @@ def main():
     if not decision:
       print('no decision made')
     else:
-      print('we should use %s', (decision,))
+      print('we should use %s' % (decision,))
       set_host_if_needed(decision)
     # TODO - should subtract time taken for checks from interval!
     # (perhaps with a minimum value to avoid hammering servers...)
