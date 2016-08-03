@@ -14,10 +14,10 @@ from time import sleep
 import socket
 
 import requests
-import Cloudflare
+import CloudFlare
 
 request_timeout_seconds = 10
-check_interval_seconds = 30
+check_interval_seconds = 60
 stale_threshold_minutes = 10
 max_history_size = 5
 times_primary_bad_threshold = 4
@@ -107,7 +107,11 @@ def main():
     primary_history = check_server_and_update_history(primary_host, primary_history)
     failover_history = check_server_and_update_history(failover_host, failover_history)
     decision = decide(primary_history, failover_history)
-    set_host_if_needed(decision)
+    if not decision:
+      print('no decision made')
+    else:
+      print('we should use %s', (decision,))
+      set_host_if_needed(decision)
     # TODO - should subtract time taken for checks from interval!
     # (perhaps with a minimum value to avoid hammering servers...)
     sleep(check_interval_seconds)
