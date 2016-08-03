@@ -49,7 +49,7 @@ def set_host_if_needed(host):
   if current_ip == target_ip:
     print('no change needed')
     return
-  print('changing DNS record to %s ...', (target_ip,))
+  print('WARN: changing DNS record to %s ...', (target_ip,))
   dns_record['content'] = target_ip
   try:
     cf.zones.dns_records.put(zone_id, record_id, data=dns_record)
