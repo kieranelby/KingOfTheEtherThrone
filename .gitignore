@@ -13,3 +13,5 @@ generated
 
 # web3 talking to geth from node.js creates these
 .node-xmlhttprequest-*
+
+world.json

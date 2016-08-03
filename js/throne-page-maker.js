@@ -82,9 +82,21 @@ ThronePageMaker.prototype._makeMonarchContext = function(monarchData, monarchInd
     'Number': monarchData.monarchNumber,
     'Name': monarchData.name,
     'CompensationAddress': monarchData.compensationAddress,
+    // NB: strictly speaking they might have paid a tiny bit more:
     'ClaimPricePaid': this.humanFormatter.formatAmountWei(monarchData.claimPriceWei),
-    'CoronationTime': this.humanFormatter.formatTimestamp(monarchData.coronationTimestamp)
+    'CoronationTime': this.humanFormatter.formatTimestamp(monarchData.coronationTimestamp),
+    'ProfitMade': this._computeProfitMade(monarchData)
   };
+};
+
+ThronePageMaker.prototype._computeProfitMade = function(monarchData) {
+  var compensationWei = this.web3.toBigNumber(monarchData.compensationWei);
+  var claimPriceWei = this.web3.toBigNumber(monarchData.claimPriceWei);
+  if (compensationWei.lessThanOrEqualTo(claimPriceWei)) {
+    return '';
+  }
+  var profitWei = compensationWei.minus(claimPriceWei);
+  return this.humanFormatter.formatAmountWei(profitWei);
 };
 
 // Assumes that the name follows the rules used in the
