@@ -137,6 +137,68 @@
             
       <a name="HowIRule"><h2>How Can I Rule?</h2></a>
       <p>The power of the {{ThroneName}} Throne can be yours for the <strong>current claim price</strong> of just <strong>{{CurrentClaimPrice}}</strong> (as of <span class="timestamp">{{LastUpdated}}</span>). Here's how:</p>
+
+      <a name="ClaimBySendExchange"><h3 class="for-exchange">Claim from an Exchange</h3></a>
+      <p>
+        Careful - do <b>not</b> send ether to {{ThroneName}} directly from an exchange like Poloniex or Kraken - it is likely that any compensation payment will <b>not</b> go to your account.
+        Instead, if you don't want to use a full Ethereum client (like geth or Mist Ethereum Wallet), we suggest sending via <a href="https://www.myetherwallet.com">myetherwallet.com</a>.
+        <br><button class="js-show-collapsed" data-section-id="claim-by-send-exchange">Show me how ...</button>
+      </p>
+      <div id="claim-by-send-exchange" class="js-collapse">
+        <p>1. Create an Ethereum address at <a href="https://www.myetherwallet.com">myetherwallet.com</a> (don't lose the passphrase/key!).</p>
+        <p>2. Withdraw funds from your exchange account to the myetherwallet.com address you just created. Make sure you withdraw a little more than the current claim price to cover gas costs - 0.01 ETHER more will do.</p>
+        <p>3. Wait for the funds to reach your myetherwallet.com address (this can take quite a long time with some exchanges).</p>
+        <p>
+          4. Go to the 'Send Ether' tab on myetherwallet.com. Once you've unlocked your wallet, you should get to a form a bit like this:
+          <img src="/myetherwallet-screenshot.png" />
+        </p>
+        <p>5. Fill in the following details: (you'll need to use the 'Advanced: Add More Gas or Data' option)</p>
+        <form>
+        <table>
+          <tr>
+            <th class="for-row">To Address</th>
+            <td>
+              Send funds to the {{ThroneName}} contract at address:<br>
+              <input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="{{ThroneContractAddress}}" />
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Amount to Send</th>
+            <td>
+              As of {{LastUpdated}}, to claim the throne you will need to send:<br>
+              <input readonly="readonly" class="read-only-for-copy" type="number" name="amount" value="{{CurrentClaimPriceEther}}" size="7" /> ETHER<br>
+              (Don't worry though, if the amount turns out to be too little or too much, the transaction will be cancelled and your funds returned, minus the gas fee).
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Transaction Type</th>
+            <td>
+              You'll need to choose 'ETH (Standard Transaction)' here - otherwise you'll won't be able to choose the 'Add More Gas or Data' option which you'll need next. Hopefully the exchange only sent ETH to your wallet anyway.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Data</th>
+            <td>
+              To make sure everyone knows who is the Monarch, you'll need to enter a name.<br>
+              For technical reasons, you'll need to <i>encode</i> your name as data using this converter:<br>
+              Choose Your Royal Name: <input type="text" class="js-name-convert" data-name-convert-destination-id="exchange_name_data" autocomplete="off" name="name_text" value="" placeholder="your name" size="32" /> converts to:<br>
+              &rArr; <input readonly="readonly" id="exchange_name_data" class="read-only-for-copy" type="text" name="exchange_name_data" size="66" value="" /><br>
+              Copy the converted name data above into the 'Data' box (if you can't see the Data box, click 'Add More Gas or Data').<br>
+              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Gas</th>
+            <td>
+              Enter 250,000 gas here - don't worry, that's less than 0.01 ETHER at the time of writing. This powers the contract.
+            </td>
+          </tr>
+        </table>
+        </form>
+        <p>6. Click 'Generate Transaction', then 'Send Transaction'. Wait a few minutes, then reload this page.</p>
+        <p>7. Any compensation will be sent back to your myetherwallet.com address, so make sure to keep a copy of your myetherwallet.com passphrase/key.</p>
+        <p>Disclaimer: we are not affiliated with or connected to myetherwallet.com; they seem reputable as of August 2016 but we strongly encourage you to do your own research.</p>
+      </div>
       
       <a name="ClaimBySendWallet"><h3 class="for-ethereum-wallet">Claim by Sending Ether using the Ethereum Wallet</h3></a>
       <p>Ethereum Wallet users can claim the throne by sending ether to the contract.<br><button class="js-show-collapsed" data-section-id="claim-by-send-wallet">Show me how ...</button></p>
@@ -256,7 +318,7 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
       </div>
 
       <a name="ClaimByOther"><h3>Other ways to claim</h3></a>
-      <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps (including web wallets such as myetherwallet.com) - make sure you include plenty of gas (250,000).
+      <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps - make sure you include plenty of gas (250,000).
         However, be careful - <b>DO NOT</b> send funds from exchange wallets since the compensation payment is likely to go to the exchange, not to you!</p>
       <p>We're planning to launch a DApp web interface in the Ethereum Mist browser shortly to make it even easier and more interactive.</p>
       <p>All contract addresses shown here exist ONLY on the Ethereum Foundation (Hard Fork) chain - do not attempt to use the contract on the "Ethereum Classic" chain! You should 'split' addresses created prior to the fork if you are worried about losing ETC.</p>
@@ -283,6 +345,13 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
       <p>You might also be thinking of one of our <a href="#Neighbours">Neighbouring Kingdoms</a>.</p>
       <h3>Is this the first version of this contract? Or have there been other throne contracts?</h3>
       <p>This is the third version of the contract. <a href="/history.html">Learn more about the past ages</a> (including celebrity rulers!).</p>
+      <h3>When a monarch is struck down by the curse, where does the money go?</h3>
+      <p>
+      Ah - I see what you mean, but it doesn't quite work like that - there isn't really any money to go anywhere when that happens!
+      For example, if a monarch pays 15 ether to claim the throne from someone, then that 15 ether is not held by the contract - it is sent to the monarch before her as compensation (minus a little commission).
+      So it's not like the 15 ether they paid is "lost" if the curse hits them - it had already gone to the ruler they usurped {{CurseIncubationDuration}} days earlier.
+      The one exception is when someone claims an empty throne that's back at the starting price of {{StartingClaimPrice}} - in that case it goes to the "wizards" behind the throne as commission.
+      </p>
       <h3>I think something went wrong. Can I have my money back?</h3>
       <p>Ah. Well, you see, one downside of trustless autonomous contracts executing on the blockchain is that there is no possibility of human intervention - (almost) no-one can reach into the back of the machine and tweak things, even if they wanted to. Besides, there is no money to give back - it&#39;s all been given to the previous monarch, remember? So refunds are - regrettably - both impossible and unethical.</p>
       <h3>Is this safe? Or will we up with all the ether trapped in a DarkKingdom?</h3>
