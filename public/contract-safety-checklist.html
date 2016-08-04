@@ -258,7 +258,7 @@
       
      <h2>C15. Incorrect use of Cryptography</h2>
       <p>
-        Cryptographic primitives are notoriously difficult to use correctly - see e.g. <a href="https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2009/july/if-youre-typing-the-letters-a-e-s-into-your-code-youre-doing-it-wrong">If you're typing the letters A E S into your code you're doing it wrong</a>.
+        Cryptographic primitives are notoriously difficult to use correctly - see e.g. <a href="https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2009/july/if-youre-typing-the-letters-a-e-s-into-your-code-youre-doing-it-wrong">If you're typing the letters A-E-S into your code you're doing it wrong</a>.
       </p>
       <p>
         We have mitigated against this risk by:
@@ -267,6 +267,23 @@
             We do not make use of any cryptography.
           </li>
         </ul>
+      </p>
+
+     <h2>C16. Gas Limits</h2>
+      <p>
+        It's quite hard to calculate the maximum amount of gas a contract can use - famously <a href="https://www.reddit.com/r/ethereum/comments/4ghzhv/governmentals_1100_eth_jackpot_payout_is_stuck/">Governmental got stuck</a> due to this. To make matters worse, the maximum gas limit on the network can vary over time based on transaction fees.
+      </p>
+      <p>
+        We have mitigated against this risk by:
+        <ul>
+          <li>Being careful not to loop over (or delete) arrays that can grow as a result of user input.</li>
+          <li>Limiting the length of user-supplied data such as monarch names.</li>
+          <li>Running automated functional tests for gas usage.</li>
+          <li>Performing "fuzz testing" by generating random method calls and applying them to both the real Solidity contract and a Javascript simulation of intended behaviour, then looking for differences.</li>
+        </ul>
+      </p>
+      <p>
+      Note that we inadvertently deployed our first contract versions to production using a slightly different version of the Solidity compiler than we tested with - this caused gas costs on the real contract to be slightly higher than expected.
       </p>
  
     </div>
