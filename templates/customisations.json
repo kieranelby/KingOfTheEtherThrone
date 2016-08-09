@@ -1,13 +1,16 @@
 {
   "_default_": {
-    "mainBackgroundColor": "#FFF7F0"
+    "mainBackgroundColor": "#FFF7F0",
+    "fullMonarchTitle": "First of Their Name, the Uncentralized, the Sovereign of the Exalted Order of Miners, the Emperor of the Blocks beyond the Sidechains, the Head of the Great Patricia Tree"
   },
   "kingoftheether": {
   },
   "kingoftheetherclassic": {
-    "mainBackgroundColor": "#F3FFF3"
+    "mainBackgroundColor": "#F3FFF3",
+    "fullMonarchTitle": "First of Their Name, the Unforked, the Head of the Holy Faith in Code as Law, the Most Maximal of the Bitcoin Maximalists, the Keeper of Immutability"
   },
   "satoshiofbtckingdom": {
-    "mainBackgroundColor": "#FFFFF0"
+    "mainBackgroundColor": "#FFFFF0",
+    "fullMonarchTitle": "most noble among men, possesor of a title respected even more than King, proud owner of a crown for which countless swords have crossed and for which blood has covered all the fields - how mighty is he"
   }
 }
