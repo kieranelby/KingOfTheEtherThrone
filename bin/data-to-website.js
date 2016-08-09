@@ -29,10 +29,13 @@ fse.mkdirSync(kingdomsDirname);
 
 var templatesDirname = 'templates';
 
+var customisations = JSON.parse(fse.readFileSync(templatesDirname + '/customisations.json', 'utf8'));
+
 rootData.world.kingdoms.forEach(function (kingdomData) {
 
   var thronePageMaker = new ThronePageMaker(
     rootData,
+    customisations,
     kingdomData,
     templatesDirname,
     kingdomsDirname,
