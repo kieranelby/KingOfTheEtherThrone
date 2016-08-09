@@ -40,6 +40,7 @@ ThronePageMaker.prototype.make = function() {
   var throneContext = {
     'ThroneName': this.kingdomData.kingdomName,
     'MainBackgroundColor': throneCustomisation.mainBackgroundColor,
+    'FullMonarchTitle': throneCustomisation.fullMonarchTitle,
     'ExampleCurrentClaimPrice': this.humanFormatter.formatAmountWei(exampleCurrentClaimPriceWei),
     'ExampleNextClaimPrice': this.humanFormatter.formatAmountWei(exampleNextClaimPriceWei),
     'StartingClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.rules.startingClaimPriceWei),
