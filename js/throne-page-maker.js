@@ -11,12 +11,14 @@ var HumanFormatter = require('./human-formatter.js');
 
 function ThronePageMaker(
   rootData,
+  customisations,
   kingdomData,
   templatesDirname,
   kingdomsDirname,
   web3
 ) {
   this.rootData = rootData;
+  this.customisations = customisations;
   this.kingdomData = kingdomData;
   this.templatesDirname = templatesDirname;
   this.kingdomsDirname = kingdomsDirname;
@@ -27,15 +29,17 @@ function ThronePageMaker(
 ThronePageMaker.prototype.make = function() {
 
   console.log('Using template to generate throne page for kingdom #' + this.kingdomData.kingdomNumber + ' ...');
-
+  
   var throneTemplateFilename = this.templatesDirname + '/throne.nunjucks.html';
   var throneTemplateSource = fse.readFileSync(throneTemplateFilename, 'utf8');
   var monarchsData = this.kingdomData.monarchs;
   var exampleCurrentClaimPriceWei = this.web3.toBigNumber(this.web3.toWei('10', 'ether'));
   var exampleIncreaseFactor = this.web3.toBigNumber(this.kingdomData.rules.claimPriceAdjustPercent).plus('100').dividedBy('100');
   var exampleNextClaimPriceWei = exampleCurrentClaimPriceWei.times(exampleIncreaseFactor);
+  var throneCustomisation = this._getThroneCustomisation();
   var throneContext = {
     'ThroneName': this.kingdomData.kingdomName,
+    'MainBackgroundColor': throneCustomisation.mainBackgroundColor,
     'ExampleCurrentClaimPrice': this.humanFormatter.formatAmountWei(exampleCurrentClaimPriceWei),
     'ExampleNextClaimPrice': this.humanFormatter.formatAmountWei(exampleNextClaimPriceWei),
     'StartingClaimPrice': this.humanFormatter.formatAmountWei(this.kingdomData.rules.startingClaimPriceWei),
@@ -75,6 +79,21 @@ ThronePageMaker.prototype.make = function() {
 
   console.log('Writing throne index page ...');
   fse.writeFileSync(kingdomDirname + '/index.html', throneHtml, 'utf8');
+};
+
+ThronePageMaker.prototype._getThroneCustomisation = function() {
+  var safeKingdomKey = ThronePageMaker.makeSafeKingdomKey(this.kingdomData.kingdomName);
+  var defaultCustomisation = this.customisations['_default_'];
+  var throneCustomisation = this.customisations[safeKingdomKey];
+  if (!throneCustomisation) {
+    throneCustomisation = {};
+  }
+  for (var name in defaultCustomisation) {
+    if (defaultCustomisation.hasOwnProperty(name) && !throneCustomisation.hasOwnProperty(name)) {
+      throneCustomisation[name] = defaultCustomisation[name];
+    }
+  }
+  return throneCustomisation;
 };
 
 ThronePageMaker.prototype._makeMonarchContext = function(monarchData, monarchIndex, junk) {

@@ -1,0 +1,13 @@
+{
+  "_default_": {
+    "mainBackgroundColor": "#FFF7F0"
+  },
+  "kingoftheether": {
+  },
+  "kingoftheetherclassic": {
+    "mainBackgroundColor": "#FFF0F7"
+  },
+  "satoshiofbtckingdom": {
+    "mainBackgroundColor": "#F7F7FF"
+  }
+}

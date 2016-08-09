@@ -285,6 +285,15 @@
       <p>
       Note that we inadvertently deployed our first contract versions to production using a slightly different version of the Solidity compiler than we tested with - this caused gas costs on the real contract to be slightly higher than expected.
       </p>
+
+     <h2>C17. Stack Depth Exhaustion</h2>
+      <p>
+        The Ethereum Virtual Machine has a stack depth limit of 1024 - this can cause calls/sends between contracts to unexpectedly fail. An attacker can set things up so that her contract eats up nearly all the stack just before calling the victim contract.
+      </p>
+      <p>
+        We omitted to test for this risk originally, but luckily the mitigations we put in place for 'C2. Failed Sends' apply here also.
+        However, it's worth pointing out that it's not just explicit send() calls that can fail - any external call between contracts could fail due to this, though luckily the latter will throw an exception.
+      </p>
  
     </div>
   </div>
