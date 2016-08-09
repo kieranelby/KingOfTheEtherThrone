@@ -71,27 +71,13 @@
 
       <a name="Contents"><h2>Contents</h2></a>
       <ul>
-        <li><a href="#WhatItDo">What's this about?</a></li>
         <li><a href="#WhoMonarch">Who is the Monarch?</a></li>
         <li><a href="#GreatHall">Hall of Monarchs</a></li>
+        <li><a href="#WhatItDo">What's this about?</a></li>
         <li><a href="#HowIRule">I Want to Rule!</a></li>
         <li><a href="#Neighbours">Neighbouring Kingdoms</a></li>
         <li><a href="#FAQ">FAQ</a></li>
         <li><a href="#Disclaimer">Disclaimer</a></li>
-      </ul>
-
-      <a name="WhatItDo"><h2>What's this about?</h2></a>
-      <p>The {{ThroneName}} Throne awaits you. It can be yours for a price - here are the contract rules:</p>
-      <ul>
-        <li>Suppose - for example - the current throne claim price is {{ExampleCurrentClaimPrice}}. (To find out what it really is, <a href="#HowIRule">see below</a>.)</li>
-        <li>You like the sound of being the Monarch, so you send {{ExampleCurrentClaimPrice}} to the contract.</li>
-        <li>This makes you the illustrious new {{ThroneName}}. Your name will be added to the <a href="#GreatHall">Hall of Monarchs</a> in the blockchain.</li>
-        <li>The contract will then send your {{ExampleCurrentClaimPrice}} (less a small commission) to the previous Monarch you have usurped, as compensation.</li>
-        <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}. (It eventually stops increasing at {{MaximumClaimPrice}} for safety).</li>
-        <li>If an usurper comes along who is willing to pay {{ExampleNextClaimPrice}}, she will depose you and become Queen, and you will receive her payment of {{ExampleNextClaimPrice}} (less a small commission) as compensation - a tidy profit for you.</li>
-        <li>However, an ancient curse applies to the throne: every Monarch dies once their reign reaches {{CurseIncubationDuration}}.
-            No compensation is paid if this happens, and the claim price for the next monarch is reset back to the original starting price of {{StartingClaimPrice}}.<br>
-            But surely a successor will appear within {{CurseIncubationDuration}}, and even if they don&#39;t, you&#39;ll be immortalised in the blockchain at least ...</li>
       </ul>
 
       <a name="WhoMonarch"><h2>Who is the Monarch?</h2></a>
@@ -134,7 +120,21 @@
         </tbody>
       </table>
       <h5>(This information was last updated at {{LastUpdated}} - reload this page to check for changes.)</h5>
-            
+
+      <a name="WhatItDo"><h2>What's this about?</h2></a>
+      <p>The {{ThroneName}} Throne awaits you. It can be yours for a price - here are the contract rules:</p>
+      <ul>
+        <li>Suppose - for example - the current throne claim price is {{ExampleCurrentClaimPrice}}. (To find out what it really is, <a href="#HowIRule">see below</a>.)</li>
+        <li>You like the sound of being the Monarch, so you send {{ExampleCurrentClaimPrice}} to the contract.</li>
+        <li>This makes you the illustrious new {{ThroneName}}. Your name will be added to the <a href="#GreatHall">Hall of Monarchs</a> in the blockchain.</li>
+        <li>The contract will then send your {{ExampleCurrentClaimPrice}} (less a small commission) to the previous Monarch you have usurped, as compensation.</li>
+        <li>The claim price for the throne will then go up by {{ClaimPriceAdjustPercent}}, to {{ExampleNextClaimPrice}}. (It eventually stops increasing at {{MaximumClaimPrice}} for safety).</li>
+        <li>If an usurper comes along who is willing to pay {{ExampleNextClaimPrice}}, she will depose you and become Queen, and you will receive her payment of {{ExampleNextClaimPrice}} (less a small commission) as compensation - a tidy profit for you.</li>
+        <li>However, an ancient curse applies to the throne: every Monarch dies once their reign reaches {{CurseIncubationDuration}}.
+            No compensation is paid if this happens, and the claim price for the next monarch is reset back to the original starting price of {{StartingClaimPrice}}.<br>
+            But surely a successor will appear within {{CurseIncubationDuration}}, and even if they don&#39;t, you&#39;ll be immortalised in the blockchain at least ...</li>
+      </ul>
+
       <a name="HowIRule"><h2>How Can I Rule?</h2></a>
       <p>The power of the {{ThroneName}} Throne can be yours for the <strong>current claim price</strong> of just <strong>{{CurrentClaimPrice}}</strong> (as of <span class="timestamp">{{LastUpdated}}</span>). Here's how:</p>
 
