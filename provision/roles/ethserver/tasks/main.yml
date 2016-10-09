@@ -20,7 +20,7 @@
 - name: ensure geth binary from the unpacked release copied to /usr/bin
   copy:      remote_src=True
              dest=/usr/bin/geth
-             src=/root/geth-release-files/geth
+             src=/root/geth-release-files/geth-linux-amd64-1.4.16-4fced097/geth
              mode=755 owner=root group=root
 
 - name: ensure geth user exists
