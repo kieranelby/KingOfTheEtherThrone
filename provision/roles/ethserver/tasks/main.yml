@@ -3,7 +3,7 @@
 
 - name: ensure geth binary release downloaded
   get_url:   dest=/root/geth-release.tar.bz2
-             url=https://github.com/ethereum/go-ethereum/releases/download/v1.4.18/geth-linux-amd64-1.4.18-ef9265d0.tar.gz
+             url=https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.5.2-c8695209.tar.gz
              force=yes
 
 - name: ensure geth binary release directory exists
@@ -20,7 +20,7 @@
 - name: ensure geth binary from the unpacked release copied to /usr/bin
   copy:      remote_src=True
              dest=/usr/bin/geth
-             src=/root/geth-release-files/geth-linux-amd64-1.4.18-ef9265d0/geth
+             src=/root/geth-release-files/geth-linux-amd64-1.5.2-c8695209/geth
              mode=755 owner=root group=root
 
 - name: ensure geth user exists
