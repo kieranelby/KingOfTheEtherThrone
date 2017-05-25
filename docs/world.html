@@ -41,6 +41,9 @@
   .read-only-for-copy {
     background-color: #f0f0f0;
   }
+  .warn {
+    background-color: #f0d0d0;
+  }
   </style>
 </head>
 <body>
@@ -53,6 +56,12 @@
         Well, there's a whole world out there - and if you like, you can create (fork?) your own alternative Kingdom where you make the rules and get a 50&#37; share of the commission ...
       </p>
 
+      <p class="warn">
+        Important: This webpage is no longer being updated -
+        the contract will continue to work on the blockchain but new Kingdoms will NOT be listed here - please do not send funds to the contract.
+        Thank you to all the past Kings / Queens / Wiazards and for your interest in the world of King of the Ether.
+      </p>
+	  
       <a name="Contents"><h2>Contents</h2></a>
       <ul>
         <li><a href="#TheKingdoms">The Kingdoms</a></li>
@@ -61,13 +70,13 @@
       </ul>
 
       <a name="TheKingdoms"><h2>The Kingdoms</h2></a>
-      <p>These are the fine kingdoms that have been established so far ...</p>
+      <p>As of May 2017, these were the fine kingdoms that had been established ...</p>
       <table>
         <thead>
           <tr>
             <th>Number</th>
             <th style="width:20em">Name</th>
-            <th>Current Claim Price</th>
+            <th>Last Known Claim Price</th>
           </tr>
         </thead>
         <tbody>
@@ -94,8 +103,16 @@
       </table>
       
       <a name="IWantOne"><h2>I Want a Kingdom!</h2></a>
+	  
+      <p class="warn">
+        Important: This webpage is no longer being updated -
+        the contract will continue to work on the blockchain but new Kingdoms will NOT be listed here - please do not send funds to the contract.
+		Instructions have been left here for historical interest (and in case any wizards want to withdraw their fees).
+        Thank you to all the past Kings / Queens / Wiazards and for your interest in the world of King of the Ether.
+      </p>
+	  
       <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet,
-      you can watch and interact with the World contract to create your own Kingdom. The fee to create a kingdom is currently 1 ETHER.</p>
+      you can watch and interact with the World contract. The fee to create a kingdom was 1 ETHER (less than 10 US dollars at the time!).</p>
       <p>1. Open your Ethereum Wallet. Choose 'Contracts' in the top-bar, then click 'Watch Contract'.</p>
       <p>2. On the 'Watch Contract' pop-up, fill in the following details:<br>
 For CONTRACT NAME, enter 'World'.<br>
@@ -199,14 +216,17 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
             <th class="for-row">Send</th>
             <td>
               You'll need to specify the kingdom creation fee you will send to pay for the creation and listing of your contract here.
-              As of 2017-05-25 20:40:29 UTC, the creation fee is 1 ETHER. The World contract page in your Ethereum Wallet will show the latest fee in the 'Kingdom Creation Fee in Finney' section on the left of the screen.
+              As of May 2017, the creation fee was 1 ETHER. The World contract page in your Ethereum Wallet will show the latest fee in the 'Kingdom Creation Fee in Finney' section on the left of the screen.
             </td>
           </tr>
         </table>
       </form>
-      <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'. Yes, the gas amount is very high - about 1.9 million. Less than 0.1 ether though.</p>
-      <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear.</p>
-      <p>7. Follow the link to the web page for your Kingdom at <a href="#TheKingdoms">The Kingdoms</a>. Use the instructions there to start watching your new Kingdom Contract in your Ethereum Wallet.</p>
+      <p class="warn">
+        Steps 5-7 removed since this webpage is no longer being updated -
+        the contract will continue to work on the blockchain but new Kingdoms will NOT be listed here - please do not send funds to the contract.
+		Instructions have been left here for historical interest (and in case any wizards want to withdraw their fees).
+        Thank you to all the past Kings / Queens / Wiazards and for your interest in the world of King of the Ether.
+      </p>
       <p>8. To withdraw any commission earned, you'll need to use the Withdraw Funds method on your Kingdom Contract (not the one on the World contract).</p>
 
       <a name="Disclaimer"><h2>Disclaimer</h2></a>
@@ -218,22 +238,5 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
 
     </div>
   </div>
-  <script type="text/javascript">
-  <!--
-  function makeCopyPasteEasier() {
-    var elems = document.querySelectorAll('.read-only-for-copy');
-    for (var i = 0; i < elems.length; i++) {
-      var elem = elems[i];
-      elem.addEventListener('click', function() {
-        this.select();
-      });
-    }
-  }
-  function init() {
-    makeCopyPasteEasier();
-  }
-  init();
-  // -->
-  </script>
 </body>
 </html>
