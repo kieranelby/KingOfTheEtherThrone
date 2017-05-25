@@ -60,6 +60,9 @@
   .read-only-for-copy {
     background-color: #f0f0f0;
   }
+  .warn {
+    background-color: #f0d0d0;
+  }
   </style>
 </head>
 <body>
@@ -82,13 +85,16 @@
 
       <a name="WhoMonarch"><h2>Who is the Monarch?</h2></a>
       
-      <p>The illustrious current  Satoshi of BTC Kingdom is <strong>Satoshi Nakamoto</strong>, the most noble among men, possesor of a title respected even more than King, proud owner of a crown for which countless swords have crossed and for which blood has covered all the fields - how mighty is he, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
-      <p>Think you can take their place? Read on for <a href="#HowIRule">How to Rule!</a></p>
-      
-      <h5>(This information was last updated at 2017-05-25 20:40:29 UTC - reload this page to check for changes.)</h5>
-     
+      <p>As of 2017-05-25 20:40:29 UTC, the illustrious (but perhaps last?) Satoshi of BTC Kingdom was <strong>Satoshi Nakamoto</strong>, the most noble among men, possesor of a title respected even more than King, proud owner of a crown for which countless swords have crossed and for which blood has covered all the fields - how mighty is he, who sits in the <a href="#GreatHall">Hall of Monarchs</a>.</p>
+	  
+      <p class="warn">
+        Important: This webpage is no longer being updated -
+        the contract will continue to work on the blockchain but new rulers will NOT be listed here.
+        Thank you to all the past Kings / Queens / Satoshis and for your interest in King of the Ether / Satoshi of BTC Kingdom.
+      </p>
+	  
       <a name="GreatHall"><h2>Hall of Monarchs</h2></a>
-      <p>These are the hallowed rulers of the  Satoshi of BTC Kingdom Throne, immortalized in the block-chain:</p>
+      <p>Up to 2017-05-25 20:40:29 UTC, these were the hallowed rulers of the  Satoshi of BTC Kingdom Throne, immortalized in the block-chain:</p>
       <table>
         <thead>
           <tr>
@@ -132,7 +138,6 @@
           
         </tbody>
       </table>
-      <h5>(This information was last updated at 2017-05-25 20:40:29 UTC - reload this page to check for changes.)</h5>
 
       <a name="WhatItDo"><h2>What's this about?</h2></a>
       <p>The  Satoshi of BTC Kingdom Throne awaits you. It can be yours for a price - here are the contract rules:</p>
@@ -149,146 +154,18 @@
       </ul>
 
       <a name="HowIRule"><h2>How Can I Rule?</h2></a>
-      <p>The power of the  Satoshi of BTC Kingdom Throne can be yours for the <strong>current claim price</strong> of just <strong>337 FINNEY (0.337 ETHER)</strong> (as of <span class="timestamp">2017-05-25 20:40:29 UTC</span>). Here's how:</p>
-
-      <a name="ClaimBySendExchange"><h3 class="for-exchange">Claim from an Exchange</h3></a>
-      <p>
-        Careful - do <b>not</b> send ether to  Satoshi of BTC Kingdom directly from an exchange like Poloniex or Kraken - it is likely that any compensation payment will <b>not</b> go to your account.
-        Instead, if you don't want to use a full Ethereum client (like geth or Mist Ethereum Wallet), we suggest sending via <a href="https://www.myetherwallet.com">myetherwallet.com</a>.
-        <br><button class="js-show-collapsed" data-section-id="claim-by-send-exchange">Show me how ...</button>
+	  
+      <p class="warn">
+        Important: This webpage is no longer being updated -
+        the contract will continue to work on the blockchain but new rulers will NOT be listed here.
+		For this reason we do NOT recommend sending funds to the contract, but we've left the instructions below just in case someone wants to usurp the last known ruler (even if no-one can see they have!) ...
+        Thank you to all the past Kings / Queens / Satoshis and for your interest in King of the Ether / Satoshi of BTC Kingdom.
       </p>
-      <div id="claim-by-send-exchange" class="js-collapse">
-        <p>1. Create an Ethereum address at <a href="https://www.myetherwallet.com">myetherwallet.com</a> (don't lose the passphrase/key!).</p>
-        <p>2. Withdraw funds from your exchange account to the myetherwallet.com address you just created. Make sure you withdraw a little more than the current claim price to cover gas costs - 0.01 ETHER more will do.</p>
-        <p>3. Wait for the funds to reach your myetherwallet.com address (this can take quite a long time with some exchanges).</p>
-        <p>
-          4. Go to the 'Send Ether' tab on myetherwallet.com. Once you've unlocked your wallet, you should get to a form a bit like this:
-          <img src="/myetherwallet-screenshot.png" />
-        </p>
-        <p>5. Copy the details below into the form on myetherwallet.com: (you'll need to use the 'Advanced: Add More Gas or Data' option)</p>
-        <form>
-        <table>
-          <tr>
-            <th class="for-row">To Address</th>
-            <td>
-              Send funds to the  Satoshi of BTC Kingdom contract at address:<br>
-              <input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="0x267ac866397c4212ea7867789ba0af0a2dd74109" />
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Amount to Send</th>
-            <td>
-              As of 2017-05-25 20:40:29 UTC, to claim the throne you will need to send:<br>
-              <input readonly="readonly" class="read-only-for-copy" type="number" name="amount" value="0.337" size="7" /> ETHER<br>
-              (Don't worry though, if the amount turns out to be too little or too much, the transaction will be cancelled and your funds returned, minus the gas fee).
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Transaction Type</th>
-            <td>
-              You'll need to choose 'ETH (Standard Transaction)' here - otherwise you'll won't be able to choose the 'Add More Gas or Data' option which you'll need next. Hopefully the exchange only sent ETH to your wallet anyway.
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Data</th>
-            <td>
-              To make sure everyone knows who is the Monarch, you'll need to enter a name.<br>
-              For technical reasons, you'll need to <i>encode</i> your name as data using this converter:<br>
-              Choose Your Royal Name: <input type="text" class="js-name-convert" data-name-convert-destination-id="exchange_name_data" autocomplete="off" name="name_text" value="" placeholder="your name" size="32" /> converts to:<br>
-              &rArr; <input readonly="readonly" id="exchange_name_data" class="read-only-for-copy" type="text" name="exchange_name_data" size="66" value="" /><br>
-              Copy the converted name data above into the 'Data' box (if you can't see the Data box, click 'Add More Gas or Data').<br>
-              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Gas</th>
-            <td>
-              Enter 250,000 gas here - don't worry, that's less than 0.01 ETHER at the time of writing. This powers the contract.
-            </td>
-          </tr>
-        </table>
-        </form>
-        <p>6. Click 'Generate Transaction', then 'Send Transaction'. Wait a few minutes, then reload this page.</p>
-        <p>7. Any compensation will be sent back to your myetherwallet.com address, so make sure to keep a copy of your myetherwallet.com passphrase/key.</p>
-        <p>Disclaimer: we are not affiliated with or connected to myetherwallet.com; they seem reputable as of August 2016 but we strongly encourage you to do your own research.</p>
-      </div>
-      
-      <a name="ClaimBySendWallet"><h3 class="for-ethereum-wallet">Claim by Sending Ether using the Ethereum Wallet</h3></a>
-      <p>Ethereum Wallet users can claim the throne by sending ether to the contract.<br><button class="js-show-collapsed" data-section-id="claim-by-send-wallet">Show me how ...</button></p>
-      <div id="claim-by-send-wallet" class="js-collapse">
-        <p>1. Go to the "Send Funds" page of your Ethereum Wallet app and enter the following details:</p>
-        <form>
-        <table>
-          <tr>
-            <th class="for-row">From</th>
-            <td>
-              We recommend using your 'Etherbase' account to pay the contract.<br>
-              Wallet-contract accounts should work, but you'll need to make sure you have some funds in your 'Etherbase' account to pay for the 'gas' fee.
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">To</th>
-            <td>
-              Send funds to the  Satoshi of BTC Kingdom contract at address:<br>
-              <input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="0x267ac866397c4212ea7867789ba0af0a2dd74109" />
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Amount</th>
-            <td>
-              As of 2017-05-25 20:40:29 UTC, to claim the throne you will need to send:<br>
-              <input readonly="readonly" class="read-only-for-copy" type="number" name="amount" value="337" size="7" /> FINNEY (that's 0.337 ETHER)<br>
-              (Don't worry though, if the amount turns out to be too little or too much, the transaction will be cancelled and your funds returned, minus the gas fee).
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Data</th>
-            <td>
-              To make sure everyone knows who is the Monarch, you'll need to include your name using the 'ADD DATA' button.<br>
-              For technical reasons, you'll need to <i>encode</i> your name as data using this converter:<br>
-              Choose Your Royal Name: <input type="text" class="js-name-convert" data-name-convert-destination-id="name_data" autocomplete="off" name="name_text" value="" placeholder="your name" size="32" /> converts to:<br>
-              &rArr; <input readonly="readonly" id="name_data" class="read-only-for-copy" type="text" name="name_data" size="66" value="" /><br>
-              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)
-            </td>
-          </tr>
-          <tr>
-            <th class="for-row">Fee</th>
-            <td>
-              The Ethereum Wallet should estimate the gas fee for you - you don't need to change anything.<br>
-              You can expect to be charged up to around 250,000 gas.
-            </td>
-          </tr>
-        </table>
-        </form>
-        <p>2. After clicking SEND, a confirmation popup will appear where you will need to enter your password. Check the amount, then click CONFIRM.</p>
-        <p>3. After you've sent your funds, wait for the transaction to confirm, then reload this page. It may take a few minutes to appear.</p>
-      </div>
-
-      <a name="ClaimByUsingGeth"><h3 class="for-geth">Claim using the geth console</h3></a>
-      <p><b>geth</b> users can claim the throne by sending funds to the contract via the geth console.<br><button class="js-show-collapsed" data-section-id="claim-by-send-geth">Show me how ...</button></p>
-      <div id="claim-by-send-geth" class="js-collapse">
-        <p>In the geth Javascript console, this command will claim the throne by sending 337 FINNEY (0.337 ETHER) to 0x267ac866397c4212ea7867789ba0af0a2dd74109:</p>
-        <textarea id="geth_js_command" rows="8" cols="72" readonly="readonly" class="read-only-for-copy">
-eth.sendTransaction({
-   from:  eth.accounts[0],
-   value: web3.toWei('337', 'finney'),
-   to: '0x267ac866397c4212ea7867789ba0af0a2dd74109',
-   gas: 250000,
-   data: web3.fromAscii('NAME:' + 'YOUR NAME HERE')
-});</textarea>
-        <p>Don't forget to unlock your ethereum account first - the Javascript above assumes you're using account 0.</p>
-        <p>To update the Javascript above with your chosen name, enter it here:<br>
-        Choose Your Royal Name: <input type="text" id="geth_name_text" autocomplete="off" name="geth_name_text" value="" placeholder="your name" size="32" /><br>
-        <span id="geth_name_error" class="error-message"></span>
-        (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)
-        <p>The claim price above was last updated at 2017-05-25 20:40:29 UTC - refresh this page to get the latest (and to see yourself appear once your transaction is confirmed!).</p>
-      </div>
 
       <a name="ClaimByInteractWallet"><h3 class="for-ethereum-wallet">Claim by Interacting with the  Satoshi of BTC Kingdom Contract in the Ethereum Wallet</h3></a>
       <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet,
         you can watch and interact with the  Satoshi of BTC Kingdom contract to become ruler - this shows off the power of Ethereum best!<br>
-        <button class="js-show-collapsed" data-section-id="claim-by-interact-wallet">Show me how ...</button></p>
-      <div id="claim-by-interact-wallet" class="js-collapse">
+      <div id="claim-by-interact-wallet">
         <p>1. Open your Ethereum Wallet. Choose 'Contracts' in the top-bar, then click 'Watch Contract'.</p>
         <p>2. On the 'Watch Contract' pop-up, fill in the following details:<br>
 For CONTRACT NAME, enter ' Satoshi of BTC Kingdom'.<br>
@@ -344,20 +221,13 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
             <th class="for-row">Send</th>
             <td>
               You'll need to specify the claim price you will send here.
-              As of 2017-05-25 20:40:29 UTC, the claim price was 337 FINNEY (0.337 ETHER). If you want to double-check, the  Satoshi of BTC Kingdom contract page in the Ethereum Wallet will show the latest in the 'Current claim price in finney' section on the left of the screen.
+              The Satoshi of BTC Kingdom contract page in the Ethereum Wallet will show the latest in the 'Current claim price in finney' section on the left of the screen.
             </td>
           </tr>
         </table>
         <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'.</p>
         <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear.</p>
       </div>
-
-      <a name="ClaimByOther"><h3>Other ways to claim</h3></a>
-      <p>The <a href="#ClaimBySendWallet">instructions for sending via the Ethereum Wallet</a> should work in other wallet apps - make sure you include plenty of gas (250,000).
-        However, be careful - <b>DO NOT</b> send funds from exchange wallets since the compensation payment is likely to go to the exchange, not to you!</p>
-      <p>We're planning to launch a DApp web interface in the Ethereum Mist browser shortly to make it even easier and more interactive.</p>
-      <p>All contract addresses shown here exist ONLY on the Ethereum Foundation (Hard Fork) chain - do not attempt to use the contract on the "Ethereum Classic" chain! You should 'split' addresses created prior to the fork if you are worried about losing ETC.</p>
-      <p>Whichever way you claim, make sure your read our <a href="#Disclaimer">Disclaimer</a> first.</p>
       
       <a name="Neighbours"><h2>Neighbouring Kingdoms</h2></a>
       <p>Price of the  Satoshi of BTC Kingdom too high? Want a Kingdom with fewer uppity peasants?</p>
@@ -430,144 +300,5 @@ Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract t
 
     </div>
   </div>
-  <script type="text/javascript">
-  <!--
-  function makeCopyPasteEasier() {
-    var elems = document.querySelectorAll('.read-only-for-copy');
-    for (var i = 0; i < elems.length; i++) {
-      var elem = elems[i];
-      elem.addEventListener('click', function() {
-        this.select();
-      });
-    }
-  }
-  function convertNameToData(name) {
-    var len = name.length;
-    if (len === 0) {
-      return '';
-    }
-    var maxLen = 25;
-    if (len > maxLen) {
-      throw new Error('name too long');
-    }
-    var foundNonPunctuation = false;
-    var data = '';
-    var prefix = 'NAME:';
-    var prefixedName = prefix + name;
-    for (var i = 0; i < prefixedName.length; i++) {
-      var b = prefixedName.charCodeAt(i);
-      valid = false;
-      if (
-          (b >= 48 && b <= 57) || // 0 - 9
-          (b >= 65 && b <= 90) || // A - Z
-          (b >= 97 && b <= 122)   // a - z
-      ) {
-          foundNonPunctuation = true;
-          valid = true;
-      } else if (
-          b == 32 || // space
-          b == 33 || // !
-          b == 40 || // (
-          b == 41 || // )
-          b == 45 || // -
-          b == 46 || // .
-          b == 95    // _
-      ) {
-          valid = true;
-      }
-      if (!valid && i >= prefix.length) {
-        throw new Error('character not allowed');
-      }
-      data += ('0' + (b.toString(16))).slice(-2).toUpperCase();
-    }
-    if (!foundNonPunctuation) {
-      throw new Error('needs non-punctuation');
-    }
-    return data;
-  }
-  function addTextInputHandler(elem, handler) {
-    elem.addEventListener('click', handler);
-    elem.addEventListener('change', handler);
-    elem.addEventListener('input', handler);
-    elem.addEventListener('keyup', handler);
-  }
-  function setupNameDataConverters() {
-    var elems = document.querySelectorAll('.js-name-convert');
-    for (var i = 0; i < elems.length; i++) {
-      var elem = elems[i];
-      var handler = function() {
-        var name = this.value;
-        var destinationId = this.getAttribute('data-name-convert-destination-id');
-        var destination = document.getElementById(destinationId);
-        try {
-          destination.value = convertNameToData(name);
-        } catch (e) {
-          destination.value = 'Sorry, this name is not allowed.';
-        }
-      };
-      addTextInputHandler(elem, handler);
-    }
-    var elem = document.getElementById('geth_name_text');
-    var handler = function() {
-      var name = this.value;
-      var destination = document.getElementById('geth_js_command');
-      var data = 'web3.fromAscii(\'NAME:\' + \'YOUR NAME HERE\')';
-      var isError = false;
-      if (name.length > 0) {
-        try {
-          data = '\'' + convertNameToData(name) + '\'';
-        } catch (e) {
-          isError = true;
-        }
-      } 
-      var currentCommand = geth_js_command.value;
-      var replacementData = 'data: ' + data;
-      var oldDataRe = /data:[^\n]+/;
-      var result = oldDataRe.exec(currentCommand);
-      var matchStart = result.index;
-      var matchEnd = matchStart + result[0].length;
-      var updatedCommand =
-        currentCommand.substring(0, matchStart) +
-        replacementData +
-        currentCommand.substring(matchEnd);
-      geth_js_command.value = updatedCommand;
-      var errorElem = document.getElementById('geth_name_error');
-      if (isError) {
-        errorElem.innerHTML = 'Sorry, that name is not allowed.';
-      } else {
-        errorElem.innerHTML = '';
-      }
-    }
-    addTextInputHandler(elem, handler);
-  }
-  function hideOrShowSectionAssociatedWith(elem, show) {
-    var sectionId = elem.getAttribute('data-section-id');
-    var section = document.getElementById(sectionId);
-    if (show) {
-      section.style.display = '';
-      elem.style.display = 'none';
-    } else {
-      section.style.display = 'none';
-    }
-  }
-  function makeExpandablesWork() {
-    var elems = document.querySelectorAll('.js-show-collapsed');
-    for (var i = 0; i < elems.length; i++) {
-      var elem = elems[i];
-      hideOrShowSectionAssociatedWith(elem, false);
-      var handler = function() {
-        hideOrShowSectionAssociatedWith(this, true);
-      };
-      elem.addEventListener('click', handler);
-    }
-  }
-  function init() {
-    makeCopyPasteEasier();
-    setupNameDataConverters();
-    makeExpandablesWork();
-  }
-  init();
-  // -->
-  </script>
 </body>
 </html>
