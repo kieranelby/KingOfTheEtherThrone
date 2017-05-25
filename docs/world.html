@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>The World of King of the Ether</title>
+  <link rel="stylesheet" href="/pure-min.css">
+  <link href="//fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <style>
+  body {
+    background-color: #FFF7F0;
+  }
+  .content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13pt;
+  }
+  .error-message {
+    font-weight: bold;
+    color: #800000;
+  }
+  th, td {
+    border: 1px solid #c0c0c0;
+    padding: 3px;
+  }
+  th.for-row {
+    vertical-align: top;
+    text-align: left;
+  }
+  h2 {
+    background-image: url("/kotelogotiny.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding: 0 30px;
+    height: 60px;
+    line-height: 60px;
+  }
+  .read-only-for-copy {
+    background-color: #f0f0f0;
+  }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="content">
+      
+      <h1>The World of King of the Ether</h1>
+      <p>
+        Thought <a href="thrones/kingoftheether/">King of the Ether</a> was the only Throne?
+        Well, there's a whole world out there - and if you like, you can create (fork?) your own alternative Kingdom where you make the rules and get a 50&#37; share of the commission ...
+      </p>
+
+      <a name="Contents"><h2>Contents</h2></a>
+      <ul>
+        <li><a href="#TheKingdoms">The Kingdoms</a></li>
+        <li><a href="#IWantOne">I Want a Kingdom!</a></li>
+        <li><a href="#Disclaimer">Disclaimer</a></li>
+      </ul>
+
+      <a name="TheKingdoms"><h2>The Kingdoms</h2></a>
+      <p>These are the fine kingdoms that have been established so far ...</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th style="width:20em">Name</th>
+            <th>Current Claim Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td><a href="/thrones/kingoftheether/">1</a></td>
+            <td><a href="/thrones/kingoftheether/">King of the Ether</a></td>
+            <td><a href="/thrones/kingoftheether/#HowIRule">500 FINNEY (0.5 ETHER)</a></td>
+          </tr>
+          
+          <tr>
+            <td><a href="/thrones/kingoftheetherclassic/">2</a></td>
+            <td><a href="/thrones/kingoftheetherclassic/">King of the Ether Classic</a></td>
+            <td><a href="/thrones/kingoftheetherclassic/#HowIRule">100 FINNEY (0.1 ETHER)</a></td>
+          </tr>
+          
+          <tr>
+            <td><a href="/thrones/satoshiofbtckingdom/">3</a></td>
+            <td><a href="/thrones/satoshiofbtckingdom/"> Satoshi of BTC Kingdom</a></td>
+            <td><a href="/thrones/satoshiofbtckingdom/#HowIRule">337 FINNEY (0.337 ETHER)</a></td>
+          </tr>
+          
+        </tbody>
+      </table>
+      
+      <a name="IWantOne"><h2>I Want a Kingdom!</h2></a>
+      <p>If you're using <a href="https://github.com/ethereum/mist/releases">a recent version</a> of the Ethereum Wallet,
+      you can watch and interact with the World contract to create your own Kingdom. The fee to create a kingdom is currently 1 ETHER.</p>
+      <p>1. Open your Ethereum Wallet. Choose 'Contracts' in the top-bar, then click 'Watch Contract'.</p>
+      <p>2. On the 'Watch Contract' pop-up, fill in the following details:<br>
+For CONTRACT NAME, enter 'World'.<br>
+For CONTRACT ADDRESS, enter:<br>
+<input readonly="readonly" class="read-only-for-copy" type="text" name="amount" size="42" value="0xEDCA5Cf34E4AEa9798127B21751bFfB1609684FF" /><br>
+For JSON INTERFACE, copy-and-paste this:<br>
+<textarea class="read-only-for-copy" readonly="readonly" cols="60" rows="5">[{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_kingdomName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;_startingClaimPriceWei&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_claimPriceAdjustPercent&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_curseIncubationDurationSeconds&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_commissionPerThousand&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;createKingdom&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;withdrawFunds&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_toAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;_valueWei&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_extraGas&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;withdrawFundsAdvanced&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_kingdomCreationFeeWei&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;setKingdomCreationFeeWei&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_kingdomFactory&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;setKingdomFactory&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_maximumClaimPriceWei&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;setMaximumClaimPriceWei&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_replacement&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;replaceWizard&quot;,&quot;outputs&quot;:[],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;kingdomCreationFeeWei&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;kingdomCreationFeeInFinney&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;feeInFinney&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;numberOfKingdoms&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;totalCount&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;kingdomsByNumber&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;kingdomNumber&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;kingdomName&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;kingdomContract&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;kingdomCreator&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;creationTimestamp&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;kingdomFactoryUsed&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_startingClaimPriceWei&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_claimPriceAdjustPercent&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_curseIncubationDurationSeconds&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_commissionPerThousand&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;validateProposedThroneRules&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;allowed&quot;,&quot;type&quot;:&quot;bool&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_kingdomName&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;validateProposedKingdomName&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;allowed&quot;,&quot;type&quot;:&quot;bool&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_kingdomName&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;findKingdomCalled&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;kingdomNumber&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_address&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;fundsOf&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;valueWei&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;topWizard&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;kingdomFactory&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;maximumClaimPriceWei&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;function&quot;},
+ {&quot;inputs&quot;:[{&quot;name&quot;:&quot;_topWizard&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;_kingdomCreationFeeWei&quot;,&quot;type&quot;:&quot;uint256&quot;},{&quot;name&quot;:&quot;_kingdomFactory&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;_maximumClaimPriceWei&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;type&quot;:&quot;constructor&quot;},
+ {&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;kingdomNumber&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;KingdomCreatedEvent&quot;,&quot;type&quot;:&quot;event&quot;},
+ {&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newFeeWei&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;CreationFeeChangedEvent&quot;,&quot;type&quot;:&quot;event&quot;},
+ {&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newFactory&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;FactoryChangedEvent&quot;,&quot;type&quot;:&quot;event&quot;},
+ {&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;oldWizard&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;newWizard&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;WizardReplacedEvent&quot;,&quot;type&quot;:&quot;event&quot;},
+ {&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:false,&quot;name&quot;:&quot;fromAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;toAddress&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;valueWei&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;FundsWithdrawnEvent&quot;,&quot;type&quot;:&quot;event&quot;}]
+</textarea><br>
+Yes, it's very long, make sure you copy it all. Click 'OK' to add the contract to the collection of 'Custom Contracts' you're watching.
+</p>
+      <p>3. Click on the 'World' contract you just created in the 'Custom Contracts' section. You should now be able to interact with the World contract using the 'READ FROM CONTRACT' section on the left, and the 'WRITE TO CONTRACT' section on the right.</p>
+      <p>4. Choose the 'Create Kingdom' method from the drop-down under 'WRITE TO CONTRACT'. Fill in the following details:</p>
+      <form>
+        <table>
+          <tr>
+            <th class="for-row">Kingdom Name</th>
+            <td>
+              We use the name you enter here for the name of the Kingdom, and the title of its Ruler, and for the Throne.<br>
+              For example, 'Queen of Goats' works well in a sentence like 'In the Queen of Goats Kingdom, the current Queen of Goats is Bob, who sits on the Queen of Goats Throne'.<br>
+              (Names must be 1 to 25 characters long, English alphabet only, contain at least one letter or number, and use only symbols ! ( ) - . _)<br>
+              To check if the name is allowed first, you can use the 'Validate proposed kingdom name' in the 'READ FROM CONTRACT' section on the left. Names must be unique - cannot have two Kingdom with same name.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Starting Claim Price Wei</th>
+            <td>
+              What should the price of your throne start at, in wei?<br>
+              Some useful conversions are:
+              <ul>
+              <li>0.1 ether = 100000000000000000 wei</li>
+              <li>0.5 ether = 500000000000000000 wei</li>
+              <li>1 ether = 100000000000000000 wei</li>
+              </ul>
+              Must be between 10 finney (10000000000000000 wei) and 100 ether (10000000000000000000 wei).
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Claim Price Adjust Percent</th>
+            <td>
+              How much should the throne price go up by each time it is claimed, in percent?<br>
+              For example, 50 means that claiming the throne at a price of 10 ether bumps the price to 15 ether for the next usurper.<br>
+              Must be a whole number between 10 and 900 (though you probably don't want to go above 100).
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Curse Incubation Duration Seconds</th>
+            <td>
+              How long can a monarch rule before they die due to the mysterious curse, in seconds?<br>
+              Some useful conversions are:
+              <ul>
+              <li>2 hours = 7200 seconds</li>
+              <li>24 hours = 86400 seconds</li>
+              <li>48 hours = 172800 seconds</li>
+              <li>7 days = 604800 seconds</li>
+              <li>14 days = 1209600 seconds</li>
+              <li>28 days = 2419200 seconds</li>
+              <li>365 days = 31536000 seconds</li>
+              </ul>
+              Must be a whole number between 7200 (2 hours) and 864000000 (10000 days, about 27 years).
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Commission Per Thousand</th>
+            <td>
+              How much commission is deducted from the compensation, in parts-per-thousand?<br>
+              For example, 20 means that a commission of 2.0% is charged on each payment.<br>
+              Must be a whole number between 10 (1%) and 100 (10%).
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Execute From</th>
+            <td>
+              Which Ethereum Wallet account do you want to use? It's generally recommended to use the 'Etherbase' account, not contract-wallets.
+              Don't lose the account - you'll need to use the same account to withdraw any commission you earn from the Kingdom contract.
+            </td>
+          </tr>
+          <tr>
+            <th class="for-row">Send</th>
+            <td>
+              You'll need to specify the kingdom creation fee you will send to pay for the creation and listing of your contract here.
+              As of 2017-05-25 20:40:29 UTC, the creation fee is 1 ETHER. The World contract page in your Ethereum Wallet will show the latest fee in the 'Kingdom Creation Fee in Finney' section on the left of the screen.
+            </td>
+          </tr>
+        </table>
+      </form>
+      <p>5. Click 'Execute'. You'll be prompted for your password, then click 'Send Transaction'. Yes, the gas amount is very high - about 1.9 million. Less than 0.1 ether though.</p>
+      <p>6. After you've sent the transaction, wait for it to confirm, then reload this page - it may take a few minutes to appear.</p>
+      <p>7. Follow the link to the web page for your Kingdom at <a href="#TheKingdoms">The Kingdoms</a>. Use the instructions there to start watching your new Kingdom Contract in your Ethereum Wallet.</p>
+      <p>8. To withdraw any commission earned, you'll need to use the Withdraw Funds method on your Kingdom Contract (not the one on the World contract).</p>
+
+      <a name="Disclaimer"><h2>Disclaimer</h2></a>
+      <p>This is intended as a bit of fun and to explore what a contract running on the Ethereum blockchain can do. Please don&#39;t spend money you can&#39;t afford to lose - keep it fun.</p>
+      <p>If you suspect that spending crypto-currencies on virtual thrones for non-existent kingdoms is illegal in your jurisdiction, please avoid participating (and complain to your political representatives).</p>
+      <p>Please note that while the contract will live as long as the Ethereum blockchain, no warranty is given that this website will continue to exist or will continue to promote the contract or list your name or Kingdom.</p>
+      <p>Under no circumstances will refunds or compensation be paid even if the contract steals all your money and/or shoots your dog. The author disclaims all liability for the operation of the contract which should be considered its own autonomous entity as far as permitted by law - it is your responsiblity to study its likely behaviour before interacting with it, including taking into account that the actual behaviour of the compiled EVM bytecode in a real eth/geth node may differ from the assumed behaviour based on the apparent intent of the solidity source code.</p>
+      <p>By interacting with the contract you agree to accept the conditions in this section as well as those listed at <a href="https://www.ethereum.org/agreement">ethereum.org/agreement</a>.</p>
+
+    </div>
+  </div>
+  <script type="text/javascript">
+  <!--
+  function makeCopyPasteEasier() {
+    var elems = document.querySelectorAll('.read-only-for-copy');
+    for (var i = 0; i < elems.length; i++) {
+      var elem = elems[i];
+      elem.addEventListener('click', function() {
+        this.select();
+      });
+    }
+  }
+  function init() {
+    makeCopyPasteEasier();
+  }
+  init();
+  // -->
+  </script>
+</body>
+</html>
